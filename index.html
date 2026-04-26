@@ -3,23 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KredytLens</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>ile-nadplacic.pl — kalkulator nadpłaty kredytu hipotecznego</title>
+<meta name="description" content="Sprawdź ile zaoszczędzisz nadpłacając kredyt hipoteczny. Raty równe i malejące, porównanie scenariuszy, harmonogram spłat miesiąc po miesiącu.">
+<meta name="theme-color" content="#2f7d5b">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:title" content="ile-nadplacic.pl — kalkulator nadpłaty kredytu">
+<meta property="og:description" content="Sprawdź ile zaoszczędzisz nadpłacając kredyt hipoteczny. Bezpłatnie, bez rejestracji.">
+<meta property="og:image" content="/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ile-nadplacic.pl/">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
     --bg:    #080808;
-    --bg2:   #101010;
-    --bg3:   #181818;
-    --line:  #222;
-    --line2: #2c2c2c;
-    --t1:    #f2f2f2;
-    --t2:    #aaa;
-    --t3:    #666;
-    --amber: #d97706;
-    --amb2:  rgba(217,119,6,.12);
-    --red:   #dc2626;
-    --green: #16a34a;
+    --bg2:   #0e0e0e;
+    --bg3:   #161616;
+    --line:  #1e1e1e;
+    --line2: #282828;
+    --t1:    #f0efea;
+    --t2:    #999;
+    --t3:    #555;
+    --amber: #a7d7be;
+    --amb2:  rgba(167,215,190,.11);
+    --red:   #c96442;
+    --green: #22c55e;
     --mono:  ui-monospace,'Cascadia Code','Source Code Pro',Menlo,Consolas,monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -155,16 +167,49 @@ input[type="range"]:active::-webkit-slider-thumb{
 <body>
 
 <!-- HEADER -->
-<header style="border-bottom:1px solid var(--line);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;background:rgba(8,8,8,.94);backdrop-filter:blur(10px);">
-    <div style="display:flex;align-items:center;gap:10px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+<header style="border-bottom:1px solid var(--line);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;background:rgba(8,8,8,.95);backdrop-filter:blur(12px);">
+    <a href="/" aria-label="ile-nadplacic.pl" style="display:flex;align-items:center;text-decoration:none;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" height="32" font-family="'Plus Jakarta Sans',system-ui,sans-serif">
+            <path d="M10 32 L32 14 L54 32" stroke="#a7d7be" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="22" cy="40" r="3.5" stroke="#a7d7be" stroke-width="3" fill="none"/>
+            <circle cx="42" cy="50" r="3.5" stroke="#a7d7be" stroke-width="3" fill="none"/>
+            <line x1="44" y1="38" x2="20" y2="52" stroke="#a7d7be" stroke-width="3.5" stroke-linecap="round"/>
+            <text x="74" y="42" font-size="26" font-weight="700" letter-spacing="-0.4" fill="#f0efea">ile<tspan fill="#e8a98c">-</tspan>nadplacic<tspan fill="#f0efea" opacity="0.45" font-weight="600">.pl</tspan></text>
         </svg>
-        <span style="font-weight:600;letter-spacing:-.2px;">KredytLens</span>
-        <span style="color:var(--t3);padding-left:10px;border-left:1px solid var(--line);font-size:11px;">kalkulator hipoteczny</span>
-    </div>
+    </a>
     <span style="font-family:var(--mono);font-size:10px;color:var(--t3);">PL · PLN</span>
 </header>
+
+<!-- ── HERO ── -->
+<div style="border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0d140f 0%,var(--bg) 100%);">
+    <div style="max-width:1080px;margin:0 auto;padding:60px 32px 52px;">
+        <p style="font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber);font-weight:500;margin-bottom:18px;">Kalkulator nadpłaty kredytu hipotecznego</p>
+        <h1 style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:clamp(28px,4.5vw,52px);font-weight:700;line-height:1.15;letter-spacing:-.5px;color:var(--t1);margin-bottom:18px;max-width:700px;">
+            Ile naprawdę zaoszczędzisz<br>nadpłacając kredyt?
+        </h1>
+        <p style="font-size:16px;color:var(--t2);font-weight:300;line-height:1.75;margin-bottom:32px;max-width:560px;">
+            Wpisz parametry kredytu, ustaw nadpłatę i sprawdź dokładnie ile mniej oddasz bankowi — miesiąc po miesiącu. Bezpłatnie, bez rejestracji.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:20px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 64 64" fill="none"><path d="M10 32 L32 14 L54 32" stroke="#a7d7be" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="40" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><circle cx="42" cy="50" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><line x1="44" y1="38" x2="20" y2="52" stroke="#a7d7be" stroke-width="4" stroke-linecap="round"/></svg>
+                <span style="font-size:13px;color:var(--t2);">Raty równe i malejące</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 64 64" fill="none"><path d="M10 32 L32 14 L54 32" stroke="#a7d7be" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="40" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><circle cx="42" cy="50" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><line x1="44" y1="38" x2="20" y2="52" stroke="#a7d7be" stroke-width="4" stroke-linecap="round"/></svg>
+                <span style="font-size:13px;color:var(--t2);">Nadpłaty miesięczne i jednorazowe</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 64 64" fill="none"><path d="M10 32 L32 14 L54 32" stroke="#a7d7be" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="40" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><circle cx="42" cy="50" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><line x1="44" y1="38" x2="20" y2="52" stroke="#a7d7be" stroke-width="4" stroke-linecap="round"/></svg>
+                <span style="font-size:13px;color:var(--t2);">Porównanie dwóch scenariuszy</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg width="14" height="14" viewBox="0 0 64 64" fill="none"><path d="M10 32 L32 14 L54 32" stroke="#a7d7be" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="22" cy="40" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><circle cx="42" cy="50" r="4" stroke="#a7d7be" stroke-width="3.5" fill="none"/><line x1="44" y1="38" x2="20" y2="52" stroke="#a7d7be" stroke-width="4" stroke-linecap="round"/></svg>
+                <span style="font-size:13px;color:var(--t2);">Harmonogram spłat miesiąc po miesiącu</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="page">
 
@@ -354,7 +399,7 @@ input[type="range"]:active::-webkit-slider-thumb{
             <p class="label">Saldo zadłużenia w czasie</p>
             <div style="display:flex;gap:14px;">
                 <div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:1px;background:var(--amber);"></div><span style="font-size:10px;color:var(--t3);">Scenariusz A</span></div>
-                <div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:1px;background:var(--green);border-top:1px dashed var(--green);"></div><span style="font-size:10px;color:var(--t3);" id="chart-leg-b">z nadpłatami</span></div>
+                <div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:1px;background:var(--red);border-top:1px dashed var(--red);"></div><span style="font-size:10px;color:var(--t3);" id="chart-leg-b">z nadpłatami</span></div>
             </div>
         </div>
         <div style="height:200px;position:relative;"><canvas id="chart-balance"></canvas></div>
@@ -523,8 +568,8 @@ input[type="range"]:active::-webkit-slider-thumb{
 
 </div><!-- /page -->
 
-<footer style="border-top:1px solid var(--line);padding:20px 32px;text-align:center;">
-    <p style="font-size:10px;color:var(--t3);">KredytLens — kalkulator poglądowy. Nie stanowi porady finansowej ani oferty bankowej.</p>
+<footer style="border-top:1px solid var(--line);padding:24px 32px;text-align:center;">
+    <p style="font-size:10px;color:var(--t3);">ile-nadplacic.pl — kalkulator poglądowy. Wyniki mają charakter szacunkowy i nie stanowią porady finansowej ani oferty kredytowej.</p>
 </footer>
 
 <script>
@@ -861,15 +906,15 @@ function initCharts(){
 
     ch.donut=new Chart(document.getElementById('chart-donut'),{
         type:'doughnut',
-        data:{labels:['Kapitał','Odsetki'],datasets:[{data:[480000,669960],backgroundColor:['#252525','#d97706'],borderColor:['#333','#b45309'],borderWidth:1,hoverOffset:5}]},
+        data:{labels:['Kapitał','Odsetki'],datasets:[{data:[480000,669960],backgroundColor:['#1e2e27','#a7d7be'],borderColor:['#2a2a2a','#7bbfa6'],borderWidth:1,hoverOffset:5}]},
         options:{responsive:true,maintainAspectRatio:false,cutout:'74%',plugins:{legend:{display:false},tooltip:{...tip,callbacks:{label:c=>'  '+c.label+': '+num(c.raw)+' PLN'}}},animation:{duration:300,easing:'easeOutQuart'}}
     });
 
     ch.bal=new Chart(document.getElementById('chart-balance').getContext('2d'),{
         type:'line',
         data:{labels:[],datasets:[
-            {label:'Scenariusz A',data:[],borderColor:'#d97706',borderWidth:1.5,fill:false,tension:.3,pointRadius:0,pointHoverRadius:3,pointHoverBackgroundColor:'#d97706'},
-            {label:'Scenariusz B',data:[],borderColor:'#16a34a',borderWidth:1.5,fill:false,tension:.3,pointRadius:0,pointHoverRadius:3,hidden:true,borderDash:[4,3]}
+            {label:'Scenariusz A',data:[],borderColor:'#a7d7be',borderWidth:1.5,fill:false,tension:.3,pointRadius:0,pointHoverRadius:3,pointHoverBackgroundColor:'#a7d7be'},
+            {label:'Scenariusz B',data:[],borderColor:'#c96442',borderWidth:1.5,fill:false,tension:.3,pointRadius:0,pointHoverRadius:3,hidden:true,borderDash:[4,3]}
         ]},
         options:{
             responsive:true,maintainAspectRatio:false,

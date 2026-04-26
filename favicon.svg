@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>ile-nadplacic.pl</title>
+  <path d="M10 32 L32 14 L54 32" stroke="#2f7d5b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+  <circle cx="22" cy="40" r="3.5" stroke="#2f7d5b" stroke-width="3" fill="none"></circle>
+  <circle cx="42" cy="50" r="3.5" stroke="#2f7d5b" stroke-width="3" fill="none"></circle>
+  <line x1="44" y1="38" x2="20" y2="52" stroke="#2f7d5b" stroke-width="3.5" stroke-linecap="round"></line>
+</svg>
