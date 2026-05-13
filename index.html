@@ -677,7 +677,9 @@ function sched(p,ap,yrs,ex,ot,type,strat,kar){
         const by=[0];
         for(let m=1;m<=karMo;m++){
             if(disbMap[m]) b+=disbMap[m];
-            const i=b*r; interest+=i; intKar+=i; mo=m;
+            const i=b*r, otp=ot[m]||0;
+            b=Math.max(0,b-(ex+otp));
+            interest+=i; intKar+=i; mo=m;
             if(m%12===0) by.push(b);
         }
         const bAK=b;
@@ -732,8 +734,10 @@ function monthly(p,ap,yrs,ex,ot,type,strat,kar){
         for(let m=1;m<=Math.min(karMo,n);m++){
             const tranche=disbMap[m]||0;
             b+=tranche;
-            const i=b*r;
-            rows.push({m,ob:b,pmt:i,i,rp:0,otp:0,cb:b,kar:true,tranche});
+            const ob=b, i=b*r, otp=ot[m]||0;
+            const nadp=Math.min(b,ex+otp);
+            b=Math.max(0,b-nadp);
+            rows.push({m,ob,pmt:i,i,rp:ex>0?Math.min(ob,ex):0,otp,cb:b,kar:true,tranche});
         }
         const bAK=b;
         const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(bAK,ap,repMo):null;
@@ -1115,15 +1119,19 @@ function renderSched(rows){
     document.getElementById('schedule-body').innerHTML=rows.map(row=>{
         if(row.kar){
             const tTxt=row.tranche>0
-                ?` <span style="font-size:10px;color:var(--green);">+${num(row.tranche)}</span>`:'' ;
+                ?` <span style="font-size:10px;color:var(--green);">+${num(row.tranche)}</span>`:'';
+            const stored=st.ot[row.m]||0;
+            const otCell=stored>0
+                ?`<span style="color:var(--green);font-weight:600">+${num(stored)}</span>`
+                :`<span class="hint" style="color:var(--t3)">+ dodaj</span>`;
             return`<tr class="kar-row" data-m="${row.m}">
                 <td style="color:var(--t3)">${row.m}</td>
                 <td style="text-align:right;color:var(--t2)">${num(Math.round(row.ob))}${tTxt}</td>
                 <td style="text-align:right;font-size:11px;color:var(--amber);font-style:italic">tylko odsetki</td>
                 <td style="text-align:right;color:var(--amber)">${num(Math.round(row.i))}</td>
-                <td style="text-align:right;color:var(--t3)">—</td>
-                <td style="text-align:right;color:var(--t3)">—</td>
-                <td style="text-align:right;color:var(--t2)">${num(Math.round(row.cb))}</td>
+                <td style="text-align:right;color:var(--t2)">${row.rp>0?num(Math.round(row.rp)):'—'}</td>
+                <td class="nc" data-m="${row.m}" style="text-align:right">${otCell}</td>
+                <td style="text-align:right;${row.otp>0||row.rp>0?'color:var(--green);font-weight:600':''}">${num(Math.round(row.cb))}</td>
             </tr>`;
         }
         const hasOt=row.otp>0, stored=st.ot[row.m]||0;
