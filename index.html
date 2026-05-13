@@ -965,6 +965,8 @@ function upd(){
 
     clearTimeout(schedT);
     schedT=setTimeout(()=>renderSched(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar)),100);
+
+    history.replaceState(null,'','#'+encodeState());
 }
 
 // ── Comparison table ────────────────────────────────────
@@ -1356,7 +1358,9 @@ function decodeState(hash){
 }
 
 function shareURL(){
-    const url=location.origin+location.pathname+'#'+encodeState();
+    const encoded=encodeState();
+    history.replaceState(null,'','#'+encoded);
+    const url=location.origin+location.pathname+'#'+encoded;
     const btn=document.getElementById('share-btn');
     const lbl=document.getElementById('share-label');
     const done=()=>{
