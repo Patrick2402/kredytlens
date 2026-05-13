@@ -151,6 +151,10 @@ input[type="range"]:active::-webkit-slider-thumb{
 .kar-btn{background:transparent;border:1px solid var(--line2);color:var(--t2);padding:4px 12px;font-size:11px;font-family:inherit;border-radius:3px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;white-space:nowrap;}
 .kar-btn:hover{border-color:var(--amber);color:var(--amber);}
 .kar-btn.active{border-color:var(--amber);color:var(--amber);background:var(--amb2);}
+/* Share FAB */
+#share-btn{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;align-items:center;gap:8px;padding:11px 20px;background:var(--bg3);border:1px solid var(--line2);border-radius:8px;color:var(--t1);font-size:13px;font-family:inherit;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:border-color .2s,color .2s,background .2s,transform .15s;white-space:nowrap;}
+#share-btn:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px);}
+#share-btn.done{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.08);}
 .kar-inp{background:var(--bg3);border:1px solid var(--line2);border-radius:4px;color:var(--t1);font-size:12px;padding:4px 6px;font-family:inherit;outline:none;}
 .kar-inp:focus{border-color:rgba(167,215,190,.5);}
 select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:20px;}
@@ -191,13 +195,7 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
             <text x="74" y="42" font-size="26" font-weight="700" letter-spacing="-0.4" fill="#f0efea">ile<tspan fill="#e8a98c">-</tspan>nadplacic<tspan fill="#f0efea" opacity="0.45" font-weight="600">.pl</tspan></text>
         </svg>
     </a>
-    <div style="display:flex;align-items:center;gap:12px;">
-        <span style="font-family:var(--mono);font-size:10px;color:var(--t3);">PL · PLN</span>
-        <button id="share-btn" onclick="shareURL()" style="background:transparent;border:1px solid var(--line2);color:var(--t2);padding:5px 12px;font-size:11px;font-family:inherit;border-radius:3px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            Udostępnij
-        </button>
-    </div>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--t3);">PL · PLN</span>
 </header>
 
 <!-- ── HERO ── -->
@@ -651,6 +649,11 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
 <footer style="border-top:1px solid var(--line);padding:24px 32px;text-align:center;">
     <p style="font-size:10px;color:var(--t3);">ile-nadplacic.pl — kalkulator poglądowy. Wyniki mają charakter szacunkowy i nie stanowią porady finansowej ani oferty kredytowej.</p>
 </footer>
+
+<button id="share-btn" onclick="shareURL()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    <span id="share-label">Udostępnij</span>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -1350,12 +1353,20 @@ function decodeState(hash){
 
 function shareURL(){
     const url=location.origin+location.pathname+'#'+encodeState();
-    navigator.clipboard.writeText(url).then(()=>{
-        const btn=document.getElementById('share-btn');
-        const prev=btn.innerHTML;
-        btn.innerHTML='✓ Skopiowano!';
-        btn.style.color='var(--green)';btn.style.borderColor='var(--green)';
-        setTimeout(()=>{btn.innerHTML=prev;btn.style.color='';btn.style.borderColor='';},2000);
+    const btn=document.getElementById('share-btn');
+    const lbl=document.getElementById('share-label');
+    const done=()=>{
+        lbl.textContent='✓ Skopiowano!';
+        btn.classList.add('done');
+        setTimeout(()=>{lbl.textContent='Udostępnij';btn.classList.remove('done');},2200);
+    };
+    navigator.clipboard.writeText(url).then(done).catch(()=>{
+        // fallback for HTTP / no clipboard permission
+        const ta=document.createElement('textarea');
+        ta.value=url; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy'); document.body.removeChild(ta);
+        done();
     });
 }
 
