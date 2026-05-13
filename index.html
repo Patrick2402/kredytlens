@@ -1331,12 +1331,16 @@ function encodeState(){
     };
     if(Object.keys(st.ot).length>0) d.ot=st.ot;
     if(st.kar.on) d.k={mo:st.kar.mo,sd:st.kar.startDate,tr:st.kar.transze.map(t=>({y:t.year,m:t.month,a:t.amt}))};
-    return btoa(encodeURIComponent(JSON.stringify(d)));
+    // URL-safe base64: + → - / → _ = removed (no padding needed for decode)
+    return btoa(encodeURIComponent(JSON.stringify(d))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
 }
 
 function decodeState(hash){
     try{
-        const d=JSON.parse(decodeURIComponent(atob(hash)));
+        // Restore URL-safe base64 to standard base64
+        let b64=hash.replace(/-/g,'+').replace(/_/g,'/');
+        while(b64.length%4) b64+='=';
+        const d=JSON.parse(decodeURIComponent(atob(b64)));
         if(d.c) st.cena=d.c;
         if(d.w!==undefined) st.wklad=d.w;
         if(d.o) st.okres=d.o;
@@ -1468,6 +1472,14 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
 
     if(location.hash.length>1){ syncUIFromState(); }
+
+    window.addEventListener('hashchange',()=>{
+        if(location.hash.length>1){
+            decodeState(location.hash.slice(1));
+            syncUIFromState();
+            upd();
+        }
+    });
 
     initSchedEvents();
     upd();
