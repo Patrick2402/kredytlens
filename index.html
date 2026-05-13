@@ -143,6 +143,18 @@ input[type="range"]:active::-webkit-slider-thumb{
 #cmp-inner{overflow:hidden;}
 #cmp-content{padding:24px 0 28px;}
 
+/* Karencja panel */
+#kar-panel{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .42s cubic-bezier(.25,.46,.45,.94),opacity .3s ease;}
+#kar-panel.open{grid-template-rows:1fr;opacity:1;}
+#kar-inner{overflow:hidden;}
+#kar-content{padding:16px 0 4px;}
+.kar-btn{background:transparent;border:1px solid var(--line2);color:var(--t2);padding:4px 12px;font-size:11px;font-family:inherit;border-radius:3px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;white-space:nowrap;}
+.kar-btn:hover{border-color:var(--amber);color:var(--amber);}
+.kar-btn.active{border-color:var(--amber);color:var(--amber);background:var(--amb2);}
+.kar-inp{background:var(--bg3);border:1px solid var(--line2);border-radius:4px;color:var(--t1);font-size:12px;padding:4px 6px;font-family:var(--mono);outline:none;}
+.kar-inp:focus{border-color:rgba(167,215,190,.5);}
+.kar-row td{padding:4px 12px !important;}
+
 /* Compare button */
 .cmp-toggle{background:transparent;border:1px solid var(--line2);color:var(--t2);padding:6px 14px;font-size:11px;font-family:inherit;border-radius:3px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;}
 .cmp-toggle:hover{border-color:var(--amber);color:var(--amber);}
@@ -290,6 +302,44 @@ input[type="range"]:active::-webkit-slider-thumb{
                 <div class="seg" id="strat-seg" style="flex:1;max-width:260px;">
                     <button class="seg-btn on" id="btn-okres" onclick="setStrat('okres')">Okres kredytu</button>
                     <button class="seg-btn" id="btn-rata" onclick="setStrat('rata')">Ratę miesięczną</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Karencja ── -->
+        <div style="border-top:1px solid var(--line);padding-top:18px;margin-top:4px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <div>
+                    <p class="sub" style="color:var(--t1);">Karencja <span style="color:var(--t3);font-size:10px;font-weight:400;">opcjonalnie</span></p>
+                    <p style="font-size:10px;color:var(--t3);margin-top:3px;line-height:1.5;">Płacisz tylko odsetki od wypłacanych transz.<br>Typowe przy kredycie na budowę domu.</p>
+                </div>
+                <button class="kar-btn" id="kar-toggle" onclick="toggleKar()">Włącz</button>
+            </div>
+
+            <div id="kar-panel">
+                <div id="kar-inner">
+                    <div id="kar-content">
+
+                        <!-- Czas karencji -->
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                            <label class="sub">Czas karencji</label>
+                            <div style="display:flex;align-items:baseline;gap:6px;">
+                                <input class="kar-inp" id="kar-mo-inp" type="number" min="1" max="60" value="12" style="width:48px;text-align:center;">
+                                <span style="font-size:10px;color:var(--t3);">mies.</span>
+                            </div>
+                        </div>
+
+                        <!-- Transze -->
+                        <div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                                <label class="sub">Transze wypłat</label>
+                                <button onclick="addTranche()" style="font-size:11px;color:var(--amber);background:none;border:1px solid rgba(167,215,190,.25);border-radius:4px;padding:3px 9px;cursor:pointer;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(167,215,190,.6)'" onmouseout="this.style.borderColor='rgba(167,215,190,.25)'">+ Dodaj transzę</button>
+                            </div>
+                            <div id="transze-list"></div>
+                            <p id="tranche-sum-info" style="font-size:11px;color:var(--t3);margin-top:8px;min-height:16px;"></p>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -580,9 +630,10 @@ const st = {
     cena:600000, wklad:20, okres:30, rate:7.5, nadplata:0, ot:{},
     type:'rowne', strat:'okres',
     cmpOn:false,
-    b:{ type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0 }
+    b:{ type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0 },
+    kar:{ on:false, mo:12, transze:[] }
 };
-let ch={}, schedT=null, prevHasEx=false;
+let ch={}, schedT=null, prevHasEx=false, trancheIdCnt=0;
 
 // ── Math ───────────────────────────────────────────────
 const kredyt = () => Math.round(st.cena*(1-st.wklad/100));
@@ -594,9 +645,42 @@ function rataRowna(p,ap,n){
 function firstRataMalejaca(p,ap,n){ return (p/n)+(p*ap/100/12); }
 function lastRataMalejaca(p,ap,n){ const cp=p/n; return cp+cp*(ap/100/12); }
 
-function sched(p,ap,yrs,ex,ot,type,strat){
+function sched(p,ap,yrs,ex,ot,type,strat,kar){
     ex=ex||0; ot=ot||{}; type=type||'rowne'; strat=strat||'okres';
     const r=ap/100/12, n=yrs*12;
+
+    if(kar&&kar.on&&kar.mo>0){
+        const karMo=Math.min(kar.mo,n);
+        const repMo=Math.max(1,n-karMo);
+        const disbMap={};
+        if(kar.transze&&kar.transze.length>0)
+            kar.transze.forEach(t=>{disbMap[t.mo]=(disbMap[t.mo]||0)+t.amt;});
+        else disbMap[1]=p;
+        let b=0,interest=0,intKar=0,mo=0;
+        const by=[0];
+        for(let m=1;m<=karMo;m++){
+            if(disbMap[m]) b+=disbMap[m];
+            const i=b*r; interest+=i; intKar+=i; mo=m;
+            if(m%12===0) by.push(b);
+        }
+        const bAK=b;
+        const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(bAK,ap,repMo):null;
+        const cPrin=type==='malejace'?bAK/repMo:null;
+        for(let m=karMo+1;m<=n;m++){
+            if(b<.01) break;
+            const i=b*r, otp=ot[m]||0, remMo=n-m+1;
+            let basePrin;
+            if(type==='malejace') basePrin=cPrin;
+            else if(strat==='okres') basePrin=fixedPmt-i;
+            else{ const dp=rataRowna(b,ap,remMo); basePrin=dp-i; }
+            const prin=Math.min(b,basePrin+ex+otp);
+            b=Math.max(0,b-prin); interest+=i; mo=m;
+            if(m%12===0) by.push(b);
+        }
+        while(by.length<yrs+1) by.push(0);
+        return{int:Math.round(interest),total:Math.round(p+interest),mo,by:by.slice(0,yrs+1),intKar:Math.round(intKar)};
+    }
+
     const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(p,ap,n):null;
     const cPrin=type==='malejace'?p/n:null;
     let b=p, interest=0, mo=0;
@@ -616,9 +700,46 @@ function sched(p,ap,yrs,ex,ot,type,strat){
     return{int:Math.round(interest),total:Math.round(p+interest),mo,by:by.slice(0,yrs+1)};
 }
 
-function monthly(p,ap,yrs,ex,ot,type,strat){
+function monthly(p,ap,yrs,ex,ot,type,strat,kar){
     ex=ex||0; ot=ot||{}; type=type||'rowne'; strat=strat||'okres';
     const r=ap/100/12, n=yrs*12;
+
+    if(kar&&kar.on&&kar.mo>0){
+        const karMo=Math.min(kar.mo,n);
+        const repMo=Math.max(1,n-karMo);
+        const disbMap={};
+        if(kar.transze&&kar.transze.length>0)
+            kar.transze.forEach(t=>{disbMap[t.mo]=(disbMap[t.mo]||0)+t.amt;});
+        else disbMap[1]=p;
+        let b=0; const rows=[];
+        for(let m=1;m<=Math.min(karMo,n);m++){
+            const tranche=disbMap[m]||0;
+            b+=tranche;
+            const i=b*r;
+            rows.push({m,ob:b,pmt:i,i,rp:0,otp:0,cb:b,kar:true,tranche});
+        }
+        const bAK=b;
+        const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(bAK,ap,repMo):null;
+        const cPrin=type==='malejace'?bAK/repMo:null;
+        for(let m=karMo+1;m<=n;m++){
+            if(b<.01) break;
+            const ob=b, i=ob*r, remMo=n-m+1;
+            let basePmt, rp;
+            if(type==='malejace'){
+                rp=Math.min(b,cPrin+ex); basePmt=i+Math.min(b,cPrin);
+            } else if(strat==='okres'){
+                rp=Math.min(b,fixedPmt-i+ex); basePmt=fixedPmt;
+            } else {
+                const dp=rataRowna(b,ap,remMo);
+                rp=Math.min(b,dp-i+ex); basePmt=dp;
+            }
+            const otp=Math.min(b-rp,ot[m]||0);
+            b=Math.max(0,b-rp-otp);
+            rows.push({m,ob,pmt:basePmt+(ex>0?ex:0),i,rp,otp,cb:b});
+        }
+        return rows;
+    }
+
     const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(p,ap,n):null;
     const cPrin=type==='malejace'?p/n:null;
     let b=p; const rows=[];
@@ -687,32 +808,44 @@ function pulse(id,cls){
 // ── Update ─────────────────────────────────────────────
 function upd(){
     const k=kredyt(), n=st.okres*12;
-    const base=sched(k,st.rate,st.okres,0,{},st.type,st.strat);
+    const karOn=st.kar.on&&st.kar.mo>0;
+    const karMo=karOn?Math.min(st.kar.mo,n):0;
+    const repN=karOn?Math.max(1,n-karMo):n;
+
+    const base=sched(k,st.rate,st.okres,0,{},st.type,st.strat,st.kar);
     const hasEx=st.nadplata>0||Object.keys(st.ot).length>0;
-    const ext=hasEx?sched(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat):null;
+    const ext=hasEx?sched(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar):null;
     const firstSavings=hasEx&&!prevHasEx;
     prevHasEx=hasEx;
+
+    if(karOn) renderTrancheSum();
 
     // Rata display
     const isMal=st.type==='malejace';
     document.getElementById('rata-display').style.display=isMal?'none':'block';
     document.getElementById('rata-range-display').style.display=isMal?'block':'none';
 
+    const rataKar=karOn?Math.round(k*st.rate/100/12):0;
+
     if(isMal){
-        const fr=firstRataMalejaca(k,st.rate,n);
-        const lr=lastRataMalejaca(k,st.rate,n);
+        const fr=firstRataMalejaca(k,st.rate,repN);
+        const lr=lastRataMalejaca(k,st.rate,repN);
         countUp('big-rata-first',fr,rataF);
         countUp('big-rata-last', lr,rataF);
-        set('big-sub-range',`PLN · przez ${n} miesięcy`);
+        set('big-sub-range',karOn
+            ?`PLN po ${karMo} mies. karencji · rata karencyjna: ~${num(rataKar)} PLN`
+            :`PLN · przez ${n} miesięcy`);
     } else {
-        countUp('big-rata',rataRowna(k,st.rate,n),rataF);
-        // Sub-label reflects strategy when overpayments active
+        countUp('big-rata',rataRowna(k,st.rate,repN),rataF);
         if(st.strat==='rata'&&hasEx){
-            const rows=monthly(k,st.rate,st.okres,st.nadplata,st.ot,'rowne','rata');
-            const lastR=rows.length>0?rows[rows.length-1].pmt-st.nadplata:0;
-            set('big-sub',`PLN → ~${num(Math.round(lastR))} PLN · rata maleje · przez ${n} mies.`);
+            const rows=monthly(k,st.rate,st.okres,st.nadplata,st.ot,'rowne','rata',st.kar);
+            const normalRows=rows.filter(r=>!r.kar);
+            const lastR=normalRows.length>0?normalRows[normalRows.length-1].pmt-st.nadplata:0;
+            set('big-sub',`PLN${karOn?' po karencji':''} → ~${num(Math.round(lastR))} PLN · rata maleje · przez ${n} mies.`);
         } else {
-            set('big-sub',`PLN / miesiąc · przez ${n} miesięcy`);
+            set('big-sub',karOn
+                ?`PLN po ${karMo} mies. karencji · rata karencyjna: ~${num(rataKar)} PLN`
+                :`PLN / miesiąc · przez ${n} miesięcy`);
         }
     }
 
@@ -783,13 +916,13 @@ function upd(){
     set('cmp-a-strat',st.strat==='okres'?'Okres kredytu':'Ratę miesięczną');
 
     clearTimeout(schedT);
-    schedT=setTimeout(()=>renderSched(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat)),100);
+    schedT=setTimeout(()=>renderSched(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar)),100);
 }
 
 // ── Comparison table ────────────────────────────────────
 function updCmp(k){
     const n=st.okres*12, nb=st.b.okres*12;
-    const A=sched(k,st.rate,  st.okres,  st.nadplata,st.ot,st.type,st.strat);
+    const A=sched(k,st.rate,  st.okres,  st.nadplata,st.ot,st.type,st.strat,st.kar);
     const B=sched(k,st.b.rate,st.b.okres,st.b.nadplata,{},st.b.type,st.b.strat);
 
     const rataA=st.type==='rowne'
@@ -855,6 +988,83 @@ function setCmpStrat(t){
     upd();
 }
 
+// ── Karencja ────────────────────────────────────────────
+function toggleKar(){
+    st.kar.on=!st.kar.on;
+    document.getElementById('kar-panel').classList.toggle('open',st.kar.on);
+    const btn=document.getElementById('kar-toggle');
+    btn.textContent=st.kar.on?'Wyłącz':'Włącz';
+    btn.classList.toggle('active',st.kar.on);
+    if(st.kar.on) renderTransze();
+    upd();
+}
+
+function addTranche(){
+    const k=kredyt();
+    const existSum=st.kar.transze.reduce((a,t)=>a+t.amt,0);
+    const remaining=Math.max(0,k-existSum);
+    const lastMo=st.kar.transze.length>0?st.kar.transze[st.kar.transze.length-1].mo:0;
+    const mo=Math.min(st.kar.mo,Math.max(1,lastMo===0?1:lastMo+3));
+    st.kar.transze.push({id:++trancheIdCnt,mo,amt:remaining});
+    renderTransze();
+    upd();
+}
+
+function removeTranche(id){
+    st.kar.transze=st.kar.transze.filter(t=>t.id!==id);
+    renderTransze();
+    upd();
+}
+
+function updateTranche(id,field,val){
+    const t=st.kar.transze.find(t=>t.id===id);
+    if(!t) return;
+    if(field==='mo') t.mo=Math.max(1,Math.min(st.kar.mo,parseInt(val)||1));
+    if(field==='amt') t.amt=Math.max(0,Math.round(parseFloat(val)||0));
+    renderTrancheSum();
+    clearTimeout(schedT); schedT=setTimeout(upd,80);
+}
+
+function renderTrancheSum(){
+    const k=kredyt();
+    const sum=st.kar.transze.reduce((a,t)=>a+t.amt,0);
+    const diff=sum-k;
+    const absD=Math.abs(diff);
+    const col=absD<1?'var(--green)':diff>0?'var(--red)':'var(--t2)';
+    const el=document.getElementById('tranche-sum-info');
+    if(!el) return;
+    el.innerHTML=`Suma transz: <span style="color:${col};font-weight:600">${num(sum)}</span> / ${num(k)} PLN`
+        +(absD>=1?` <span style="color:${col}">(${diff>0?'+':''}${num(Math.round(diff))})</span>`
+                 :' <span style="color:var(--green)">✓</span>');
+}
+
+function renderTransze(){
+    const container=document.getElementById('transze-list');
+    if(!container) return;
+    if(st.kar.transze.length===0){
+        container.innerHTML='<p style="font-size:11px;color:var(--t3);margin:0 0 4px;">Brak transz — cała kwota kredytu wypłacana w miesiącu 1.</p>';
+        document.getElementById('tranche-sum-info').textContent='';
+        return;
+    }
+    container.innerHTML=st.kar.transze.map(t=>`
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:7px;">
+            <span style="font-size:11px;color:var(--t3);white-space:nowrap;min-width:26px;">Mies.</span>
+            <input class="kar-inp" type="number" min="1" max="${st.kar.mo}" value="${t.mo}"
+                style="width:48px;text-align:center;"
+                onchange="updateTranche(${t.id},'mo',this.value)"
+                oninput="updateTranche(${t.id},'mo',this.value)">
+            <span style="font-size:11px;color:var(--t3);">kwota</span>
+            <input class="kar-inp" type="number" min="0" value="${t.amt}"
+                style="flex:1;min-width:0;"
+                onchange="updateTranche(${t.id},'amt',this.value)"
+                oninput="updateTranche(${t.id},'amt',this.value)">
+            <span style="font-size:11px;color:var(--t3);">PLN</span>
+            <button onclick="removeTranche(${t.id})"
+                style="background:none;border:1px solid var(--line2);color:var(--t3);border-radius:3px;width:22px;height:22px;font-size:14px;cursor:pointer;line-height:1;padding:0;flex-shrink:0;">×</button>
+        </div>`).join('');
+    renderTrancheSum();
+}
+
 function toggleCmp(){
     st.cmpOn=!st.cmpOn;
     document.getElementById('cmp-panel').classList.toggle('open',st.cmpOn);
@@ -867,6 +1077,19 @@ function toggleCmp(){
 // ── Schedule ────────────────────────────────────────────
 function renderSched(rows){
     document.getElementById('schedule-body').innerHTML=rows.map(row=>{
+        if(row.kar){
+            const tTxt=row.tranche>0
+                ?` <span style="font-size:10px;color:var(--green);">+${num(row.tranche)}</span>`:'' ;
+            return`<tr class="kar-row" data-m="${row.m}">
+                <td style="color:var(--t3)">${row.m}</td>
+                <td style="text-align:right;color:var(--t2)">${num(Math.round(row.ob))}${tTxt}</td>
+                <td style="text-align:right;font-size:11px;color:var(--amber);font-style:italic">tylko odsetki</td>
+                <td style="text-align:right;color:var(--amber)">${num(Math.round(row.i))}</td>
+                <td style="text-align:right;color:var(--t3)">—</td>
+                <td style="text-align:right;color:var(--t3)">—</td>
+                <td style="text-align:right;color:var(--t2)">${num(Math.round(row.cb))}</td>
+            </tr>`;
+        }
         const hasOt=row.otp>0, stored=st.ot[row.m]||0;
         const otCell=stored>0
             ?`<span style="color:var(--green);font-weight:600">+${num(stored)}</span>`
@@ -953,9 +1176,12 @@ function updBal(base,ext){
 function updScen(k){
     const n=st.okres*12, rates=[3,4,5,6,7,8,9,10,12];
     const cl=rates.reduce((p,c)=>Math.abs(c-st.rate)<Math.abs(p-st.rate)?c:p);
+    const karOn=st.kar.on&&st.kar.mo>0;
+    const karMo=karOn?Math.min(st.kar.mo,n):0;
+    const repN=karOn?Math.max(1,n-karMo):n;
     document.getElementById('scenarios-body').innerHTML=rates.map(r=>{
-        const pmt=st.type==='rowne'?rataRowna(k,r,n):firstRataMalejaca(k,r,n);
-        const ti=sched(k,r,st.okres,0,{},st.type,st.strat).int;
+        const pmt=st.type==='rowne'?rataRowna(k,r,repN):firstRataMalejaca(k,r,repN);
+        const ti=sched(k,r,st.okres,0,{},st.type,st.strat,st.kar).int;
         const tp=ti+k;
         const act=r===cl;
         const iCol=r<=5?'color:var(--green)':r>=9?'color:var(--red)':'color:var(--t2)';
@@ -1015,6 +1241,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     bindB('cmp-val-rate','rate',true);
     bindB('cmp-val-okres','okres');
     bindB('cmp-val-nadp','nadplata');
+
+    // Karencja months input
+    const karMoInp=document.getElementById('kar-mo-inp');
+    karMoInp.addEventListener('change',()=>{
+        const v=Math.max(1,Math.min(60,parseInt(karMoInp.value)||12));
+        st.kar.mo=v; karMoInp.value=v;
+        renderTransze(); upd();
+    });
+
     initSchedEvents();
     upd();
 });
