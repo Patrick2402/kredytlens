@@ -151,10 +151,6 @@ input[type="range"]:active::-webkit-slider-thumb{
 .kar-btn{background:transparent;border:1px solid var(--line2);color:var(--t2);padding:4px 12px;font-size:11px;font-family:inherit;border-radius:3px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;white-space:nowrap;}
 .kar-btn:hover{border-color:var(--amber);color:var(--amber);}
 .kar-btn.active{border-color:var(--amber);color:var(--amber);background:var(--amb2);}
-/* Share FAB */
-#share-btn{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;align-items:center;gap:8px;padding:11px 20px;background:var(--bg3);border:1px solid var(--line2);border-radius:8px;color:var(--t1);font-size:13px;font-family:inherit;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:border-color .2s,color .2s,background .2s,transform .15s;white-space:nowrap;}
-#share-btn:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px);}
-#share-btn.done{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.08);}
 .kar-inp{background:var(--bg3);border:1px solid var(--line2);border-radius:4px;color:var(--t1);font-size:12px;padding:4px 6px;font-family:inherit;outline:none;}
 .kar-inp:focus{border-color:rgba(167,215,190,.5);}
 select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:20px;}
@@ -650,10 +646,6 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
     <p style="font-size:10px;color:var(--t3);">ile-nadplacic.pl — kalkulator poglądowy. Wyniki mają charakter szacunkowy i nie stanowią porady finansowej ani oferty kredytowej.</p>
 </footer>
 
-<button id="share-btn" onclick="shareURL()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-    <span id="share-label">Udostępnij</span>
-</button>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -665,7 +657,7 @@ const st = {
     b:{ type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0 },
     kar:{ on:false, mo:12, startDate:{year:2026,month:5}, transze:[] }
 };
-let ch={}, schedT=null, hashT=null, prevHasEx=false, trancheIdCnt=0;
+let ch={}, schedT=null, prevHasEx=false, trancheIdCnt=0;
 
 const MIES=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 
@@ -966,8 +958,6 @@ function upd(){
     clearTimeout(schedT);
     schedT=setTimeout(()=>renderSched(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar)),100);
 
-    clearTimeout(hashT);
-    hashT=setTimeout(()=>history.replaceState(null,'','#'+encodeState()),600);
 }
 
 // ── Comparison table ────────────────────────────────────
@@ -1325,95 +1315,6 @@ function bindB(valId,key,float){
     inp.addEventListener('blur',()=>{inp.value=float?st.b[key]:num(st.b[key]).replace(/\s/g,'');});
 }
 
-// ── URL state sharing ────────────────────────────────────
-function encodeState(){
-    const d={
-        c:st.cena,w:st.wklad,o:st.okres,r:st.rate,n:st.nadplata,
-        t:st.type,s:st.strat,cmp:st.cmpOn?1:0,
-        b:{t:st.b.type,s:st.b.strat,r:st.b.rate,o:st.b.okres,n:st.b.nadplata}
-    };
-    if(Object.keys(st.ot).length>0) d.ot=st.ot;
-    if(st.kar.on) d.k={mo:st.kar.mo,sd:st.kar.startDate,tr:st.kar.transze.map(t=>({y:t.year,m:t.month,a:t.amt}))};
-    // URL-safe base64: + → - / → _ = removed (no padding needed for decode)
-    return btoa(encodeURIComponent(JSON.stringify(d))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
-}
-
-function decodeState(hash){
-    try{
-        // Restore URL-safe base64 to standard base64
-        let b64=hash.replace(/-/g,'+').replace(/_/g,'/');
-        while(b64.length%4) b64+='=';
-        const d=JSON.parse(decodeURIComponent(atob(b64)));
-        if(d.c) st.cena=d.c;
-        if(d.w!==undefined) st.wklad=d.w;
-        if(d.o) st.okres=d.o;
-        if(d.r) st.rate=d.r;
-        if(d.n!==undefined) st.nadplata=d.n;
-        if(d.ot) st.ot=d.ot;
-        if(d.t) st.type=d.t;
-        if(d.s) st.strat=d.s;
-        st.cmpOn=!!d.cmp;
-        if(d.b){st.b.type=d.b.t||'rowne';st.b.strat=d.b.s||'okres';st.b.rate=d.b.r||6.5;st.b.okres=d.b.o||25;st.b.nadplata=d.b.n||0;}
-        if(d.k){st.kar.on=true;st.kar.mo=d.k.mo||12;if(d.k.sd)st.kar.startDate=d.k.sd;st.kar.transze=(d.k.tr||[]).map(t=>({id:++trancheIdCnt,year:t.y,month:t.m,amt:t.a}));}
-    }catch(e){console.warn('Invalid URL state',e);}
-}
-
-function shareURL(){
-    const encoded=encodeState();
-    history.replaceState(null,'','#'+encoded);
-    const url=location.origin+location.pathname+'#'+encoded;
-    const btn=document.getElementById('share-btn');
-    const lbl=document.getElementById('share-label');
-    const done=()=>{
-        lbl.textContent='✓ Skopiowano!';
-        btn.classList.add('done');
-        setTimeout(()=>{lbl.textContent='Udostępnij';btn.classList.remove('done');},2200);
-    };
-    navigator.clipboard.writeText(url).then(done).catch(()=>{
-        // fallback for HTTP / no clipboard permission
-        const ta=document.createElement('textarea');
-        ta.value=url; ta.style.position='fixed'; ta.style.opacity='0';
-        document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); document.body.removeChild(ta);
-        done();
-    });
-}
-
-function syncUIFromState(){
-    ['cena','wklad','okres','nadplata'].forEach(k=>{
-        const sl=document.getElementById('sl-'+k),inp=document.getElementById('val-'+k);
-        if(sl){sl.value=st[k];fill(sl);}
-        if(inp) inp.value=k==='nadplata'||k==='wklad'?st[k]:num(st[k]).replace(/\s/g,'');
-    });
-    const slRate=document.getElementById('sl-rate'),inpRate=document.getElementById('val-rate');
-    if(slRate){slRate.value=st.rate;fill(slRate);}
-    if(inpRate) inpRate.value=st.rate;
-    document.getElementById('btn-rowne').classList.toggle('on',st.type==='rowne');
-    document.getElementById('btn-malejace').classList.toggle('on',st.type==='malejace');
-    document.getElementById('btn-okres').classList.toggle('on',st.strat==='okres');
-    document.getElementById('btn-rata').classList.toggle('on',st.strat==='rata');
-    const cr=document.getElementById('cmp-val-rate'),co=document.getElementById('cmp-val-okres'),cn=document.getElementById('cmp-val-nadp');
-    if(cr) cr.value=st.b.rate; if(co) co.value=st.b.okres; if(cn) cn.value=st.b.nadplata;
-    document.getElementById('cmp-btn-rowne').classList.toggle('on',st.b.type==='rowne');
-    document.getElementById('cmp-btn-malejace').classList.toggle('on',st.b.type==='malejace');
-    document.getElementById('cmp-btn-okres').classList.toggle('on',st.b.strat==='okres');
-    document.getElementById('cmp-btn-rata').classList.toggle('on',st.b.strat==='rata');
-    if(st.cmpOn){
-        document.getElementById('cmp-panel').classList.add('open');
-        const btn=document.getElementById('cmp-toggle-btn');
-        btn.textContent='Zamknij porównanie';btn.classList.add('active');
-    }
-    if(st.kar.on){
-        document.getElementById('kar-panel').classList.add('open');
-        const kb=document.getElementById('kar-toggle');
-        kb.textContent='Wyłącz';kb.classList.add('active');
-        const km=document.getElementById('kar-mo-inp');
-        if(km) km.value=st.kar.mo;
-        buildStartDateSelects();
-        renderTransze();
-    }
-}
-
 // ── Karencja start date selects ──────────────────────────
 function buildStartDateSelects(){
     const sm=document.getElementById('kar-start-m');
@@ -1454,8 +1355,6 @@ function updBreakdown(rows){
 
 // ── Init ────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
-    if(location.hash.length>1){ decodeState(location.hash.slice(1)); }
-
     initCharts();
     bind('sl-cena','val-cena','cena');
     bind('sl-wklad','val-wklad','wklad');
@@ -1474,16 +1373,6 @@ document.addEventListener('DOMContentLoaded',()=>{
         const v=Math.max(1,Math.min(60,parseInt(karMoInp.value)||12));
         st.kar.mo=v; karMoInp.value=v;
         renderTransze(); upd();
-    });
-
-    if(location.hash.length>1){ syncUIFromState(); }
-
-    window.addEventListener('hashchange',()=>{
-        if(location.hash.length>1){
-            decodeState(location.hash.slice(1));
-            syncUIFromState();
-            upd();
-        }
     });
 
     initSchedEvents();
