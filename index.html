@@ -675,6 +675,9 @@ function sched(p,ap,yrs,ex,ot,type,strat,kar){
         else disbMap[1]=p;
         let b=0,interest=0,intKar=0,mo=0;
         const by=[0];
+        // Reference balance = what balance WOULD be without overpayments during karencja
+        // Needed for strat='okres' so that karencja overpayments shorten term, not lower payment
+        const refBak=Object.values(disbMap).reduce((a,v)=>a+v,0)||p;
         for(let m=1;m<=karMo;m++){
             if(disbMap[m]) b+=disbMap[m];
             const i=b*r, otp=ot[m]||0;
@@ -683,7 +686,7 @@ function sched(p,ap,yrs,ex,ot,type,strat,kar){
             if(m%12===0) by.push(b);
         }
         const bAK=b;
-        const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(bAK,ap,repMo):null;
+        const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(refBak,ap,repMo):null;
         const cPrin=type==='malejace'?bAK/repMo:null;
         for(let m=karMo+1;m<=n;m++){
             if(b<.01) break;
@@ -730,6 +733,7 @@ function monthly(p,ap,yrs,ex,ot,type,strat,kar){
         if(kar.transze&&kar.transze.length>0)
             kar.transze.forEach(t=>{const mo=trancheMo(t,kar);if(mo>=1&&mo<=karMo)disbMap[mo]=(disbMap[mo]||0)+t.amt;});
         else disbMap[1]=p;
+        const refBak=Object.values(disbMap).reduce((a,v)=>a+v,0)||p;
         let b=0; const rows=[];
         for(let m=1;m<=Math.min(karMo,n);m++){
             const tranche=disbMap[m]||0;
@@ -740,7 +744,7 @@ function monthly(p,ap,yrs,ex,ot,type,strat,kar){
             rows.push({m,ob,pmt:i,i,rp:ex>0?Math.min(ob,ex):0,otp,cb:b,kar:true,tranche});
         }
         const bAK=b;
-        const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(bAK,ap,repMo):null;
+        const fixedPmt=(type==='rowne'&&strat==='okres')?rataRowna(refBak,ap,repMo):null;
         const cPrin=type==='malejace'?bAK/repMo:null;
         for(let m=karMo+1;m<=n;m++){
             if(b<.01) break;
