@@ -151,8 +151,9 @@ input[type="range"]:active::-webkit-slider-thumb{
 .kar-btn{background:transparent;border:1px solid var(--line2);color:var(--t2);padding:4px 12px;font-size:11px;font-family:inherit;border-radius:3px;cursor:pointer;transition:border-color .15s,color .15s,background .15s;white-space:nowrap;}
 .kar-btn:hover{border-color:var(--amber);color:var(--amber);}
 .kar-btn.active{border-color:var(--amber);color:var(--amber);background:var(--amb2);}
-.kar-inp{background:var(--bg3);border:1px solid var(--line2);border-radius:4px;color:var(--t1);font-size:12px;padding:4px 6px;font-family:var(--mono);outline:none;}
+.kar-inp{background:var(--bg3);border:1px solid var(--line2);border-radius:4px;color:var(--t1);font-size:12px;padding:4px 6px;font-family:inherit;outline:none;}
 .kar-inp:focus{border-color:rgba(167,215,190,.5);}
+select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:20px;}
 .kar-row td{padding:4px 12px !important;}
 
 /* Compare button */
@@ -320,12 +321,21 @@ input[type="range"]:active::-webkit-slider-thumb{
                 <div id="kar-inner">
                     <div id="kar-content">
 
-                        <!-- Czas karencji -->
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                            <label class="sub">Czas karencji</label>
-                            <div style="display:flex;align-items:baseline;gap:6px;">
-                                <input class="kar-inp" id="kar-mo-inp" type="number" min="1" max="60" value="12" style="width:48px;text-align:center;">
-                                <span style="font-size:10px;color:var(--t3);">mies.</span>
+                        <!-- Data uruchomienia + czas karencji -->
+                        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+                            <div style="flex:1;min-width:140px;">
+                                <label class="sub" style="display:block;margin-bottom:6px;">Data uruchomienia</label>
+                                <div style="display:flex;gap:4px;">
+                                    <select class="kar-inp" id="kar-start-m" style="flex:1;min-width:0;"></select>
+                                    <select class="kar-inp" id="kar-start-y" style="width:62px;"></select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="sub" style="display:block;margin-bottom:6px;">Czas karencji</label>
+                                <div style="display:flex;align-items:baseline;gap:6px;">
+                                    <input class="kar-inp" id="kar-mo-inp" type="number" min="1" max="60" value="12" style="width:44px;text-align:center;">
+                                    <span style="font-size:10px;color:var(--t3);">mies.</span>
+                                </div>
                             </div>
                         </div>
 
@@ -631,9 +641,16 @@ const st = {
     type:'rowne', strat:'okres',
     cmpOn:false,
     b:{ type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0 },
-    kar:{ on:false, mo:12, transze:[] }
+    kar:{ on:false, mo:12, startDate:{year:2026,month:5}, transze:[] }
 };
 let ch={}, schedT=null, prevHasEx=false, trancheIdCnt=0;
+
+const MIES=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
+
+function trancheMo(t,kar){
+    const sd=kar.startDate;
+    return(t.year-sd.year)*12+(t.month-sd.month)+1;
+}
 
 // ── Math ───────────────────────────────────────────────
 const kredyt = () => Math.round(st.cena*(1-st.wklad/100));
@@ -654,7 +671,7 @@ function sched(p,ap,yrs,ex,ot,type,strat,kar){
         const repMo=Math.max(1,n-karMo);
         const disbMap={};
         if(kar.transze&&kar.transze.length>0)
-            kar.transze.forEach(t=>{disbMap[t.mo]=(disbMap[t.mo]||0)+t.amt;});
+            kar.transze.forEach(t=>{const mo=trancheMo(t,kar);if(mo>=1&&mo<=karMo)disbMap[mo]=(disbMap[mo]||0)+t.amt;});
         else disbMap[1]=p;
         let b=0,interest=0,intKar=0,mo=0;
         const by=[0];
@@ -709,7 +726,7 @@ function monthly(p,ap,yrs,ex,ot,type,strat,kar){
         const repMo=Math.max(1,n-karMo);
         const disbMap={};
         if(kar.transze&&kar.transze.length>0)
-            kar.transze.forEach(t=>{disbMap[t.mo]=(disbMap[t.mo]||0)+t.amt;});
+            kar.transze.forEach(t=>{const mo=trancheMo(t,kar);if(mo>=1&&mo<=karMo)disbMap[mo]=(disbMap[mo]||0)+t.amt;});
         else disbMap[1]=p;
         let b=0; const rows=[];
         for(let m=1;m<=Math.min(karMo,n);m++){
@@ -1003,9 +1020,14 @@ function addTranche(){
     const k=kredyt();
     const existSum=st.kar.transze.reduce((a,t)=>a+t.amt,0);
     const remaining=Math.max(0,k-existSum);
-    const lastMo=st.kar.transze.length>0?st.kar.transze[st.kar.transze.length-1].mo:0;
-    const mo=Math.min(st.kar.mo,Math.max(1,lastMo===0?1:lastMo+3));
-    st.kar.transze.push({id:++trancheIdCnt,mo,amt:remaining});
+    const last=st.kar.transze.length>0?st.kar.transze[st.kar.transze.length-1]:null;
+    let y=st.kar.startDate.year, m=st.kar.startDate.month;
+    if(last){y=last.year;m=last.month+3;if(m>12){y+=Math.floor((m-1)/12);m=((m-1)%12)+1;}}
+    // clamp to karencja end
+    const endAbsMo=(st.kar.startDate.year)*12+st.kar.startDate.month+st.kar.mo-1;
+    const absM=y*12+m;
+    if(absM>endAbsMo){const fixed=endAbsMo;y=Math.floor((fixed-1)/12);m=((fixed-1)%12)+1;}
+    st.kar.transze.push({id:++trancheIdCnt,year:y,month:m,amt:remaining});
     renderTransze();
     upd();
 }
@@ -1019,7 +1041,8 @@ function removeTranche(id){
 function updateTranche(id,field,val){
     const t=st.kar.transze.find(t=>t.id===id);
     if(!t) return;
-    if(field==='mo') t.mo=Math.max(1,Math.min(st.kar.mo,parseInt(val)||1));
+    if(field==='year') t.year=parseInt(val)||st.kar.startDate.year;
+    if(field==='month') t.month=parseInt(val)||1;
     if(field==='amt') t.amt=Math.max(0,Math.round(parseFloat(val)||0));
     renderTrancheSum();
     clearTimeout(schedT); schedT=setTimeout(upd,80);
@@ -1038,6 +1061,13 @@ function renderTrancheSum(){
                  :' <span style="color:var(--green)">✓</span>');
 }
 
+function trancheYearOpts(selY){
+    const sy=st.kar.startDate.year;
+    const ey=sy+Math.ceil(st.kar.mo/12)+1;
+    return Array.from({length:ey-sy+1},(_,i)=>sy+i)
+        .map(y=>`<option value="${y}"${y===selY?' selected':''}>${y}</option>`).join('');
+}
+
 function renderTransze(){
     const container=document.getElementById('transze-list');
     if(!container) return;
@@ -1046,22 +1076,28 @@ function renderTransze(){
         document.getElementById('tranche-sum-info').textContent='';
         return;
     }
-    container.innerHTML=st.kar.transze.map(t=>`
-        <div style="display:flex;gap:6px;align-items:center;margin-bottom:7px;">
-            <span style="font-size:11px;color:var(--t3);white-space:nowrap;min-width:26px;">Mies.</span>
-            <input class="kar-inp" type="number" min="1" max="${st.kar.mo}" value="${t.mo}"
-                style="width:48px;text-align:center;"
-                onchange="updateTranche(${t.id},'mo',this.value)"
-                oninput="updateTranche(${t.id},'mo',this.value)">
-            <span style="font-size:11px;color:var(--t3);">kwota</span>
+    container.innerHTML=st.kar.transze.map(t=>{
+        const monthOpts=MIES.map((n,i)=>`<option value="${i+1}"${i+1===t.month?' selected':''}>${n}</option>`).join('');
+        const yearOpts=trancheYearOpts(t.year);
+        const mo=trancheMo(t,st.kar);
+        const valid=mo>=1&&mo<=st.kar.mo;
+        const badge=valid?`<span style="font-size:10px;color:var(--t3);">mies.${mo}</span>`
+            :`<span style="font-size:10px;color:var(--red);">poza karencją</span>`;
+        return`<div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap;">
+            <select class="kar-inp" style="flex:1;min-width:100px;"
+                onchange="updateTranche(${t.id},'month',this.value)">${monthOpts}</select>
+            <select class="kar-inp" style="width:62px;"
+                onchange="updateTranche(${t.id},'year',this.value)">${yearOpts}</select>
+            ${badge}
             <input class="kar-inp" type="number" min="0" value="${t.amt}"
-                style="flex:1;min-width:0;"
+                style="width:90px;text-align:right;"
                 onchange="updateTranche(${t.id},'amt',this.value)"
                 oninput="updateTranche(${t.id},'amt',this.value)">
             <span style="font-size:11px;color:var(--t3);">PLN</span>
             <button onclick="removeTranche(${t.id})"
                 style="background:none;border:1px solid var(--line2);color:var(--t3);border-radius:3px;width:22px;height:22px;font-size:14px;cursor:pointer;line-height:1;padding:0;flex-shrink:0;">×</button>
-        </div>`).join('');
+        </div>`;
+    }).join('');
     renderTrancheSum();
 }
 
@@ -1241,6 +1277,20 @@ document.addEventListener('DOMContentLoaded',()=>{
     bindB('cmp-val-rate','rate',true);
     bindB('cmp-val-okres','okres');
     bindB('cmp-val-nadp','nadplata');
+
+    // Karencja start date selects
+    function buildStartDateSelects(){
+        const sm=document.getElementById('kar-start-m');
+        const sy=document.getElementById('kar-start-y');
+        if(!sm||!sy) return;
+        sm.innerHTML=MIES.map((n,i)=>`<option value="${i+1}"${i+1===st.kar.startDate.month?' selected':''}>${n}</option>`).join('');
+        const curY=new Date().getFullYear();
+        sy.innerHTML=Array.from({length:8},(_,i)=>curY-1+i)
+            .map(y=>`<option value="${y}"${y===st.kar.startDate.year?' selected':''}>${y}</option>`).join('');
+        sm.onchange=()=>{st.kar.startDate.month=parseInt(sm.value);renderTransze();upd();};
+        sy.onchange=()=>{st.kar.startDate.year=parseInt(sy.value);trancheYearOpts&&renderTransze();upd();};
+    }
+    buildStartDateSelects();
 
     // Karencja months input
     const karMoInp=document.getElementById('kar-mo-inp');
