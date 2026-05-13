@@ -665,7 +665,7 @@ const st = {
     b:{ type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0 },
     kar:{ on:false, mo:12, startDate:{year:2026,month:5}, transze:[] }
 };
-let ch={}, schedT=null, prevHasEx=false, trancheIdCnt=0;
+let ch={}, schedT=null, hashT=null, prevHasEx=false, trancheIdCnt=0;
 
 const MIES=['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 
@@ -966,7 +966,8 @@ function upd(){
     clearTimeout(schedT);
     schedT=setTimeout(()=>renderSched(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar)),100);
 
-    history.replaceState(null,'','#'+encodeState());
+    clearTimeout(hashT);
+    hashT=setTimeout(()=>history.replaceState(null,'','#'+encodeState()),600);
 }
 
 // ── Comparison table ────────────────────────────────────
