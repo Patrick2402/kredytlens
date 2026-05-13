@@ -191,7 +191,13 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
             <text x="74" y="42" font-size="26" font-weight="700" letter-spacing="-0.4" fill="#f0efea">ile<tspan fill="#e8a98c">-</tspan>nadplacic<tspan fill="#f0efea" opacity="0.45" font-weight="600">.pl</tspan></text>
         </svg>
     </a>
-    <span style="font-family:var(--mono);font-size:10px;color:var(--t3);">PL · PLN</span>
+    <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--t3);">PL · PLN</span>
+        <button id="share-btn" onclick="shareURL()" style="background:transparent;border:1px solid var(--line2);color:var(--t2);padding:5px 12px;font-size:11px;font-family:inherit;border-radius:3px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Udostępnij
+        </button>
+    </div>
 </header>
 
 <!-- ── HERO ── -->
@@ -465,6 +471,19 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
         </div>
         <div style="height:200px;position:relative;"><canvas id="chart-balance"></canvas></div>
     </div>
+</div>
+
+<!-- ── Yearly breakdown chart ── -->
+<div class="section">
+    <div style="padding:20px 0 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+        <p class="label">Rozkład roczny spłat</p>
+        <div style="display:flex;gap:16px;align-items:center;">
+            <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--amber);opacity:.8;"></div><span style="font-size:10px;color:var(--t3);">Odsetki</span></div>
+            <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:2px;background:#2a6e47;"></div><span style="font-size:10px;color:var(--t3);">Kapitał</span></div>
+            <div id="bkd-nadp-leg" style="display:none;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:2px;background:var(--green);"></div><span style="font-size:10px;color:var(--t3);">Nadpłaty</span></div>
+        </div>
+    </div>
+    <div style="height:220px;position:relative;"><canvas id="chart-breakdown"></canvas></div>
 </div>
 
 <!-- ── Savings strip ── -->
@@ -931,6 +950,7 @@ function upd(){
     updDonut(k,base.int);
     updBal(base.by,bLine);
     updScen(k);
+    updBreakdown(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar));
 
     if(st.cmpOn) updCmp(k);
 
@@ -1200,6 +1220,27 @@ function initCharts(){
             animation:{duration:200}
         }
     });
+
+    ch.bkd=new Chart(document.getElementById('chart-breakdown'),{
+        type:'bar',
+        data:{labels:[],datasets:[
+            {label:'Kapitał',data:[],backgroundColor:'rgba(42,110,71,.75)',stack:'s'},
+            {label:'Nadpłaty',data:[],backgroundColor:'rgba(34,197,94,.75)',stack:'s'},
+            {label:'Odsetki',data:[],backgroundColor:'rgba(167,215,190,.65)',stack:'s'}
+        ]},
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:{...tip,mode:'index',intersect:false,callbacks:{
+                title:i=>'Rok '+i[0].label,
+                label:c=>c.raw>0?'  '+c.dataset.label+': '+num(Math.round(c.raw))+' PLN':null
+            }}},
+            scales:{
+                x:{stacked:true,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#888',font:{size:11}}},
+                y:{stacked:true,grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#888',font:{size:11},callback:v=>cmpN(v)}}
+            },
+            animation:{duration:200}
+        }
+    });
 }
 
 function var_(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
@@ -1278,8 +1319,123 @@ function bindB(valId,key,float){
     inp.addEventListener('blur',()=>{inp.value=float?st.b[key]:num(st.b[key]).replace(/\s/g,'');});
 }
 
+// ── URL state sharing ────────────────────────────────────
+function encodeState(){
+    const d={
+        c:st.cena,w:st.wklad,o:st.okres,r:st.rate,n:st.nadplata,
+        t:st.type,s:st.strat,cmp:st.cmpOn?1:0,
+        b:{t:st.b.type,s:st.b.strat,r:st.b.rate,o:st.b.okres,n:st.b.nadplata}
+    };
+    if(Object.keys(st.ot).length>0) d.ot=st.ot;
+    if(st.kar.on) d.k={mo:st.kar.mo,sd:st.kar.startDate,tr:st.kar.transze.map(t=>({y:t.year,m:t.month,a:t.amt}))};
+    return btoa(encodeURIComponent(JSON.stringify(d)));
+}
+
+function decodeState(hash){
+    try{
+        const d=JSON.parse(decodeURIComponent(atob(hash)));
+        if(d.c) st.cena=d.c;
+        if(d.w!==undefined) st.wklad=d.w;
+        if(d.o) st.okres=d.o;
+        if(d.r) st.rate=d.r;
+        if(d.n!==undefined) st.nadplata=d.n;
+        if(d.ot) st.ot=d.ot;
+        if(d.t) st.type=d.t;
+        if(d.s) st.strat=d.s;
+        st.cmpOn=!!d.cmp;
+        if(d.b){st.b.type=d.b.t||'rowne';st.b.strat=d.b.s||'okres';st.b.rate=d.b.r||6.5;st.b.okres=d.b.o||25;st.b.nadplata=d.b.n||0;}
+        if(d.k){st.kar.on=true;st.kar.mo=d.k.mo||12;if(d.k.sd)st.kar.startDate=d.k.sd;st.kar.transze=(d.k.tr||[]).map(t=>({id:++trancheIdCnt,year:t.y,month:t.m,amt:t.a}));}
+    }catch(e){console.warn('Invalid URL state',e);}
+}
+
+function shareURL(){
+    const url=location.origin+location.pathname+'#'+encodeState();
+    navigator.clipboard.writeText(url).then(()=>{
+        const btn=document.getElementById('share-btn');
+        const prev=btn.innerHTML;
+        btn.innerHTML='✓ Skopiowano!';
+        btn.style.color='var(--green)';btn.style.borderColor='var(--green)';
+        setTimeout(()=>{btn.innerHTML=prev;btn.style.color='';btn.style.borderColor='';},2000);
+    });
+}
+
+function syncUIFromState(){
+    ['cena','wklad','okres','nadplata'].forEach(k=>{
+        const sl=document.getElementById('sl-'+k),inp=document.getElementById('val-'+k);
+        if(sl){sl.value=st[k];fill(sl);}
+        if(inp) inp.value=k==='nadplata'||k==='wklad'?st[k]:num(st[k]).replace(/\s/g,'');
+    });
+    const slRate=document.getElementById('sl-rate'),inpRate=document.getElementById('val-rate');
+    if(slRate){slRate.value=st.rate;fill(slRate);}
+    if(inpRate) inpRate.value=st.rate;
+    document.getElementById('btn-rowne').classList.toggle('on',st.type==='rowne');
+    document.getElementById('btn-malejace').classList.toggle('on',st.type==='malejace');
+    document.getElementById('btn-okres').classList.toggle('on',st.strat==='okres');
+    document.getElementById('btn-rata').classList.toggle('on',st.strat==='rata');
+    const cr=document.getElementById('cmp-val-rate'),co=document.getElementById('cmp-val-okres'),cn=document.getElementById('cmp-val-nadp');
+    if(cr) cr.value=st.b.rate; if(co) co.value=st.b.okres; if(cn) cn.value=st.b.nadplata;
+    document.getElementById('cmp-btn-rowne').classList.toggle('on',st.b.type==='rowne');
+    document.getElementById('cmp-btn-malejace').classList.toggle('on',st.b.type==='malejace');
+    document.getElementById('cmp-btn-okres').classList.toggle('on',st.b.strat==='okres');
+    document.getElementById('cmp-btn-rata').classList.toggle('on',st.b.strat==='rata');
+    if(st.cmpOn){
+        document.getElementById('cmp-panel').classList.add('open');
+        const btn=document.getElementById('cmp-toggle-btn');
+        btn.textContent='Zamknij porównanie';btn.classList.add('active');
+    }
+    if(st.kar.on){
+        document.getElementById('kar-panel').classList.add('open');
+        const kb=document.getElementById('kar-toggle');
+        kb.textContent='Wyłącz';kb.classList.add('active');
+        const km=document.getElementById('kar-mo-inp');
+        if(km) km.value=st.kar.mo;
+        buildStartDateSelects();
+        renderTransze();
+    }
+}
+
+// ── Karencja start date selects ──────────────────────────
+function buildStartDateSelects(){
+    const sm=document.getElementById('kar-start-m');
+    const sy=document.getElementById('kar-start-y');
+    if(!sm||!sy) return;
+    sm.innerHTML=MIES.map((n,i)=>`<option value="${i+1}"${i+1===st.kar.startDate.month?' selected':''}>${n}</option>`).join('');
+    const curY=new Date().getFullYear();
+    sy.innerHTML=Array.from({length:8},(_,i)=>curY-1+i)
+        .map(y=>`<option value="${y}"${y===st.kar.startDate.year?' selected':''}>${y}</option>`).join('');
+    sm.onchange=()=>{st.kar.startDate.month=parseInt(sm.value);renderTransze();upd();};
+    sy.onchange=()=>{st.kar.startDate.year=parseInt(sy.value);trancheYearOpts&&renderTransze();upd();};
+}
+
+// ── Yearly breakdown ─────────────────────────────────────
+function yearlyBreakdown(rows){
+    const out=[];
+    for(let yr=1;;yr++){
+        const yrRows=rows.filter(r=>Math.ceil(r.m/12)===yr);
+        if(yrRows.length===0) break;
+        const int=yrRows.reduce((a,r)=>a+r.i,0);
+        const prin=yrRows.reduce((a,r)=>a+(r.kar?0:r.rp),0);
+        const nadp=yrRows.reduce((a,r)=>a+(r.otp||0)+(r.kar&&r.rp>0?r.rp:0),0);
+        out.push({yr,int,prin,nadp});
+    }
+    return out;
+}
+
+function updBreakdown(rows){
+    const bd=yearlyBreakdown(rows);
+    const hasNadp=bd.some(y=>y.nadp>0);
+    document.getElementById('bkd-nadp-leg').style.display=hasNadp?'flex':'none';
+    ch.bkd.data.labels=bd.map(y=>y.yr);
+    ch.bkd.data.datasets[0].data=bd.map(y=>y.prin);
+    ch.bkd.data.datasets[1].data=hasNadp?bd.map(y=>y.nadp):bd.map(()=>0);
+    ch.bkd.data.datasets[2].data=bd.map(y=>y.int);
+    ch.bkd.update('none');
+}
+
 // ── Init ────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
+    if(location.hash.length>1){ decodeState(location.hash.slice(1)); }
+
     initCharts();
     bind('sl-cena','val-cena','cena');
     bind('sl-wklad','val-wklad','wklad');
@@ -1290,18 +1446,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     bindB('cmp-val-okres','okres');
     bindB('cmp-val-nadp','nadplata');
 
-    // Karencja start date selects
-    function buildStartDateSelects(){
-        const sm=document.getElementById('kar-start-m');
-        const sy=document.getElementById('kar-start-y');
-        if(!sm||!sy) return;
-        sm.innerHTML=MIES.map((n,i)=>`<option value="${i+1}"${i+1===st.kar.startDate.month?' selected':''}>${n}</option>`).join('');
-        const curY=new Date().getFullYear();
-        sy.innerHTML=Array.from({length:8},(_,i)=>curY-1+i)
-            .map(y=>`<option value="${y}"${y===st.kar.startDate.year?' selected':''}>${y}</option>`).join('');
-        sm.onchange=()=>{st.kar.startDate.month=parseInt(sm.value);renderTransze();upd();};
-        sy.onchange=()=>{st.kar.startDate.year=parseInt(sy.value);trancheYearOpts&&renderTransze();upd();};
-    }
     buildStartDateSelects();
 
     // Karencja months input
@@ -1311,6 +1455,8 @@ document.addEventListener('DOMContentLoaded',()=>{
         st.kar.mo=v; karMoInp.value=v;
         renderTransze(); upd();
     });
+
+    if(location.hash.length>1){ syncUIFromState(); }
 
     initSchedEvents();
     upd();
