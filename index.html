@@ -683,6 +683,52 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
     </div><!-- /cmp-panel -->
 </div>
 
+<!-- ── Analiza nadpłaty ── -->
+<div class="section" style="padding:28px 0 32px;">
+    <p class="label" style="margin-bottom:22px;">Analiza nadpłaty</p>
+
+    <!-- Czułość: oszczędność wg kwoty nadpłaty -->
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+        <p class="sub">Ile oszczędzasz przy różnych kwotach nadpłaty miesięcznej <span id="sens-strat" style="color:var(--t3);font-size:11px;"></span></p>
+        <div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div><span style="font-size:10px;color:var(--t3);">Twoja nadpłata</span></div>
+    </div>
+    <div style="height:190px;position:relative;"><canvas id="chart-sens"></canvas></div>
+
+    <!-- Cel spłaty -->
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:26px;padding:13px 16px;border:1px solid var(--line2);border-radius:4px;background:var(--bg2);">
+        <span class="sub">Chcę spłacić kredyt w</span>
+        <input class="pi" id="goal-yrs" type="text" inputmode="numeric" value="20" style="width:36px;">
+        <span class="sub">lat</span>
+        <span class="sub mono" id="goal-result" style="color:var(--t1);">—</span>
+        <button class="kar-btn" id="goal-apply" onclick="applyGoal()" style="margin-left:auto;">Ustaw tę nadpłatę</button>
+    </div>
+
+    <!-- Nadpłata vs inwestycja -->
+    <div style="margin-top:36px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
+            <p class="label">Nadpłata czy inwestycja?</p>
+            <div id="inv-controls" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <span style="font-size:11px;color:var(--t2);">Oczekiwany zwrot rocznie</span>
+                <input type="range" id="sl-inv" min="0" max="15" step="0.1" value="6" style="width:130px;">
+                <span style="display:flex;align-items:baseline;gap:3px;"><input class="pi" id="val-inv" type="text" inputmode="decimal" value="6.0" style="width:44px;"><span class="label">%</span></span>
+                <button class="kar-btn active" id="belka-btn" onclick="toggleBelka()">podatek Belki 19%</button>
+            </div>
+        </div>
+        <div class="sum-box" id="inv-verdict" style="margin-bottom:16px;">Ustaw nadpłatę miesięczną, aby porównać ją z inwestowaniem tej samej kwoty.</div>
+        <div id="inv-wrap" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                <p class="sub" style="font-size:11px;">Wartość majątku w czasie (po podatku, ta sama kwota „z ręki" co miesiąc)</p>
+                <div style="display:flex;gap:14px;">
+                    <div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:1.5px;background:var(--amber);"></div><span style="font-size:10px;color:var(--t3);">Nadpłacasz kredyt</span></div>
+                    <div style="display:flex;align-items:center;gap:5px;"><div style="width:14px;height:1px;background:var(--red);border-top:1px dashed var(--red);"></div><span style="font-size:10px;color:var(--t3);">Inwestujesz</span></div>
+                </div>
+            </div>
+            <div style="height:200px;position:relative;"><canvas id="chart-invest"></canvas></div>
+            <p style="font-size:10px;color:var(--t3);margin-top:10px;">Model: w obu wariantach wydajesz co miesiąc tyle samo. Wariant „nadpłacasz": nadpłata idzie w kredyt, a po jego spłacie cała rata + nadpłata jest inwestowana. Wariant „inwestujesz": płacisz zwykłą ratę, a nadpłatę inwestujesz. Zwrot składany miesięcznie, podatek od zysków przy sprzedaży.</p>
+        </div>
+    </div>
+</div>
+
 <!-- ── Harmonogram ── -->
 <div class="section" style="padding-top:0;">
     <div style="padding:20px 0 14px;display:flex;justify-content:space-between;align-items:baseline;">
@@ -767,7 +813,8 @@ const st = {
     type:'rowne', strat:'okres',
     cmpOn:false,
     b:{ type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0 },
-    kar:{ on:false, mo:12, startDate:{year:2026,month:5}, transze:[] }
+    kar:{ on:false, mo:12, startDate:{year:2026,month:5}, transze:[] },
+    inv:{ rate:6.0, belka:true }
 };
 let ch={}, schedT=null, prevHasEx=false, trancheIdCnt=0;
 
@@ -1058,6 +1105,9 @@ function upd(){
     updBal(base.by,bLine);
     updScen(k);
     updBreakdown(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar));
+    updSens(k);
+    updGoal(k);
+    updInvest(k,n);
 
     if(st.cmpOn) updCmp(k);
 
@@ -1110,6 +1160,117 @@ function updCmp(k){
             <td class="cmp-col-b" style="text-align:right;">${b}</td>
             <td style="text-align:right;">${d}</td>
         </tr>`).join('');
+}
+
+// ── Analiza nadpłaty ────────────────────────────────────
+let goalNeeded=null, sensData={save:[],mo:[]};
+
+// Miesięczny wydatek "z ręki" wg wierszy harmonogramu (i+rp = faktyczna rata, otp = wpłata jednorazowa)
+function cashOf(rows,n){
+    const c=new Array(n+1).fill(0);
+    rows.forEach(r=>{c[r.m]=r.i+r.rp+r.otp;});
+    return c;
+}
+
+const netOf=(port,contrib,belka)=>belka?contrib+Math.max(0,port-contrib)*0.81:port;
+
+// Ten sam budżet miesięczny w obu wariantach: A nadpłaca kredyt, B inwestuje nadpłatę.
+// Wolna gotówka (po spłacie kredytu w A, spadająca rata przy strat='rata') też jest inwestowana.
+function simInvest(cA,cB,n,annRate,belka){
+    const rm=Math.pow(1+annRate/100,1/12)-1;
+    let pA=0,pB=0,conA=0,conB=0;
+    const lineA=[0],lineB=[0];
+    for(let m=1;m<=n;m++){
+        const budget=cB[m]+st.nadplata+(st.ot[m]||0);
+        const iA=Math.max(0,budget-cA[m]), iB=Math.max(0,budget-cB[m]);
+        pA=pA*(1+rm)+iA; conA+=iA;
+        pB=pB*(1+rm)+iB; conB+=iB;
+        if(m%12===0){lineA.push(netOf(pA,conA,belka));lineB.push(netOf(pB,conB,belka));}
+    }
+    return{netA:netOf(pA,conA,belka),netB:netOf(pB,conB,belka),lineA,lineB};
+}
+
+function breakEvenRate(cA,cB,n){
+    const f=r=>{const s=simInvest(cA,cB,n,r,st.inv.belka);return s.netB-s.netA;};
+    if(f(0)>=0) return 0;
+    if(f(30)<0) return null;
+    let lo=0,hi=30;
+    for(let i=0;i<22;i++){const mid=(lo+hi)/2;f(mid)>=0?hi=mid:lo=mid;}
+    return (lo+hi)/2;
+}
+
+function updInvest(k,n){
+    const hasEx=st.nadplata>0||Object.keys(st.ot).length>0;
+    document.getElementById('inv-wrap').style.display=hasEx?'block':'none';
+    if(!hasEx){
+        html('inv-verdict','Ustaw nadpłatę miesięczną powyżej, aby porównać ją z inwestowaniem tej samej kwoty.');
+        return;
+    }
+    const cA=cashOf(monthly(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar),n);
+    const cB=cashOf(monthly(k,st.rate,st.okres,0,{},st.type,st.strat,st.kar),n);
+    const s=simInvest(cA,cB,n,st.inv.rate,st.inv.belka);
+    const be=breakEvenRate(cA,cB,n);
+    const yrs=st.okres, dif=Math.abs(Math.round(s.netA-s.netB));
+    const beTxt=be===null?'':be<=0.05
+        ?' Przy tych parametrach inwestowanie wygrywa nawet przy zerowym zwrocie.'
+        :` Próg opłacalności: inwestycja wygrywa dopiero powyżej <strong style="color:var(--t1)">~${be.toFixed(1)}% rocznie</strong>${st.inv.belka?' (brutto, przed podatkiem)':''}.`;
+    if(s.netA>=s.netB){
+        html('inv-verdict',`Przy zwrocie <strong style="color:var(--t1)">${st.inv.rate.toFixed(1)}%</strong> rocznie <strong style="color:var(--green)">nadpłata wygrywa</strong> z inwestowaniem o <strong style="color:var(--green)">${pln(dif)}</strong> po ${yrs} latach.${beTxt}`);
+    } else {
+        html('inv-verdict',`Przy zwrocie <strong style="color:var(--t1)">${st.inv.rate.toFixed(1)}%</strong> rocznie <strong style="color:var(--red)">inwestowanie wygrywa</strong> z nadpłatą o <strong style="color:var(--red)">${pln(dif)}</strong> po ${yrs} latach.${beTxt}`);
+    }
+    ch.inv.data.labels=Array.from({length:yrs+1},(_,i)=>i);
+    ch.inv.data.datasets[0].data=s.lineA;
+    ch.inv.data.datasets[1].data=s.lineB;
+    ch.inv.update('none');
+}
+
+function updSens(k){
+    const maxE=Math.max(10000,st.nadplata), steps=40, stp=maxE/steps;
+    const base=sched(k,st.rate,st.okres,0,st.ot,st.type,st.strat,st.kar);
+    const pts=[]; sensData={save:[],mo:[]};
+    for(let i=0;i<=steps;i++){
+        const e=Math.round(i*stp);
+        const s=e===0?base:sched(k,st.rate,st.okres,e,st.ot,st.type,st.strat,st.kar);
+        pts.push({x:e,y:base.int-s.int});
+        sensData.save.push(base.int-s.int); sensData.mo.push(base.mo-s.mo);
+    }
+    set('sens-strat',st.strat==='okres'?'(strategia: skrócenie okresu)':'(strategia: niższa rata)');
+    const cur=st.nadplata>0?sched(k,st.rate,st.okres,st.nadplata,st.ot,st.type,st.strat,st.kar):base;
+    ch.sens.data.datasets[0].data=pts;
+    ch.sens.data.datasets[1].data=st.nadplata>0?[{x:st.nadplata,y:base.int-cur.int}]:[];
+    ch.sens.options.scales.x.max=maxE;
+    ch.sens.update('none');
+}
+
+function updGoal(k){
+    const raw=parseInt(document.getElementById('goal-yrs').value);
+    const gy=Math.max(1,Math.min(st.okres,raw||st.okres));
+    const T=gy*12;
+    const solve=e=>sched(k,st.rate,st.okres,e,st.ot,st.type,'okres',st.kar).mo;
+    if(solve(0)<=T){ goalNeeded=0; html('goal-result','→ obecne parametry już mieszczą się w tym terminie'); return; }
+    let lo=0,hi=1000;
+    while(solve(hi)>T&&hi<2e6){lo=hi;hi*=2;}
+    if(hi>=2e6){ goalNeeded=null; html('goal-result','→ nieosiągalne przy tych parametrach'); return; }
+    for(let i=0;i<18;i++){const mid=(lo+hi)/2;solve(mid)>T?lo=mid:hi=mid;}
+    goalNeeded=Math.ceil(hi/10)*10;
+    html('goal-result',`→ nadpłacaj ok. <strong style="color:var(--green)">${num(goalNeeded)} PLN/mc</strong> <span style="color:var(--t3);font-family:'Inter';font-weight:300;">(skracając okres)</span>`);
+}
+
+function applyGoal(){
+    if(!goalNeeded) return;
+    if(st.strat!=='okres') setStrat('okres');
+    st.nadplata=goalNeeded;
+    document.getElementById('sl-nadplata').value=Math.min(goalNeeded,10000);
+    document.getElementById('val-nadplata').value=goalNeeded;
+    upd();
+    setTimeout(()=>pulse('s-interest','savepulse'),150);
+}
+
+function toggleBelka(){
+    st.inv.belka=!st.inv.belka;
+    document.getElementById('belka-btn').classList.toggle('active',st.inv.belka);
+    upd();
 }
 
 // ── Toggles ─────────────────────────────────────────────
@@ -1349,6 +1510,51 @@ function initCharts(){
             animation:{duration:200}
         }
     });
+
+    ch.sens=new Chart(document.getElementById('chart-sens').getContext('2d'),{
+        type:'line',
+        data:{datasets:[
+            {label:'Oszczędność',data:[],borderColor:'#22c55e',borderWidth:1.5,fill:false,tension:.3,pointRadius:0,pointHoverRadius:3,pointHoverBackgroundColor:'#22c55e'},
+            {label:'Twoja nadpłata',data:[],borderColor:'#22c55e',backgroundColor:'#22c55e',pointRadius:4,pointHoverRadius:5,showLine:false}
+        ]},
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:{...tip,mode:'index',intersect:false,filter:i=>i.datasetIndex===0,callbacks:{
+                title:i=>i.length?'Nadpłata '+num(i[0].parsed.x)+' PLN/mc':'',
+                label:c=>{
+                    const idx=c.dataIndex, mo=sensData.mo[idx]||0;
+                    return['  oszczędzasz '+num(Math.round(c.parsed.y))+' PLN','  spłata krótsza o '+Math.floor(mo/12)+' lat '+mo%12+' mies.'];
+                }
+            }}},
+            scales:{
+                x:{type:'linear',min:0,max:10000,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#888',font:{size:11},maxTicksLimit:9,callback:v=>num(v)}},
+                y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#888',font:{size:11},callback:v=>cmpN(v)}}
+            },
+            interaction:{mode:'index',axis:'x',intersect:false},
+            animation:{duration:200}
+        }
+    });
+
+    ch.inv=new Chart(document.getElementById('chart-invest').getContext('2d'),{
+        type:'line',
+        data:{labels:[],datasets:[
+            {label:'Nadpłacasz kredyt',data:[],borderColor:'#a7d7be',borderWidth:1.5,fill:false,tension:.3,pointRadius:0,pointHoverRadius:3,pointHoverBackgroundColor:'#a7d7be'},
+            {label:'Inwestujesz',data:[],borderColor:'#c96442',borderWidth:1.5,fill:false,tension:.3,pointRadius:0,pointHoverRadius:3,borderDash:[4,3]}
+        ]},
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{display:false},tooltip:{...tip,mode:'index',intersect:false,callbacks:{
+                title:i=>'Rok '+i[0].label,
+                label:c=>'  '+c.dataset.label+': '+num(Math.round(c.raw))+' PLN'
+            }}},
+            scales:{
+                x:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#888',font:{size:11},maxTicksLimit:8}},
+                y:{grid:{color:'rgba(255,255,255,.06)'},ticks:{color:'#888',font:{size:11},callback:v=>cmpN(v)}}
+            },
+            interaction:{mode:'index',axis:'x',intersect:false},
+            animation:{duration:200}
+        }
+    });
 }
 
 function var_(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
@@ -1478,6 +1684,19 @@ document.addEventListener('DOMContentLoaded',()=>{
     bindB('cmp-val-nadp','nadplata');
 
     buildStartDateSelects();
+
+    // Analiza: zwrot z inwestycji + cel spłaty
+    const slInv=document.getElementById('sl-inv'), valInv=document.getElementById('val-inv');
+    slInv.addEventListener('input',()=>{ st.inv.rate=parseFloat(slInv.value); valInv.value=st.inv.rate.toFixed(1); upd(); });
+    valInv.addEventListener('change',()=>{
+        const v=Math.max(0,Math.min(15,parseFloat(valInv.value.replace(',','.'))||0));
+        st.inv.rate=v; valInv.value=v.toFixed(1); slInv.value=v; upd();
+    });
+    const goalInp=document.getElementById('goal-yrs');
+    goalInp.addEventListener('change',()=>{
+        const v=Math.max(1,Math.min(st.okres,parseInt(goalInp.value)||st.okres));
+        goalInp.value=v; upd();
+    });
 
     // Karencja months input
     const karMoInp=document.getElementById('kar-mo-inp');
