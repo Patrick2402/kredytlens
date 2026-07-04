@@ -3,23 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ile-nadplacic.pl — kalkulator nadpłaty kredytu hipotecznego</title>
-<meta name="description" content="Sprawdź ile zaoszczędzisz nadpłacając kredyt hipoteczny. Raty równe i malejące, porównanie scenariuszy, harmonogram spłat miesiąc po miesiącu.">
+<title>Kalkulator nadpłaty kredytu hipotecznego — ile zaoszczędzisz? | ile-nadplacic.pl</title>
+<meta name="description" content="Sprawdź, ile zaoszczędzisz nadpłacając kredyt hipoteczny. Raty równe i malejące, skrócenie okresu lub niższa rata, harmonogram spłat miesiąc po miesiącu. Za darmo, bez rejestracji.">
 <meta name="theme-color" content="#2f7d5b">
+<link rel="canonical" href="https://ile-nadplacic.pl/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<meta property="og:title" content="ile-nadplacic.pl — kalkulator nadpłaty kredytu">
+<meta property="og:title" content="Kalkulator nadpłaty kredytu hipotecznego — ile zaoszczędzisz?">
 <meta property="og:description" content="Sprawdź ile zaoszczędzisz nadpłacając kredyt hipoteczny. Bezpłatnie, bez rejestracji.">
-<meta property="og:image" content="/og-image.png">
+<meta property="og:image" content="https://ile-nadplacic.pl/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ile-nadplacic.pl/">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="ile-nadplacic.pl">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Self-hosted variable fonts (latin + latin-ext for polskich znaków) */
+@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/inter-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Inter';font-style:normal;font-weight:300 700;font-display:swap;src:url(/fonts/inter-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600 700;font-display:swap;src:url(/fonts/jakarta-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600 700;font-display:swap;src:url(/fonts/jakarta-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+
 :root {
     --bg:    #080808;
     --bg2:   #0e0e0e;
@@ -176,7 +186,80 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
     0%{opacity:1;}20%{opacity:.2;}100%{opacity:1;}
 }
 .bigpulse{animation:bigpulse .28s ease;}
+
+/* Poradnik / FAQ */
+.guide{max-width:720px;}
+.guide h2{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:22px;font-weight:700;letter-spacing:-.3px;color:var(--t1);margin:44px 0 14px;line-height:1.3;}
+.guide h3{font-size:15px;font-weight:600;color:var(--t1);margin:26px 0 8px;}
+.guide p{font-size:14px;color:var(--t2);font-weight:300;line-height:1.75;margin-bottom:12px;}
+.guide strong{color:var(--t1);font-weight:600;}
+.guide ul{margin:0 0 12px 18px;}
+.guide li{font-size:14px;color:var(--t2);font-weight:300;line-height:1.75;margin-bottom:4px;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://ile-nadplacic.pl/#app",
+      "name": "Kalkulator nadpłaty kredytu hipotecznego",
+      "url": "https://ile-nadplacic.pl/",
+      "description": "Bezpłatny kalkulator nadpłaty kredytu hipotecznego. Raty równe i malejące, skrócenie okresu lub obniżenie raty, harmonogram spłat miesiąc po miesiącu, porównanie scenariuszy.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "pl",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "PLN" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://ile-nadplacic.pl/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Czy bank może pobrać prowizję za nadpłatę kredytu hipotecznego?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Dla umów zawartych od 22 lipca 2017 r. (ustawa o kredycie hipotecznym) bank może pobierać rekompensatę za nadpłatę kredytu ze zmiennym oprocentowaniem tylko przez pierwsze 36 miesięcy — maksymalnie 3% nadpłacanej kwoty i nie więcej niż roczne odsetki od tej kwoty. Po 3 latach nadpłata jest bezpłatna. Przy okresowo stałej stopie rekompensata może obowiązywać przez cały okres stałego oprocentowania."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy warto nadpłacać kredyt hipoteczny?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nadpłata daje gwarantowany zysk równy oprocentowaniu kredytu — jeśli kredyt kosztuje 7,5% rocznie, każda nadpłacona złotówka „zarabia” 7,5% bez ryzyka i bez podatku Belki. Warto nadpłacać, gdy oprocentowanie kredytu jest wyższe niż to, co bezpiecznie zarobisz na lokacie lub obligacjach skarbowych. Najpierw jednak zbuduj poduszkę finansową na 3–6 miesięcy wydatków."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Lepiej skrócić okres kredytowania czy zmniejszyć ratę?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Skrócenie okresu daje większą oszczędność na odsetkach, bo wysoka rata nadal szybko spłaca kapitał. Zmniejszenie raty daje za to niższe stałe obciążenie i większe bezpieczeństwo domowego budżetu. Jeśli zależy Ci na maksymalnej oszczędności — skracaj okres; jeśli na płynności — obniżaj ratę."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Lepiej nadpłacać co miesiąc małe kwoty czy raz w roku większą sumę?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Im wcześniej pieniądze pomniejszą kapitał, tym krócej bank nalicza od nich odsetki. Regularne comiesięczne nadpłaty dają więc większą oszczędność niż odkładanie tej samej sumy i wpłacanie jej raz w roku."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Czy nadpłata kredytu automatycznie skraca okres spłaty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nie — większość banków domyślnie zmniejsza ratę, zachowując dotychczasowy okres. Jeśli chcesz skrócić okres kredytowania, zwykle musisz to wskazać w dyspozycji nadpłaty; w części banków wymaga to aneksu do umowy. Sprawdź zasady w swojej bankowości elektronicznej."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -640,6 +723,35 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
     </table>
 </div>
 
+<!-- ── Poradnik + FAQ ── -->
+<section class="guide" style="border-top:1px solid var(--line);margin-top:48px;">
+    <h2>Jak działa nadpłata kredytu hipotecznego?</h2>
+    <p>Każda rata kredytu składa się z dwóch części: <strong>kapitału</strong> (spłata pożyczonych pieniędzy) i <strong>odsetek</strong>, które bank nalicza od aktualnego salda zadłużenia. Nadpłata trafia w całości na kapitał — pomniejsza saldo, od którego liczone są wszystkie przyszłe odsetki.</p>
+    <p>Dlatego efekt nadpłaty jest największy na początku spłaty, gdy saldo jest wysokie, a w racie dominują odsetki. Ta sama kwota nadpłacona w 3. roku kredytu oszczędza znacznie więcej niż nadpłacona w 20. roku. Dokładne liczby dla Twojego kredytu zobaczysz wyżej w kalkulatorze — miesiąc po miesiącu.</p>
+
+    <h2>Skrócić okres kredytu czy zmniejszyć ratę?</h2>
+    <p>Po nadpłacie bank musi coś zrobić z harmonogramem — i masz tu dwie strategie:</p>
+    <ul>
+        <li><strong>Skrócenie okresu</strong> — rata zostaje bez zmian, ale spłacasz kredyt szybciej. To wariant z <strong>większą oszczędnością na odsetkach</strong>, bo wysoka rata nadal intensywnie spłaca kapitał.</li>
+        <li><strong>Zmniejszenie raty</strong> — okres zostaje, ale miesięczne obciążenie spada. Oszczędność odsetkowa jest mniejsza, za to zyskujesz <strong>luz w budżecie</strong> i bezpieczeństwo na wypadek gorszych miesięcy.</li>
+    </ul>
+    <p>Obie strategie porównasz w kalkulatorze jednym kliknięciem — przełącznik „Okres kredytu / Ratę miesięczną" pokaże różnicę w złotówkach.</p>
+
+    <h2>Najczęstsze pytania o nadpłatę kredytu</h2>
+
+    <h3>Czy bank może pobrać prowizję za nadpłatę kredytu hipotecznego?</h3>
+    <p>Dla umów zawartych od 22 lipca 2017 r. (ustawa o kredycie hipotecznym) bank może pobierać rekompensatę za nadpłatę kredytu ze zmiennym oprocentowaniem tylko przez <strong>pierwsze 36 miesięcy</strong> — maksymalnie 3% nadpłacanej kwoty i nie więcej niż roczne odsetki od tej kwoty. <strong>Po 3 latach nadpłata jest bezpłatna.</strong> Przy okresowo stałej stopie rekompensata może obowiązywać przez cały okres stałego oprocentowania — sprawdź swoją umowę.</p>
+
+    <h3>Czy warto nadpłacać kredyt hipoteczny?</h3>
+    <p>Nadpłata daje gwarantowany zysk równy oprocentowaniu kredytu — jeśli kredyt kosztuje 7,5% rocznie, każda nadpłacona złotówka „zarabia" 7,5% bez ryzyka i bez podatku Belki. Warto nadpłacać, gdy oprocentowanie kredytu jest wyższe niż to, co bezpiecznie zarobisz na lokacie lub obligacjach skarbowych. Najpierw jednak zbuduj poduszkę finansową na 3–6 miesięcy wydatków — nadpłaconych pieniędzy nie da się łatwo „wyjąć" z kredytu.</p>
+
+    <h3>Lepiej nadpłacać co miesiąc małe kwoty czy raz w roku większą sumę?</h3>
+    <p>Im wcześniej pieniądze pomniejszą kapitał, tym krócej bank nalicza od nich odsetki. Regularne comiesięczne nadpłaty dają więc większą oszczędność niż odkładanie tej samej sumy i wpłacanie jej raz w roku.</p>
+
+    <h3>Czy nadpłata automatycznie skraca okres spłaty?</h3>
+    <p>Nie — większość banków domyślnie zmniejsza ratę, zachowując dotychczasowy okres. Jeśli chcesz skrócić okres kredytowania, zwykle musisz to wskazać w dyspozycji nadpłaty; w części banków wymaga to aneksu do umowy. Sprawdź zasady w swojej bankowości elektronicznej.</p>
+</section>
+
 </div><!-- /page -->
 
 <footer style="border-top:1px solid var(--line);padding:24px 32px;text-align:center;">
@@ -647,7 +759,7 @@ select.kar-inp{cursor:pointer;-webkit-appearance:none;appearance:none;background
 </footer>
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="/js/chart.umd.min.js" defer></script>
 <script>
 // ── State ──────────────────────────────────────────────
 const st = {
