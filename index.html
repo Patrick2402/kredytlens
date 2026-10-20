@@ -823,13 +823,8 @@ select.mini-inp{
                         <select class="mini-inp" id="kar-mo-inp"></select>
                     </div>
                     <p class="t-label" style="margin-top:14px">Transze</p>
-                    <div class="chips" role="group" aria-label="Szybki podział na transze">
-                        <button class="chip" type="button" onclick="presetTranches(1)">1 × 100%</button>
-                        <button class="chip" type="button" onclick="presetTranches(2)">2 × 50%</button>
-                        <button class="chip" type="button" onclick="presetTranches(3)">30 · 30 · 40%</button>
-                        <button class="chip" type="button" onclick="presetTranches(4)">4 × 25%</button>
-                        <button class="chip" type="button" onclick="presetTranches(5)">5 × 20%</button>
-                    </div>
+                    <p class="t-hint" id="tr-share"></p>
+                    <div class="chips" id="tr-chips" role="group" aria-label="Szybki podział na transze"></div>
                     <div id="transze-list"></div>
                     <div class="row-inline" style="margin-top:6px">
                         <button class="btn" type="button" onclick="addTranche()">+ Dodaj transzę</button>
@@ -1182,8 +1177,9 @@ function defaults(){
         start:{year:now.getFullYear(), month:now.getMonth()+1},
         rateMode:'const', ratePath:[],
         fee:{on:false, pct:2, mo:36},
-        // Transze jako procent kwoty kredytu i numer miesiąca karencji: {id, mo, pct}
-        kar:{on:false, mo:12, transze:[]},
+        // Transze jako procent CENY mieszkania i numer miesiąca karencji: {id, mo, pct}.
+        // pctOf odróżnia ten format od wcześniejszego (procent kwoty kredytu).
+        kar:{on:false, mo:12, transze:[], pctOf:'cena'},
         inv:{rate:6.0, belka:true},
         tab:'charts',
         saved:[],   // zapisane scenariusze: {id, name, s:snapshot parametrów}
@@ -1217,16 +1213,25 @@ function loadState(){
     m.ratePath=Array.isArray(o.ratePath)?o.ratePath:[];
     if(m.tab==='cmp') m.tab='saved';
     if(!TABS.includes(m.tab)) m.tab='charts';
-    // Stary format transz trzymał kwotę i datę kalendarzową — przeliczamy na
-    // procent kredytu i miesiąc karencji.
-    const k=Math.round(m.cena*(1-m.wklad/100))||1;
-    m.kar.transze=(Array.isArray(m.kar.transze)?m.kar.transze:[]).map(t=>{
-        if(t.pct!==undefined) return t;
-        const mo=(t.year-m.start.year)*12+(t.month-m.start.month)+1;
-        return {id:t.id, mo:Math.max(1,Math.min(m.kar.mo,mo||1)), pct:Math.round((t.amt||0)/k*1000)/10};
-    });
+    // Format transz bierzemy z surowego zapisu — domyślne pctOf by go zamaskowało.
+    migrateKar(m,(o.kar||{}).pctOf);
+    m.saved.forEach(x=>{ const raw=(x.s.kar||{}).pctOf; x.s.kar={...d.kar,...(x.s.kar||{})}; migrateKar(x.s,raw); });
     idCnt=Math.max(0,...m.ratePath.map(s=>s.id||0),...m.kar.transze.map(t=>t.id||0),...m.saved.map(x=>x.id||0));
     return m;
+}
+/* Transze zapisywane były kolejno jako: kwota + data kalendarzowa, potem
+   procent kwoty kredytu. Obecnie: procent ceny mieszkania + miesiąc karencji. */
+function migrateKar(m,pctOf){
+    const cena=m.cena||1, share=1-(m.wklad||0)/100;
+    const r1=v=>Math.round(v*10)/10;
+    m.kar.transze=(Array.isArray(m.kar.transze)?m.kar.transze:[]).map(t=>{
+        if(t.pct===undefined){
+            const mo=(t.year-m.start.year)*12+(t.month-m.start.month)+1;
+            return {id:t.id, mo:Math.max(1,Math.min(m.kar.mo,mo||1)), pct:r1((t.amt||0)/cena*100)};
+        }
+        return pctOf==='cena'?t:{...t, pct:r1(t.pct*share)};
+    });
+    m.kar.pctOf='cena';
 }
 function resetAll(){
     try{ localStorage.removeItem(LS_STATE); }catch(e){}
@@ -1305,21 +1310,21 @@ function feeFor(fee,m,amount,rMonthly){
     return Math.min(amount*fee.pct/100, amount*rMonthly*12);
 }
 
-/* Wypłaty transz w kolejnych miesiącach karencji. Narastająco nie więcej niż
-   100% kredytu; brakująca część trafia do ostatniego miesiąca karencji, więc
-   kapitał do spłaty to zawsze pełna kwota kredytu. */
-function disbursements(p,transze,karMo){
+/* Wypłaty transz w kolejnych miesiącach karencji. Procent transzy liczony od
+   ceny mieszkania; narastająco nie więcej niż kwota kredytu, a brakująca część
+   trafia do ostatniego miesiąca karencji — kapitał do spłaty to zawsze pełny kredyt. */
+function disbursements(p,cena,transze,karMo){
     const disb={};
     if(!transze||!transze.length){ disb[1]=p; return disb; }
-    let left=100;
+    let left=p;
     [...transze].sort((a,b)=>a.mo-b.mo).forEach(t=>{
-        const pc=Math.max(0,Math.min(left,t.pct||0));
-        if(pc<=0) return;
-        left-=pc;
+        const amt=Math.max(0,Math.min(left,cena*(t.pct||0)/100));
+        if(amt<=0) return;
+        left-=amt;
         const m=Math.max(1,Math.min(karMo,t.mo));
-        disb[m]=(disb[m]||0)+p*pc/100;
+        disb[m]=(disb[m]||0)+amt;
     });
-    if(left>1e-9) disb[karMo]=(disb[karMo]||0)+p*left/100;
+    if(left>0.005) disb[karMo]=(disb[karMo]||0)+left;
     return disb;
 }
 
@@ -1338,7 +1343,7 @@ function run(o){
 
     if(karOn){
         karMo=Math.min(kar.mo,n-1);
-        const disb=disbursements(p,kar.transze,karMo);
+        const disb=disbursements(p,o.cena||p,kar.transze,karMo);
         for(let m=1;m<=karMo;m++){
             const tr=disb[m]||0; b+=tr;
             const ob=b, i=b*rm[m];
@@ -1400,7 +1405,7 @@ function run(o){
 
 /* Wspólne parametry bieżącego scenariusza — nadpisywane tam, gdzie trzeba. */
 function baseOpts(k,rm){
-    return {p:k,rm,yrs:st.okres,ex:st.nadplata,ot:st.ot,type:st.type,strat:st.strat,kar:st.kar,fee:st.fee};
+    return {p:k,cena:st.cena,rm,yrs:st.okres,ex:st.nadplata,ot:st.ot,type:st.type,strat:st.strat,kar:st.kar,fee:st.fee};
 }
 
 const firstPmt=res=>{const r=(res.rows||[]).find(x=>!x.kar); return r?r.pmt:0;};
@@ -1990,13 +1995,38 @@ function renderRatePath(){
     }).join('');
 }
 
-// ═══ Transze karencji (procent kwoty kredytu) ════════════════════════════
-const PCT_OPTS=[5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
+// ═══ Transze karencji (procent ceny mieszkania) ══════════════════════════
 const karLen=()=>Math.max(1,Math.min(st.kar.mo,st.okres*12-1));
 const pctSum=()=>st.kar.transze.reduce((a,t)=>a+(t.pct||0),0);
+/* Jaki procent ceny finansuje kredyt — do tylu sumują się transze. */
+const loanShare=()=>Math.round((100-st.wklad)*10)/10;
+function pctOptions(){
+    const L=loanShare(), out=[];
+    for(let v=5;v<L;v+=5) out.push(v);
+    out.push(L);
+    return out;
+}
+/* Podział udziału kredytu na `count` transz w pełnych 5%; reszta w ostatniej. */
+function splitShare(count){
+    const L=loanShare(), base=Math.floor(L/count/5)*5;
+    if(base<=0) return null;
+    return Array.from({length:count},(_,i)=>i<count-1?base:Math.round((L-base*(count-1))*10)/10);
+}
+function renderPresets(){
+    const el=$('tr-chips'); if(!el) return;
+    el.innerHTML=[1,2,3,4,5].map(c=>{
+        const sp=splitShare(c); if(!sp) return '';
+        const last=sp[sp.length-1], head=sp[0];
+        const label=c===1?`${trim0(head)}%`
+            :last===head?`${c} × ${trim0(head)}%`
+            :c<=3?sp.map(trim0).join(' · ')+'%'
+            :`${c-1} × ${trim0(head)}% + ${trim0(last)}%`;
+        return `<button class="chip" type="button" onclick="presetTranches(${c})">${label}</button>`;
+    }).join('');
+}
 
 function presetTranches(count){
-    const splits={1:[100],2:[50,50],3:[30,30,40],4:[25,25,25,25],5:[20,20,20,20,20]}[count];
+    const splits=splitShare(count); if(!splits) return;
     const L=karLen();
     st.kar.transze=splits.map((pct,i)=>({id:++idCnt, mo:Math.floor(i*L/count)+1, pct}));
     renderTransze(); upd(); updHeavy();
@@ -2004,7 +2034,7 @@ function presetTranches(count){
 function addTranche(){
     const L=karLen();
     const last=st.kar.transze[st.kar.transze.length-1];
-    const left=Math.max(0,100-pctSum());
+    const left=Math.max(0,loanShare()-pctSum());
     const pct=left>0?Math.max(5,Math.floor(left/5)*5||left):10;
     st.kar.transze.push({id:++idCnt, mo:last?Math.min(L,last.mo+3):1, pct});
     renderTransze(); upd(); updHeavy();
@@ -2022,19 +2052,21 @@ function updateTranche(id,field,val){
 function renderTrancheSum(){
     const el=$('tranche-sum-info'); if(!el) return;
     if(!st.kar.transze.length){ el.textContent=''; return; }
-    const k=kredyt(), sum=Math.round(pctSum()*10)/10;
-    if(Math.abs(sum-100)<0.05){ html('tranche-sum-info','Razem <strong class="c-accent">100%</strong> ✓'); return; }
-    if(sum>100){
-        html('tranche-sum-info',`Razem <strong class="c-neg">${trim0(sum)}%</strong> — liczę tylko pierwsze 100%`);
+    const L=loanShare(), sum=Math.round(pctSum()*10)/10;
+    if(Math.abs(sum-L)<0.05){ html('tranche-sum-info',`Razem <strong class="c-accent">${trim0(L)}% ceny</strong> = cały kredyt ✓`); return; }
+    if(sum>L){
+        html('tranche-sum-info',`Razem <strong class="c-neg">${trim0(sum)}% ceny</strong> — kredyt to tylko ${trim0(L)}%, nadwyżkę pomijam`);
         return;
     }
-    const left=100-sum;
-    html('tranche-sum-info',`Razem ${trim0(sum)}% — pozostałe ${trim0(left)}% (${pln(k*left/100)}) przyjmuję w ostatnim miesiącu karencji`);
+    const left=L-sum;
+    html('tranche-sum-info',`Razem ${trim0(sum)}% z ${trim0(L)}% ceny — pozostałe ${trim0(left)}% (${pln(st.cena*left/100)}) przyjmuję w ostatnim miesiącu karencji`);
 }
 function renderTransze(){
     const el=$('transze-list'); if(!el) return;
-    const L=karLen(), k=kredyt();
+    const L=karLen(), cena=st.cena, base=pctOptions();
     st.kar.transze.forEach(t=>{ t.mo=Math.max(1,Math.min(L,t.mo)); });
+    renderPresets();
+    $('tr-share').textContent=`Procent od ceny mieszkania. Kredyt pokrywa ${trim0(loanShare())}% ceny (${pln(kredyt())}).`;
     if(!st.kar.transze.length){
         el.innerHTML='<p class="t-hint" style="margin:10px 0">Brak transz — cały kredyt wypłacony w pierwszym miesiącu. Wybierz podział powyżej.</p>';
         renderTrancheSum(); return;
@@ -2042,12 +2074,12 @@ function renderTransze(){
     el.innerHTML=st.kar.transze.map((t,i)=>{
         const moOpts=Array.from({length:L},(_,j)=>j+1)
             .map(m=>`<option value="${m}"${m===t.mo?' selected':''}>${dateLabel(m)}</option>`).join('');
-        const opts=PCT_OPTS.includes(t.pct)?PCT_OPTS:[...PCT_OPTS,t.pct].sort((a,b)=>a-b);
-        const pctOpts=opts.map(p=>`<option value="${p}"${p===t.pct?' selected':''}>${trim0(p)}% · ${compact(k*p/100)}</option>`).join('');
+        const opts=base.includes(t.pct)?base:[...base,t.pct].sort((a,b)=>a-b);
+        const pctOpts=opts.map(p=>`<option value="${p}"${p===t.pct?' selected':''}>${trim0(p)}% · ${compact(cena*p/100)}</option>`).join('');
         return`<div class="tr-row">
             <span class="tr-n">${i+1}.</span>
             <select class="mini-inp grow" aria-label="Miesiąc wypłaty transzy ${i+1}" onchange="updateTranche(${t.id},'mo',this.value)">${moOpts}</select>
-            <select class="mini-inp" aria-label="Procent kredytu w transzy ${i+1}" onchange="updateTranche(${t.id},'pct',this.value)">${pctOpts}</select>
+            <select class="mini-inp" aria-label="Procent ceny mieszkania w transzy ${i+1}" onchange="updateTranche(${t.id},'pct',this.value)">${pctOpts}</select>
             <button class="del-btn" type="button" aria-label="Usuń transzę ${i+1}" onclick="removeTranche(${t.id})">×</button>
         </div>`;
     }).join('');
