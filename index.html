@@ -36,42 +36,49 @@
 @font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600 700;font-display:swap;src:url(/fonts/jakarta-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
 
 /* ── Tokeny ──────────────────────────────────────────────────────────────
-   Kolory serii wykresów zwalidowane skryptem dataviz (--pairs all) osobno
-   dla każdej powierzchni: light na #f7f8f7, dark na #101210. Nie podmieniaj
-   ich pojedynczo — para odsetki/oszczędność siedzi tuż nad progiem CVD. */
+   Kolory serii wykresów (--capital, --cost, --accent) zwalidowane skryptem
+   dataviz (--pairs all) osobno dla light i dark. Nie podmieniaj ich
+   pojedynczo — para odsetki/oszczędność siedzi tuż nad progiem CVD.
+   Reszta palety jest ciepła (kremowe tło, miękkie pastele pod ikonami). */
 :root{
     color-scheme:light;
-    --bg:#f7f8f7; --surface:#ffffff; --surface-2:#eef1ee; --surface-3:#e5e9e5;
-    --border:#e0e5e0; --border-strong:#c8cfc8;
-    --ink:#141815; --ink-2:#4c554e; --ink-3:#656e67;
+    --bg:#fbf8f3; --surface:#ffffff; --surface-2:#f6f1e9; --surface-3:#ece5d9;
+    --border:#ede6db; --border-strong:#d9cfc0;
+    --ink:#1f1b16; --ink-2:#564e44; --ink-3:#73685b;
 
     --accent:#12a06f;               /* seria: nadpłata / oszczędność, oraz akcent UI */
     --accent-ink:#0a7350;           /* ten sam akcent jako tekst (≥4.5:1) */
     --accent-soft:rgba(18,160,111,.10);
-    --accent-ring:rgba(18,160,111,.30);
+    --accent-ring:rgba(18,160,111,.28);
     --cost:#eb6834;                 /* seria: odsetki */
     --cost-ink:#b04413;
     --capital:#2a78d6;              /* seria: kapitał */
     --neg:#c0392b;
+    --primary:#0a7350; --on-primary:#ffffff;
 
-    --grid:rgba(20,24,21,.09);
-    --tick:#656e67;
-    --tip-bg:#ffffff; --tip-border:#c8cfc8;
+    /* Pastele pod ikonami i tła kart */
+    --mint:#e6f4ec; --peach:#fdeee3; --sky:#e8f0fb; --sun:#fbf1d6;
+    --mint-ink:#0a7350; --peach-ink:#b04413; --sky-ink:#1f5fae; --sun-ink:#8a6410;
 
-    --shadow:0 1px 2px rgba(20,24,21,.05),0 4px 16px rgba(20,24,21,.05);
+    --grid:rgba(31,27,22,.08);
+    --tick:#73685b;
+    --tip-bg:#ffffff; --tip-border:#d9cfc0;
+
+    --shadow:0 1px 2px rgba(80,55,30,.05),0 12px 32px -14px rgba(80,55,30,.18);
+    --shadow-sm:0 1px 2px rgba(80,55,30,.08);
     --mono:ui-monospace,'Cascadia Code','Source Code Pro',Menlo,Consolas,monospace;
     --sans:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
     --display:'Plus Jakarta Sans','Inter',system-ui,sans-serif;
 
-    --r-sm:6px; --r:10px; --r-lg:14px;
+    --r-sm:10px; --r:14px; --r-lg:24px;
     --step:.18s cubic-bezier(.25,.46,.45,.94);
 }
 @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]){
         color-scheme:dark;
-        --bg:#0a0c0b; --surface:#101311; --surface-2:#171b18; --surface-3:#1e231f;
-        --border:#232823; --border-strong:#333a34;
-        --ink:#f1f3ef; --ink-2:#a8b0a8; --ink-3:#828b83;
+        --bg:#14120f; --surface:#1d1a16; --surface-2:#26221d; --surface-3:#302b25;
+        --border:#2e2923; --border-strong:#463e35;
+        --ink:#f6f1ea; --ink-2:#c4baad; --ink-3:#9d9284;
 
         --accent:#199e70; --accent-ink:#7fd3ac;
         --accent-soft:rgba(25,158,112,.16);
@@ -79,18 +86,23 @@
         --cost:#d95926; --cost-ink:#f0895c;
         --capital:#3987e5;
         --neg:#e0684a;
+        --primary:#7fd3ac; --on-primary:#0b1f16;
 
-        --grid:rgba(241,243,239,.07);
-        --tick:#828b83;
-        --tip-bg:#171b18; --tip-border:#333a34;
-        --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+        --mint:rgba(25,158,112,.15); --peach:rgba(217,89,38,.15); --sky:rgba(57,135,229,.16); --sun:rgba(222,170,50,.15);
+        --mint-ink:#7fd3ac; --peach-ink:#f0895c; --sky-ink:#8ab8f2; --sun-ink:#e8c46a;
+
+        --grid:rgba(246,241,234,.07);
+        --tick:#9d9284;
+        --tip-bg:#26221d; --tip-border:#463e35;
+        --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -14px rgba(0,0,0,.6);
+        --shadow-sm:0 1px 2px rgba(0,0,0,.4);
     }
 }
 :root[data-theme="dark"]{
     color-scheme:dark;
-    --bg:#0a0c0b; --surface:#101311; --surface-2:#171b18; --surface-3:#1e231f;
-    --border:#232823; --border-strong:#333a34;
-    --ink:#f1f3ef; --ink-2:#a8b0a8; --ink-3:#828b83;
+    --bg:#14120f; --surface:#1d1a16; --surface-2:#26221d; --surface-3:#302b25;
+    --border:#2e2923; --border-strong:#463e35;
+    --ink:#f6f1ea; --ink-2:#c4baad; --ink-3:#9d9284;
 
     --accent:#199e70; --accent-ink:#7fd3ac;
     --accent-soft:rgba(25,158,112,.16);
@@ -98,11 +110,16 @@
     --cost:#d95926; --cost-ink:#f0895c;
     --capital:#3987e5;
     --neg:#e0684a;
+    --primary:#7fd3ac; --on-primary:#0b1f16;
 
-    --grid:rgba(241,243,239,.07);
-    --tick:#828b83;
-    --tip-bg:#171b18; --tip-border:#333a34;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+    --mint:rgba(25,158,112,.15); --peach:rgba(217,89,38,.15); --sky:rgba(57,135,229,.16); --sun:rgba(222,170,50,.15);
+    --mint-ink:#7fd3ac; --peach-ink:#f0895c; --sky-ink:#8ab8f2; --sun-ink:#e8c46a;
+
+    --grid:rgba(246,241,234,.07);
+    --tick:#9d9284;
+    --tip-bg:#26221d; --tip-border:#463e35;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -14px rgba(0,0,0,.6);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4);
 }
 
 /* ── Reset ───────────────────────────────────────────────────────────────── */
@@ -116,12 +133,13 @@ body{
 }
 svg{display:block;}
 ::selection{background:var(--accent-soft);color:var(--ink);}
+[hidden]{display:none !important;}
 
 /* Liczby zawsze tabelarycznie — kolumny nie skaczą przy animacji countUp. */
 .num,.data,input[inputmode="numeric"],input[inputmode="decimal"],table{font-variant-numeric:tabular-nums;}
 
 :where(a,button,input,select,summary):focus-visible{
-    outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;
+    outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;
 }
 .skip{
     position:absolute;left:-9999px;top:0;z-index:100;
@@ -139,34 +157,45 @@ svg{display:block;}
 
 /* ── Skala typograficzna ─────────────────────────────────────────────────── */
 .t-eyebrow{font-size:11px;letter-spacing:.10em;text-transform:uppercase;font-weight:600;color:var(--accent-ink);}
-.t-section{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);}
-.t-label{font-size:12px;font-weight:500;color:var(--ink-2);}
+.t-section{font-family:var(--display);font-size:17px;font-weight:700;letter-spacing:-.015em;color:var(--ink);}
+.t-label{font-size:13px;font-weight:500;color:var(--ink-2);}
 .t-hint{font-size:12px;color:var(--ink-3);font-weight:400;line-height:1.5;}
-.t-unit{font-size:11px;color:var(--ink-3);font-weight:500;}
-.t-body{font-size:14px;color:var(--ink-2);line-height:1.7;}
-.t-num-xl{font-family:var(--display);font-size:clamp(32px,4.4vw,44px);font-weight:700;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums;}
+.t-unit{font-size:12px;color:var(--ink-3);font-weight:500;}
+.t-num-xl{font-family:var(--display);font-size:clamp(36px,4.6vw,50px);font-weight:700;letter-spacing:-.035em;line-height:1.05;font-variant-numeric:tabular-nums;}
 .t-num-lg{font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
-.t-num-md{font-size:17px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
+.t-num-md{font-family:var(--display);font-size:17px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;}
 .ink-2{color:var(--ink-2);} .ink-3{color:var(--ink-3);}
 .c-accent{color:var(--accent-ink);} .c-cost{color:var(--cost-ink);} .c-neg{color:var(--neg);}
-.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
 
 /* ── Layout ──────────────────────────────────────────────────────────────── */
-.page{max-width:1120px;margin:0 auto;padding:0 28px 96px;}
-.band{border-bottom:1px solid var(--border);}
-.stack-lg{padding:36px 0;}
-.stack{padding:28px 0;}
+.page{max-width:1160px;margin:0 auto;padding:0 24px 96px;}
+.card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+    box-shadow:var(--shadow);padding:28px;
+}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:12px 16px;flex-wrap:wrap;margin-bottom:20px;}
+.head-row .t-hint{max-width:52ch;}
+.title{display:flex;align-items:center;gap:12px;}
 
-.head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
-.head-row .t-hint{margin-top:3px;max-width:52ch;}
+/* Kolorowe kółko z ikoną — przy nagłówkach i opcjach */
+.ico{
+    width:36px;height:36px;border-radius:12px;flex-shrink:0;
+    display:inline-flex;align-items:center;justify-content:center;
+}
+.ico svg{width:18px;height:18px;}
+.ico-sm{width:32px;height:32px;border-radius:10px;}
+.ico-sm svg{width:16px;height:16px;}
+.ico-mint{background:var(--mint);color:var(--mint-ink);}
+.ico-peach{background:var(--peach);color:var(--peach-ink);}
+.ico-sky{background:var(--sky);color:var(--sky-ink);}
+.ico-sun{background:var(--sun);color:var(--sun-ink);}
 
 /* ── Nagłówek strony ─────────────────────────────────────────────────────── */
 .topbar{
     position:sticky;top:0;z-index:50;
-    border-bottom:1px solid var(--border);
-    background:color-mix(in srgb,var(--bg) 88%,transparent);
+    background:color-mix(in srgb,var(--bg) 85%,transparent);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-    padding:10px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
 .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink);}
 .brand-mark{color:var(--accent);flex-shrink:0;}
@@ -177,12 +206,12 @@ svg{display:block;}
 
 .icon-btn{
     display:inline-flex;align-items:center;justify-content:center;gap:6px;
-    height:32px;padding:0 10px;
-    background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);
+    height:34px;padding:0 12px;
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
     color:var(--ink-2);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;
     transition:border-color var(--step),color var(--step),background var(--step);
 }
-.icon-btn:hover{border-color:var(--border-strong);color:var(--ink);background:var(--surface-2);}
+.icon-btn:hover{border-color:var(--border-strong);color:var(--ink);}
 .icon-btn svg{width:15px;height:15px;}
 .theme-btn .i-sun{display:none;}
 :root[data-theme="dark"] .theme-btn .i-sun{display:block;}
@@ -193,123 +222,150 @@ svg{display:block;}
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
-.hero{border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--accent-soft) 0%,transparent 70%);}
-.hero-in{max-width:1120px;margin:0 auto;padding:40px 28px 32px;}
-.hero h1{
-    font-family:var(--display);font-size:clamp(26px,4vw,42px);font-weight:700;
-    line-height:1.12;letter-spacing:-.025em;margin:12px 0 12px;max-width:20ch;
+.hero{
+    position:relative;overflow:hidden;margin:8px 0 24px;
+    border-radius:28px;padding:44px 44px 40px;
+    background:
+        radial-gradient(circle at 88% 20%,var(--peach) 0,transparent 42%),
+        radial-gradient(circle at 70% 110%,var(--sky) 0,transparent 45%),
+        var(--mint);
+    display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;
 }
-.hero-lead{font-size:16px;color:var(--ink-2);font-weight:300;line-height:1.7;max-width:60ch;}
+.hero h1{
+    font-family:var(--display);font-size:clamp(28px,4vw,44px);font-weight:700;
+    line-height:1.1;letter-spacing:-.03em;margin:10px 0 12px;max-width:18ch;
+}
+.hero-lead{font-size:16px;color:var(--ink-2);line-height:1.65;max-width:52ch;}
+.hero-art{width:220px;height:auto;}
+.hero-art .a-house{fill:var(--surface);}
+.hero-art .a-line{stroke:var(--ink);}
+.hero-art .a-accent{fill:var(--accent);}
+.hero-art .a-cost{fill:var(--cost);}
+.hero-art .a-sun{fill:#f2b84b;}
 
-/* ── Panele ──────────────────────────────────────────────────────────────── */
-.grid-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;}
-.grid-2 > * + *{border-left:1px solid var(--border);}
-.panel{padding:28px 0;}
-.panel-l{padding-right:32px;}
-.panel-r{padding-left:32px;}
-.results{position:sticky;top:72px;}
-.save{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;padding:14px 16px;border-radius:var(--r);background:var(--accent-soft);}
-.ribbon .t-hint{margin-top:10px;}
+/* ── Kalkulator: parametry + wyniki ──────────────────────────────────────── */
+.calc{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:20px;align-items:start;}
+.card-results{
+    position:sticky;top:76px;
+    background:linear-gradient(170deg,var(--mint) 0%,var(--surface) 46%);
+}
 
 /* ── Kontrolki: suwak + wartość ──────────────────────────────────────────── */
-.field{margin-bottom:20px;}
+.field{margin-bottom:22px;}
 .field:last-child{margin-bottom:0;}
-.field-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:9px;}
-.field-val{display:flex;align-items:baseline;gap:5px;flex-shrink:0;}
+.field-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;}
+.field-val{
+    display:flex;align-items:baseline;gap:6px;flex-shrink:0;
+    background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-sm);
+    padding:5px 11px;transition:border-color var(--step),background var(--step);
+}
+.field-val:focus-within{border-color:var(--accent);background:var(--surface);}
 
 .inp{
-    background:transparent;border:none;border-bottom:1.5px solid var(--border-strong);
-    color:var(--ink);font-family:var(--sans);font-variant-numeric:tabular-nums;
-    font-size:16px;font-weight:600;padding:2px 0;width:92px;text-align:right;
-    outline:none;transition:border-color var(--step),box-shadow var(--step);
+    background:transparent;border:none;
+    color:var(--ink);font-family:var(--display);font-variant-numeric:tabular-nums;
+    font-size:16px;font-weight:700;padding:0;width:84px;text-align:right;outline:none;
 }
-.inp:focus{border-bottom-color:var(--accent);box-shadow:0 2px 0 -1px var(--accent-ring);}
 .inp-sm{width:66px;font-size:14px;}
-.inp-xs{width:44px;font-size:14px;}
+.inp-xs{width:40px;font-size:15px;}
+.inp-box{
+    background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-sm);
+    padding:5px 9px;transition:border-color var(--step);
+}
+.inp-box:focus{border-color:var(--accent);background:var(--surface);}
 
 input[type="range"]{
-    -webkit-appearance:none;appearance:none;width:100%;height:3px;
-    background:var(--border-strong);border-radius:3px;outline:none;cursor:pointer;display:block;
+    -webkit-appearance:none;appearance:none;width:100%;height:6px;
+    background:var(--surface-3);border-radius:999px;outline:none;cursor:pointer;display:block;
 }
 input[type="range"]::-webkit-slider-thumb{
-    -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
-    background:var(--accent);cursor:pointer;border:2.5px solid var(--bg);
-    box-shadow:0 0 0 1px var(--accent),0 1px 3px rgba(0,0,0,.3);
+    -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+    background:var(--surface);cursor:pointer;border:3px solid var(--accent);
+    box-shadow:0 2px 6px rgba(0,0,0,.18);
     transition:transform var(--step),box-shadow var(--step);
 }
-input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.18);box-shadow:0 0 0 1px var(--accent),0 0 0 6px var(--accent-ring);}
-input[type="range"]:active::-webkit-slider-thumb{transform:scale(1.06);box-shadow:0 0 0 1px var(--accent),0 0 0 9px var(--accent-ring);}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.1);box-shadow:0 0 0 7px var(--accent-ring);}
+input[type="range"]:active::-webkit-slider-thumb{transform:scale(1.04);box-shadow:0 0 0 9px var(--accent-ring);}
 input[type="range"]::-moz-range-thumb{
-    width:15px;height:15px;border-radius:50%;background:var(--accent);
-    cursor:pointer;border:2.5px solid var(--bg);box-shadow:0 0 0 1px var(--accent);
+    width:16px;height:16px;border-radius:50%;background:var(--surface);
+    cursor:pointer;border:3px solid var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.18);
 }
-input[type="range"]::-moz-range-track{height:3px;background:var(--border-strong);border-radius:3px;}
+input[type="range"]::-moz-range-track{height:6px;background:var(--surface-3);border-radius:999px;}
 input[type="range"]:focus-visible{outline:2px solid var(--accent);outline-offset:6px;}
 
 /* ── Segmentowany przełącznik ────────────────────────────────────────────── */
-.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:2px;gap:2px;}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:3px;gap:2px;}
 .seg-btn{
-    flex:1;padding:5px 12px;border:none;background:transparent;border-radius:4px;
-    color:var(--ink-2);font-size:12px;font-family:inherit;font-weight:500;
+    flex:1;padding:6px 14px;border:none;background:transparent;border-radius:999px;
+    color:var(--ink-2);font-size:12.5px;font-family:inherit;font-weight:500;
     cursor:pointer;white-space:nowrap;transition:background var(--step),color var(--step);
 }
 .seg-btn:hover{color:var(--ink);}
-.seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.seg-btn[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:var(--shadow-sm);}
 :root[data-theme="dark"] .seg-btn[aria-pressed="true"]{background:var(--surface-3);}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg-btn[aria-pressed="true"]{background:var(--surface-3);}}
-.seg-full{display:flex;width:100%;}
 
-/* ── Przycisk pomocniczy ─────────────────────────────────────────────────── */
+/* ── Przyciski ───────────────────────────────────────────────────────────── */
 .btn{
-    background:transparent;border:1px solid var(--border-strong);color:var(--ink-2);
-    padding:6px 13px;font-size:12px;font-family:inherit;font-weight:500;
-    border-radius:var(--r-sm);cursor:pointer;white-space:nowrap;
-    transition:border-color var(--step),color var(--step),background var(--step);
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    background:var(--surface);border:1px solid var(--border-strong);color:var(--ink-2);
+    padding:7px 15px;font-size:12.5px;font-family:inherit;font-weight:500;
+    border-radius:999px;cursor:pointer;white-space:nowrap;
+    transition:border-color var(--step),color var(--step),background var(--step),transform var(--step);
 }
 .btn:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
+.btn:active{transform:scale(.97);}
 .btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
-.btn-accent{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);font-weight:600;}
-.btn-accent:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn-primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary);font-weight:600;}
+.btn-primary:hover{background:var(--primary);border-color:var(--primary);color:var(--on-primary);filter:brightness(1.08);}
+.btn-ghost{border-color:transparent;background:transparent;}
+.btn-sm{padding:4px 10px;font-size:12px;}
 .btn:disabled{opacity:.45;cursor:not-allowed;}
-.btn:disabled:hover{border-color:var(--border-strong);color:var(--ink-2);background:transparent;}
+.btn:disabled:hover{border-color:var(--border-strong);color:var(--ink-2);background:var(--surface);filter:none;}
 
 /* ── Wyniki ──────────────────────────────────────────────────────────────── */
-.result-head{margin-bottom:6px;}
-.result-sub{font-size:13px;color:var(--ink-3);margin-top:7px;}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;margin:22px 0;}
-.stat{border-radius:var(--r-sm);padding:6px 8px;margin:-6px -8px;transition:background var(--step);}
-.stat:hover{background:var(--surface-2);}
-.stat-k{font-size:12px;color:var(--ink-3);margin-bottom:4px;}
+.result-head{margin-bottom:4px;}
+.result-sub{font-size:13px;color:var(--ink-3);margin-top:6px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 18px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;}
+.stat-k{font-size:12px;color:var(--ink-3);margin-bottom:3px;}
 
 .callout{
-    border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;
+    border:1px dashed var(--border-strong);border-radius:var(--r);padding:14px 16px;
     background:var(--surface);font-size:13px;color:var(--ink-2);line-height:1.65;
 }
 .callout strong{color:var(--ink);font-weight:600;}
 
 /* ── Wstęga oszczędności (element sygnaturowy) ───────────────────────────── */
-.ribbon{margin-top:20px;}
-.ribbon-row{margin-bottom:11px;}
-.ribbon-row:last-child{margin-bottom:0;}
+.ribbon-row{margin-bottom:10px;}
 .ribbon-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px;font-size:12px;}
-.ribbon-track{height:10px;background:var(--surface-3);border-radius:5px;overflow:hidden;}
-.ribbon-fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.ribbon-track{height:12px;background:var(--surface-3);border-radius:999px;overflow:hidden;}
+.ribbon-fill{height:100%;border-radius:999px;transition:width .5s cubic-bezier(.4,0,.2,1);}
 .ribbon-fill.is-base{background:var(--cost);}
 .ribbon-fill.is-ext{background:var(--accent);}
+.save{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;padding:16px 18px;
+    border-radius:var(--r);background:var(--mint);
+}
+.ribbon .t-hint{margin-top:10px;}
+
+/* Zapis scenariusza */
+.scn-save{margin-top:18px;padding-top:18px;border-top:1px dashed var(--border-strong);}
+.scn-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.scn-form .inp-box{flex:1;min-width:140px;font:inherit;font-size:13px;color:var(--ink);outline:none;}
+.scn-msg{margin-top:8px;}
 
 /* ── Wykresy ─────────────────────────────────────────────────────────────── */
 .chart-box{position:relative;}
-.h-160{height:160px;} .h-200{height:200px;} .h-220{height:220px;} .h-240{height:240px;}
+.h-200{height:200px;} .h-220{height:220px;} .h-240{height:240px;}
 .legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);}
-.swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
 .swatch-line{width:14px;height:2px;border-radius:2px;flex-shrink:0;}
 .swatch-dash{width:14px;height:0;border-top:2px dashed currentColor;flex-shrink:0;}
 .sw-capital{background:var(--capital);}
 .sw-cost{background:var(--cost);}
 .sw-accent{background:var(--accent);}
-.legend-rows{display:flex;flex-direction:column;gap:9px;}
-.legend-row{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:13px;}
 
 /* ── Tabele ──────────────────────────────────────────────────────────────── */
 .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
@@ -320,23 +376,24 @@ input[type="range"]:focus-visible{outline:2px solid var(--accent);outline-offset
     border-bottom:1px solid var(--border);
 }
 .tbl th:first-child{text-align:left;padding-left:0;}
-.tbl td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:13px;text-align:right;white-space:nowrap;}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;text-align:right;white-space:nowrap;}
 .tbl td:first-child{text-align:left;padding-left:0;color:var(--ink-2);white-space:normal;}
 .tbl tbody tr:last-child td{border-bottom:none;}
+.cmp-a{color:var(--ink-2);}
 
-#sched-wrap{max-height:420px;overflow-y:auto;overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);}
+#sched-wrap{max-height:440px;overflow-y:auto;overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);}
 #sched-wrap::-webkit-scrollbar{width:8px;height:8px;}
 #sched-wrap::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:4px;}
 #sched-wrap::-webkit-scrollbar-track{background:transparent;}
-.sched{width:100%;border-collapse:collapse;font-family:var(--mono);font-variant-numeric:tabular-nums;}
+.sched{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;}
 .sched th{
     position:sticky;top:0;z-index:5;background:var(--surface-2);
-    font-family:var(--sans);font-size:11px;font-weight:600;color:var(--ink-3);
-    text-transform:uppercase;letter-spacing:.05em;padding:9px 12px;text-align:right;white-space:nowrap;
+    font-size:11px;font-weight:600;color:var(--ink-3);
+    text-transform:uppercase;letter-spacing:.05em;padding:10px 12px;text-align:right;white-space:nowrap;
     border-bottom:1px solid var(--border);
 }
 .sched th:first-child{text-align:left;}
-.sched td{padding:6px 12px;border-bottom:1px solid var(--border);font-size:12px;text-align:right;white-space:nowrap;}
+.sched td{padding:7px 12px;border-bottom:1px solid var(--border);font-size:12.5px;text-align:right;white-space:nowrap;}
 .sched td:first-child{text-align:left;color:var(--ink-3);}
 .sched tbody tr{transition:background .1s;}
 .sched tbody tr:hover{background:var(--surface-2);}
@@ -347,59 +404,62 @@ input[type="range"]:focus-visible{outline:2px solid var(--accent);outline-offset
 .cell-cap{color:var(--ink-2);}
 .cell-ot{color:var(--accent-ink);font-weight:600;}
 .cell-fee{color:var(--neg);}
-.kar-tag{font-size:11px;color:var(--cost-ink);font-style:italic;font-family:var(--sans);}
+.kar-tag{font-size:11px;color:var(--cost-ink);font-style:italic;}
 
 .nc{cursor:pointer;}
-.nc .hint{color:var(--ink-3);font-family:var(--sans);font-size:11px;transition:color .1s;}
+.nc .hint{color:var(--ink-3);font-size:11px;transition:color .1s;}
 .nc:hover .hint{color:var(--accent-ink);}
 .oti{
     background:var(--surface);border:1px solid var(--accent);color:var(--ink);
-    font-family:var(--mono);font-size:12px;border-radius:4px;padding:2px 6px;
+    font-size:12px;border-radius:8px;padding:3px 7px;
     width:104px;text-align:right;outline:none;
 }
 
 /* Musi mieć wyższą specyficzność niż `outline:none` w regułach bazowych pól —
    `:where(...)` wnosi zero, więc globalny pierścień focusu tam przegrywa. */
-.inp:focus-visible,.mini-inp:focus-visible,.oti:focus-visible{
+.mini-inp:focus-visible,.oti:focus-visible,.inp-box:focus-visible{
     outline:2px solid var(--accent);outline-offset:2px;
 }
 
-/* Wiersz „Twoja stopa” w tabeli scenariuszy */
+/* Wiersz „Twoja stopa” w tabeli scenariuszy stopy */
 .tbl tr.is-current td{background:var(--accent-soft);}
-.tbl tr.is-current td:first-child{color:var(--accent-ink);font-weight:600;}
+.tbl tr.is-current td:first-child{color:var(--accent-ink);font-weight:600;padding-left:10px;border-radius:10px 0 0 10px;}
+.tbl tr.is-current td:last-child{border-radius:0 10px 10px 0;}
 .tag-you{font-size:11px;color:var(--ink-3);font-weight:400;margin-left:6px;}
 
 /* ── Panele rozwijane ────────────────────────────────────────────────────── */
 .disclose{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .38s cubic-bezier(.25,.46,.45,.94),opacity .28s ease;}
 .disclose.is-open{grid-template-rows:1fr;opacity:1;}
 .disclose > div{overflow:hidden;}
-.disclose-pad{padding:18px 0 4px;}
+.disclose-pad{padding:14px 0 2px;}
 
 /* ── Opcje dodatkowe ─────────────────────────────────────────────────────── */
-.field-accent{border-top:1px solid var(--border);padding-top:20px;margin-top:4px;}
-.opts-title{margin:30px 0 4px;color:var(--ink-3);}
-.opt{border-bottom:1px solid var(--border);padding:14px 0;}
-.opt:last-child{border-bottom:none;}
+.field-accent{background:var(--mint);border-radius:var(--r);padding:16px 16px 14px;margin:6px -4px 0;}
+.field-accent .field-val{background:var(--surface);}
+.opts-title{margin:28px 0 10px;color:var(--ink-3);}
+.opt{background:var(--surface-2);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;}
+.opt:last-child{margin-bottom:0;}
 .opt-head{display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.opt .mini-inp{background:var(--surface);}
 
 /* Przełącznik wł./wył. */
 .switch{
-    position:relative;flex-shrink:0;width:38px;height:22px;border-radius:999px;cursor:pointer;
+    position:relative;flex-shrink:0;width:42px;height:24px;border-radius:999px;cursor:pointer;
     background:var(--border-strong);border:none;padding:0;transition:background var(--step);
 }
 .switch::after{
-    content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
-    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform var(--step);
+    content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .22s cubic-bezier(.3,1.4,.5,1);
 }
 .switch[aria-checked="true"]{background:var(--accent);}
-.switch[aria-checked="true"]::after{transform:translateX(16px);}
+.switch[aria-checked="true"]::after{transform:translateX(18px);}
 .switch:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 
 /* Transze */
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px;}
 .chip{
     border:1px solid var(--border-strong);background:var(--surface);color:var(--ink-2);
-    border-radius:999px;padding:4px 11px;font:inherit;font-size:12px;font-weight:500;cursor:pointer;
+    border-radius:999px;padding:5px 12px;font:inherit;font-size:12px;font-weight:500;cursor:pointer;
     font-variant-numeric:tabular-nums;transition:border-color var(--step),color var(--step),background var(--step);
 }
 .chip:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
@@ -408,21 +468,21 @@ input[type="range"]:focus-visible{outline:2px solid var(--accent);outline-offset
 .tr-n{font-size:12px;color:var(--ink-3);width:16px;flex-shrink:0;}
 .mini-inp{
     background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r-sm);
-    color:var(--ink);font-size:13px;font-family:inherit;padding:5px 8px;outline:none;
+    color:var(--ink);font-size:13px;font-family:inherit;padding:6px 10px;outline:none;
     transition:border-color var(--step);
 }
 .mini-inp:focus{border-color:var(--accent);}
 select.mini-inp{
-    cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:24px;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right 8px center;
+    cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:26px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23998' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 10px center;
 }
 .row-inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px;}
 .row-inline:last-child{margin-bottom:0;}
 .grow{flex:1;min-width:0;}
 .del-btn{
-    background:none;border:1px solid var(--border-strong);color:var(--ink-3);
-    border-radius:var(--r-sm);width:26px;height:26px;font-size:15px;line-height:1;
+    background:var(--surface);border:1px solid var(--border-strong);color:var(--ink-3);
+    border-radius:50%;width:28px;height:28px;font-size:15px;line-height:1;
     cursor:pointer;padding:0;flex-shrink:0;transition:border-color var(--step),color var(--step);
 }
 .del-btn:hover{border-color:var(--neg);color:var(--neg);}
@@ -430,48 +490,91 @@ select.mini-inp{
 /* ── Cel spłaty ──────────────────────────────────────────────────────────── */
 .goal{
     display:flex;flex-wrap:wrap;align-items:center;gap:10px;
-    padding:14px 16px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);
+    padding:16px 18px;border-radius:var(--r);background:var(--sun);
 }
+.goal .inp{background:var(--surface);border-radius:8px;padding:3px 6px;width:48px;}
 .goal .btn{margin-left:auto;}
 
-/* ── Porównanie scenariuszy ──────────────────────────────────────────────── */
-.cmp-grid{display:grid;grid-template-columns:170px minmax(0,1fr) minmax(0,1fr) 110px;}
-.cmp-grid > div{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;}
-.cmp-grid > div:nth-child(4n+1){padding-left:0;}
-.cmp-grid > div:nth-child(4n+3),.cmp-grid > div:nth-child(4n+4){border-left:1px solid var(--border);}
-.cmp-head > div{border-bottom:1px solid var(--border);align-items:flex-start;flex-direction:column;gap:3px;}
-.cmp-a{color:var(--ink-2);font-variant-numeric:tabular-nums;}
-.cmp-b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;}
-.diff-good{color:var(--accent-ink);font-variant-numeric:tabular-nums;font-size:12px;}
-.diff-bad{color:var(--neg);font-variant-numeric:tabular-nums;font-size:12px;}
-.cmp-label{grid-column:1;}
-
-/* ── Zakładki ────────────────────────────────────────────────────────────── */
+/* ── Szczegóły w zakładkach ──────────────────────────────────────────────── */
+.details{margin-top:24px;}
 .tabs{
-    display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px;
+    display:flex;gap:2px;padding:4px;margin-bottom:26px;width:max-content;max-width:100%;
+    background:var(--surface-2);border-radius:999px;
     overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
 }
 .tabs::-webkit-scrollbar{display:none;}
 .tab{
-    flex-shrink:0;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;
-    padding:10px 12px;font:inherit;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;
-    white-space:nowrap;transition:color var(--step),border-color var(--step);
+    flex-shrink:0;display:inline-flex;align-items:center;gap:6px;
+    background:none;border:none;border-radius:999px;
+    padding:8px 15px;font:inherit;font-size:13px;font-weight:500;color:var(--ink-2);cursor:pointer;
+    white-space:nowrap;transition:color var(--step),background var(--step);
 }
 .tab:hover{color:var(--ink);}
-.tab[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--accent);}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:600;background:var(--surface);box-shadow:var(--shadow-sm);}
+:root[data-theme="dark"] .tab[aria-selected="true"]{background:var(--surface-3);}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tab[aria-selected="true"]{background:var(--surface-3);}}
+.tab-count{
+    min-width:18px;height:18px;padding:0 5px;border-radius:999px;font-size:11px;font-weight:600;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--primary);color:var(--on-primary);
+}
 .tabpanel{min-height:260px;}
+.sub-block{margin-top:36px;}
+
+/* ── Moje scenariusze ────────────────────────────────────────────────────── */
+.scn-empty{
+    display:flex;gap:16px;align-items:flex-start;padding:22px;border-radius:var(--r);
+    background:var(--surface-2);
+}
+.scn-empty p{max-width:56ch;}
+.scn-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:var(--r);}
+.scn{border-collapse:separate;border-spacing:0;width:100%;}
+.scn th,.scn td{padding:11px 16px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--border);font-size:13px;}
+.scn tbody tr:last-child td{border-bottom:none;}
+.scn th:first-child,.scn td:first-child{
+    text-align:left;position:sticky;left:0;z-index:1;background:var(--surface);
+    color:var(--ink-3);font-weight:500;font-size:12.5px;
+}
+.scn thead th{vertical-align:top;background:var(--surface);}
+.scn .is-now{background:var(--surface-2);}
+.scn .is-best{background:var(--mint);}
+.scn tr.is-key td{font-weight:700;font-family:var(--display);font-size:14px;}
+.scn tr.is-key td:first-child{font-family:var(--sans);font-weight:500;font-size:12.5px;}
+.scn-name{font-family:var(--display);font-size:14px;font-weight:700;color:var(--ink);max-width:200px;margin-left:auto;white-space:normal;}
+
+/* Na telefonie scenariusze jako karty — tabela mieściłaby jedną kolumnę. */
+.scn-cards{display:none;}
+.scn-card{border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;background:var(--surface);}
+.scn-card.is-now{background:var(--surface-2);}
+.scn-card.is-best{background:var(--mint);border-color:transparent;}
+.scn-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:4px;}
+.scn-card .scn-name{margin-left:0;max-width:none;}
+.scn-card .scn-actions{margin-top:0;}
+.scn-kv{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:12px;}
+.scn-kv dt{font-size:11.5px;color:var(--ink-3);}
+.scn-kv dd{font-family:var(--display);font-weight:700;font-size:15px;}
+.scn-kv dd small{font-family:var(--sans);font-weight:500;font-size:11px;display:block;}
+.scn-tag{
+    display:inline-block;margin-top:5px;padding:2px 9px;border-radius:999px;
+    font-size:11px;font-weight:600;background:var(--surface);color:var(--ink-3);
+}
+.scn-tag.best{background:var(--primary);color:var(--on-primary);}
+.scn-actions{display:flex;gap:4px;justify-content:flex-end;margin-top:8px;}
+.diff-good{color:var(--accent-ink);font-size:11.5px;font-weight:500;}
+.diff-bad{color:var(--neg);font-size:11.5px;font-weight:500;}
+.scn small{display:block;font-family:var(--sans);font-weight:500;}
 
 /* ── Poradnik ────────────────────────────────────────────────────────────── */
-.guide{max-width:68ch;border-top:1px solid var(--border);margin-top:20px;padding-top:8px;}
-.guide h2{font-family:var(--display);font-size:23px;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin:42px 0 14px;line-height:1.25;}
-.guide h3{font-size:16px;font-weight:600;color:var(--ink);margin:26px 0 8px;}
-.guide p{font-size:14.5px;color:var(--ink-2);font-weight:300;line-height:1.78;margin-bottom:13px;}
+.guide{max-width:68ch;margin:56px auto 0;}
+.guide h2{font-family:var(--display);font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin:44px 0 14px;line-height:1.25;}
+.guide h3{font-family:var(--display);font-size:16.5px;font-weight:700;color:var(--ink);margin:28px 0 8px;}
+.guide p{font-size:15px;color:var(--ink-2);line-height:1.78;margin-bottom:13px;}
 .guide strong{color:var(--ink);font-weight:600;}
 .guide ul{margin:0 0 13px 20px;}
-.guide li{font-size:14.5px;color:var(--ink-2);font-weight:300;line-height:1.78;margin-bottom:6px;}
+.guide li{font-size:15px;color:var(--ink-2);line-height:1.78;margin-bottom:6px;}
 
 /* ── Stopka ──────────────────────────────────────────────────────────────── */
-.foot{border-top:1px solid var(--border);padding:28px;text-align:center;}
+.foot{padding:32px 24px 40px;text-align:center;}
 .foot p{font-size:12px;color:var(--ink-3);max-width:70ch;margin:0 auto;line-height:1.6;}
 
 /* ── Animacje ────────────────────────────────────────────────────────────── */
@@ -481,59 +584,38 @@ select.mini-inp{
 .flash{animation:flash .8s ease;}
 
 /* ── Responsywność ───────────────────────────────────────────────────────── */
-@media (max-width:820px){
-    .grid-2{grid-template-columns:1fr;}
-    .grid-2 > * + *{border-left:none;border-top:1px solid var(--border);}
-    .panel-l{padding-right:0;}
-    .panel-r{padding-left:0;}
-    .results{position:static;}
-    .page{padding:0 18px 72px;}
-    .topbar{padding:10px 18px;}
-    .hero-in{padding:28px 18px 24px;}
+@media (max-width:900px){
+    .calc{grid-template-columns:1fr;}
+    .card-results{position:static;}
+    .hero-art{display:none;}
+    .hero{grid-template-columns:1fr;}
 }
-/* Poniżej 720px tabela porównania przestaje być tabelą — składa się w karty,
-   bo kolumna „Różnica” inaczej wychodzi poza ekran. */
 @media (max-width:720px){
-    /* Siatka porównania składa się w karty: etykieta jako nagłówek, pod nią wartości. */
-    .cmp-grid{grid-template-columns:1fr;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-    .cmp-grid > div{border-left:none !important;padding:9px 14px !important;}
-    .cmp-grid > div:nth-child(4n+1){
-        background:var(--surface-2);font-weight:600;color:var(--ink);
-        border-bottom:none;padding-top:12px !important;
-    }
-    .cmp-grid > div:nth-child(4n+1) ~ div{justify-content:flex-end;}
-    .cmp-grid > div:nth-child(4n+2)::before{content:'Scenariusz A';}
-    .cmp-grid > div:nth-child(4n+3)::before{content:'Scenariusz B';}
-    .cmp-grid > div:nth-child(4n+4)::before{content:'Różnica';}
-    .cmp-grid > div:nth-child(4n+2)::before,
-    .cmp-grid > div:nth-child(4n+3)::before,
-    .cmp-grid > div:nth-child(4n+4)::before{
-        font-size:12px;color:var(--ink-3);font-weight:400;margin-right:auto;padding-right:12px;
-    }
-    /* Komórki różnicy przy wierszach parametrów są puste — na mobile tylko zaśmiecają. */
-    .cmp-grid > div:nth-child(4n+4):empty{display:none;}
-    .cmp-grid > div:nth-child(4n+1):not(:first-child){border-top:3px solid var(--border);}
-    .cmp-head{display:none;}
+    .page{padding:0 14px 72px;}
+    .topbar{padding:10px 14px;}
+    .card{padding:20px 18px;border-radius:20px;}
+    .hero{padding:28px 22px 26px;border-radius:22px;}
 
     /* Tabele oznaczone jako stackable zamieniają się w listę par etykieta–wartość. */
     .tbl.stackable thead{display:none;}
-    .tbl.stackable tr{display:block;padding:8px 0;border-bottom:3px solid var(--border);}
+    .tbl.stackable tr{display:block;padding:8px 0;border-bottom:1px solid var(--border);}
     .tbl.stackable tr:last-child{border-bottom:none;}
     .tbl.stackable td{
         display:flex;justify-content:space-between;align-items:baseline;gap:14px;
         border-bottom:none;padding:3px 0;white-space:normal;text-align:right;
     }
     .tbl.stackable td:first-child{font-weight:600;color:var(--ink);padding-bottom:5px;}
+    .tbl.stackable tr.is-current td{padding-left:10px;padding-right:10px;border-radius:0;}
     .tbl.stackable td[data-l]::before{
         content:attr(data-l);color:var(--ink-3);font-size:12px;font-weight:400;
         text-align:left;flex-shrink:0;
     }
     .tbl.stackable td:not(:first-child):empty{display:none;}
 
-    .stat-grid{grid-template-columns:1fr 1fr;gap:14px;}
+    .scn-wrap{display:none;}
+    .scn-cards{display:block;}
     .goal .btn{margin-left:0;width:100%;}
-}
-@media (max-width:480px){
+    .save .t-num-lg{font-size:19px;}
 }
 </style>
 </head>
@@ -563,27 +645,42 @@ select.mini-inp{
     </div>
 </header>
 
+<main class="page" id="kalkulator">
+
 <!-- ── Hero ─────────────────────────────────────────────────────────────── -->
 <div class="hero">
-    <div class="hero-in">
+    <div>
         <p class="t-eyebrow">Kalkulator nadpłaty kredytu hipotecznego</p>
         <h1>Ile naprawdę zaoszczędzisz nadpłacając kredyt?</h1>
         <p class="hero-lead">Wpisz parametry kredytu i kwotę nadpłaty — od razu zobaczysz, ile mniej oddasz bankowi i o ile szybciej spłacisz kredyt. Bezpłatnie, bez rejestracji.</p>
     </div>
+    <svg class="hero-art" viewBox="0 0 220 170" fill="none" aria-hidden="true">
+        <circle class="a-sun" cx="178" cy="34" r="17"/>
+        <path class="a-house a-line" d="M44 152V84l56-44 56 44v68z" stroke-width="3" stroke-linejoin="round"/>
+        <path class="a-line" d="M30 94l70-56 70 56" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect class="a-accent" x="87" y="110" width="26" height="42" rx="5"/>
+        <rect class="a-cost" x="60" y="96" width="17" height="17" rx="4"/>
+        <rect class="a-cost" x="123" y="96" width="17" height="17" rx="4"/>
+        <rect class="a-accent a-line" x="168" y="138" width="40" height="12" rx="6" stroke-width="2.5"/>
+        <rect class="a-accent a-line" x="172" y="124" width="40" height="12" rx="6" stroke-width="2.5"/>
+        <rect class="a-accent a-line" x="166" y="110" width="40" height="12" rx="6" stroke-width="2.5"/>
+        <path class="a-line" d="M14 152h196" stroke-width="3" stroke-linecap="round"/>
+    </svg>
 </div>
 
-<main class="page" id="kalkulator">
-
 <!-- ── Parametry + wyniki ───────────────────────────────────────────────── -->
-<section class="grid-2 band">
+<section class="calc">
 
     <!-- Parametry -->
-    <div class="panel panel-l">
+    <div class="card">
         <div class="head-row">
-            <h2 class="t-section">Parametry kredytu</h2>
+            <div class="title">
+                <span class="ico ico-sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg></span>
+                <h2 class="t-section">Twój kredyt</h2>
+            </div>
             <div class="seg" role="group" aria-label="Typ rat">
                 <button class="seg-btn" type="button" id="btn-rowne" aria-pressed="true" onclick="setType('rowne')">Raty równe</button>
-                <button class="seg-btn" type="button" id="btn-malejace" aria-pressed="false" onclick="setType('malejace')">Raty malejące</button>
+                <button class="seg-btn" type="button" id="btn-malejace" aria-pressed="false" onclick="setType('malejace')">Malejące</button>
             </div>
         </div>
 
@@ -602,7 +699,7 @@ select.mini-inp{
             <div class="field-top">
                 <label class="t-label" for="val-wklad">Wkład własny <span class="ink-3" id="wklad-kwota">(120 000 PLN)</span></label>
                 <span class="field-val">
-                    <input class="inp" id="val-wklad" type="text" inputmode="numeric" value="20">
+                    <input class="inp" id="val-wklad" type="text" inputmode="numeric" value="20" style="width:40px">
                     <span class="t-unit">%</span>
                 </span>
             </div>
@@ -613,7 +710,7 @@ select.mini-inp{
             <div class="field-top">
                 <label class="t-label" for="val-okres">Okres kredytowania</label>
                 <span class="field-val">
-                    <input class="inp" id="val-okres" type="text" inputmode="numeric" value="30">
+                    <input class="inp" id="val-okres" type="text" inputmode="numeric" value="30" style="width:40px">
                     <span class="t-unit">lat</span>
                 </span>
             </div>
@@ -624,7 +721,7 @@ select.mini-inp{
             <div class="field-top">
                 <label class="t-label" for="val-rate" id="rate-label">Oprocentowanie</label>
                 <span class="field-val">
-                    <input class="inp" id="val-rate" type="text" inputmode="decimal" value="7,5">
+                    <input class="inp" id="val-rate" type="text" inputmode="decimal" value="7,5" style="width:52px">
                     <span class="t-unit">%</span>
                 </span>
             </div>
@@ -634,7 +731,7 @@ select.mini-inp{
         <!-- Nadpłata -->
         <div class="field field-accent">
             <div class="field-top">
-                <label class="t-label c-accent" for="val-nadplata">Nadpłata co miesiąc</label>
+                <label class="t-label c-accent" for="val-nadplata" style="font-weight:600">Nadpłata co miesiąc</label>
                 <span class="field-val">
                     <input class="inp" id="val-nadplata" type="text" inputmode="numeric" value="500">
                     <span class="t-unit">PLN</span>
@@ -655,7 +752,8 @@ select.mini-inp{
 
         <div class="opt">
             <div class="opt-head">
-                <label class="t-label grow" for="start-m">Kredyt uruchomiony</label>
+                <span class="ico ico-sm ico-sun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+                <label class="t-label grow" for="start-m">Start kredytu</label>
                 <select class="mini-inp" id="start-m" aria-label="Miesiąc uruchomienia kredytu"></select>
                 <select class="mini-inp" id="start-y" aria-label="Rok uruchomienia kredytu"></select>
             </div>
@@ -663,6 +761,7 @@ select.mini-inp{
 
         <div class="opt">
             <div class="opt-head">
+                <span class="ico ico-sm ico-sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
                 <div class="grow">
                     <p class="t-label">Zmienna stopa w czasie</p>
                     <p class="t-hint">Np. stała przez 5 lat, potem inna.</p>
@@ -680,6 +779,7 @@ select.mini-inp{
 
         <div class="opt">
             <div class="opt-head">
+                <span class="ico ico-sm ico-peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></span>
                 <div class="grow">
                     <p class="t-label">Prowizja za nadpłatę</p>
                     <p class="t-hint">Rekompensata dla banku w pierwszych latach.</p>
@@ -709,6 +809,7 @@ select.mini-inp{
 
         <div class="opt">
             <div class="opt-head">
+                <span class="ico ico-sm ico-mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v6M15 10v5M9 15v5"/></svg></span>
                 <div class="grow">
                     <p class="t-label">Karencja i transze</p>
                     <p class="t-hint">Budowa domu: płacisz tylko odsetki od wypłaconej części.</p>
@@ -721,9 +822,7 @@ select.mini-inp{
                         <label class="t-hint grow" for="kar-mo-inp">Czas karencji</label>
                         <select class="mini-inp" id="kar-mo-inp"></select>
                     </div>
-                    <div class="row-inline" style="margin-top:14px">
-                        <span class="t-label grow">Transze</span>
-                    </div>
+                    <p class="t-label" style="margin-top:14px">Transze</p>
                     <div class="chips" role="group" aria-label="Szybki podział na transze">
                         <button class="chip" type="button" onclick="presetTranches(1)">1 × 100%</button>
                         <button class="chip" type="button" onclick="presetTranches(2)">2 × 50%</button>
@@ -742,9 +841,11 @@ select.mini-inp{
     </div>
 
     <!-- Wyniki -->
-    <div class="panel panel-r">
-      <div class="results">
-        <h2 class="t-section" style="margin-bottom:18px">Wyniki</h2>
+    <div class="card card-results">
+        <div class="title" style="margin-bottom:20px">
+            <span class="ico ico-mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="6"/><path d="M15.4 9.3a6 6 0 1 1-6.1 6.1"/></svg></span>
+            <h2 class="t-section">Wyniki</h2>
+        </div>
 
         <div id="rata-display">
             <p class="t-label result-head">Rata miesięczna</p>
@@ -810,17 +911,30 @@ select.mini-inp{
             <p class="t-hint" id="ribbon-ot" hidden></p>
         </div>
         <p class="callout" id="no-ex" hidden>Ustaw nadpłatę, a zobaczysz tu, ile zaoszczędzisz.</p>
-      </div>
+
+        <!-- Zapis scenariusza -->
+        <div class="scn-save">
+            <button class="btn btn-primary" type="button" id="scn-open">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+                Zapisz jako scenariusz
+            </button>
+            <form class="scn-form" id="scn-form" hidden>
+                <input class="inp-box" id="scn-name" type="text" maxlength="40" aria-label="Nazwa scenariusza">
+                <button class="btn btn-primary" type="submit">Zapisz</button>
+                <button class="btn btn-ghost" type="button" id="scn-cancel">Anuluj</button>
+            </form>
+            <p class="t-hint scn-msg" id="scn-msg" hidden></p>
+        </div>
     </div>
 </section>
 
 <!-- ── Szczegóły (zakładki) ─────────────────────────────────────────────── -->
-<section class="stack" id="szczegoly">
+<section class="card details" id="szczegoly">
     <div class="tabs" role="tablist" aria-label="Szczegóły kredytu">
         <button class="tab" type="button" role="tab" id="tab-charts" aria-controls="p-charts" aria-selected="true">Wykresy</button>
+        <button class="tab" type="button" role="tab" id="tab-saved" aria-controls="p-saved" aria-selected="false" tabindex="-1">Moje scenariusze <span class="tab-count" id="scn-count" hidden>0</span></button>
         <button class="tab" type="button" role="tab" id="tab-sched" aria-controls="p-sched" aria-selected="false" tabindex="-1">Harmonogram</button>
         <button class="tab" type="button" role="tab" id="tab-analysis" aria-controls="p-analysis" aria-selected="false" tabindex="-1">Ile nadpłacać?</button>
-        <button class="tab" type="button" role="tab" id="tab-cmp" aria-controls="p-cmp" aria-selected="false" tabindex="-1">Porównanie</button>
         <button class="tab" type="button" role="tab" id="tab-scen" aria-controls="p-scen" aria-selected="false" tabindex="-1">Gdy stopa się zmieni</button>
     </div>
 
@@ -835,7 +949,7 @@ select.mini-inp{
         </div>
         <div class="chart-box h-240"><canvas id="chart-balance" aria-label="Wykres liniowy salda zadłużenia w kolejnych latach" role="img"></canvas></div>
 
-        <div class="head-row" style="margin-top:36px">
+        <div class="head-row sub-block">
             <h2 class="t-section">Co roku płacisz</h2>
             <div class="legend">
                 <span class="legend-item"><span class="swatch sw-capital"></span>Kapitał</span>
@@ -844,6 +958,11 @@ select.mini-inp{
             </div>
         </div>
         <div class="chart-box h-220"><canvas id="chart-breakdown" aria-label="Wykres słupkowy: kapitał, odsetki i nadpłaty w kolejnych latach" role="img"></canvas></div>
+    </div>
+
+    <!-- Moje scenariusze -->
+    <div class="tabpanel" role="tabpanel" id="p-saved" aria-labelledby="tab-saved" hidden>
+        <div id="scn-out"></div>
     </div>
 
     <!-- Harmonogram -->
@@ -878,19 +997,19 @@ select.mini-inp{
     <div class="tabpanel" role="tabpanel" id="p-analysis" aria-labelledby="tab-analysis" hidden>
         <div class="goal">
             <label class="t-label" for="goal-yrs">Chcę spłacić kredyt w</label>
-            <input class="inp inp-xs" id="goal-yrs" type="text" inputmode="numeric" value="20">
+            <input class="inp" id="goal-yrs" type="text" inputmode="numeric" value="20">
             <span class="t-label">lat</span>
             <span class="t-label" id="goal-result">—</span>
-            <button class="btn btn-accent" type="button" id="goal-apply" onclick="applyGoal()">Ustaw tę nadpłatę</button>
+            <button class="btn btn-primary" type="button" id="goal-apply" onclick="applyGoal()">Ustaw tę nadpłatę</button>
         </div>
 
-        <div class="head-row" style="margin-top:32px">
+        <div class="head-row sub-block">
             <h2 class="t-section">Oszczędność przy różnych nadpłatach <span class="t-hint" id="sens-strat"></span></h2>
             <span class="legend-item"><span class="swatch sw-accent" style="border-radius:50%"></span>Twoja nadpłata</span>
         </div>
         <div class="chart-box h-200"><canvas id="chart-sens" aria-label="Wykres: oszczędność w zależności od kwoty nadpłaty miesięcznej" role="img"></canvas></div>
 
-        <div style="margin-top:36px">
+        <div class="sub-block">
             <div class="head-row">
                 <div>
                     <h2 class="t-section">Nadpłata czy inwestycja?</h2>
@@ -899,8 +1018,7 @@ select.mini-inp{
                 <div class="row-inline">
                     <label class="t-hint" for="val-inv">Zwrot rocznie</label>
                     <input type="range" id="sl-inv" min="0" max="15" step="0.1" value="6" style="width:120px" aria-label="Oczekiwany roczny zwrot z inwestycji">
-                    <input class="inp inp-xs" id="val-inv" type="text" inputmode="decimal" value="6,0">
-                    <span class="t-unit">%</span>
+                    <span class="field-val"><input class="inp inp-xs" id="val-inv" type="text" inputmode="decimal" value="6,0"><span class="t-unit">%</span></span>
                     <button class="btn" type="button" id="belka-btn" aria-pressed="true" onclick="toggleBelka()">podatek Belki 19%</button>
                 </div>
             </div>
@@ -919,71 +1037,9 @@ select.mini-inp{
         </div>
     </div>
 
-    <!-- Porównanie -->
-    <div class="tabpanel" role="tabpanel" id="p-cmp" aria-labelledby="tab-cmp" hidden>
-        <p class="t-hint" style="margin-bottom:16px">Scenariusz A to Twoje obecne parametry. Zmień scenariusz B i porównaj — ta sama kwota kredytu, stała stopa.</p>
-        <div class="cmp-grid cmp-head">
-            <div></div>
-            <div><span class="t-label">Scenariusz A</span><span class="t-hint">obecne parametry</span></div>
-            <div><span class="t-label c-accent">Scenariusz B</span><span class="t-hint">edytuj</span></div>
-            <div><span class="t-label">Różnica</span></div>
-        </div>
-
-        <div class="cmp-grid">
-            <div class="t-label">Typ rat</div>
-            <div class="cmp-a" id="cmp-a-type">Raty równe</div>
-            <div>
-                <div class="seg" role="group" aria-label="Typ rat scenariusza B">
-                    <button class="seg-btn" type="button" id="cmp-btn-rowne" aria-pressed="true" onclick="setCmpType('rowne')">Równe</button>
-                    <button class="seg-btn" type="button" id="cmp-btn-malejace" aria-pressed="false" onclick="setCmpType('malejace')">Malejące</button>
-                </div>
-            </div>
-            <div></div>
-
-            <div class="t-label">Oprocentowanie</div>
-            <div class="cmp-a" id="cmp-a-rate">7,5%</div>
-            <div><input class="inp inp-sm" id="cmp-val-rate" type="text" inputmode="decimal" value="6,5" aria-label="Oprocentowanie scenariusza B"><span class="t-unit">&nbsp;%</span></div>
-            <div></div>
-
-            <div class="t-label">Okres</div>
-            <div class="cmp-a" id="cmp-a-okres">30 lat</div>
-            <div><input class="inp inp-sm" id="cmp-val-okres" type="text" inputmode="numeric" value="25" aria-label="Okres scenariusza B"><span class="t-unit">&nbsp;lat</span></div>
-            <div></div>
-
-            <div class="t-label">Nadpłata / mies.</div>
-            <div class="cmp-a" id="cmp-a-nadp">500 PLN</div>
-            <div><input class="inp inp-sm" id="cmp-val-nadp" type="text" inputmode="numeric" value="0" aria-label="Nadpłata miesięczna scenariusza B"><span class="t-unit">&nbsp;PLN</span></div>
-            <div></div>
-
-            <div class="t-label">Nadpłata skraca</div>
-            <div class="cmp-a" id="cmp-a-strat">Okres kredytu</div>
-            <div>
-                <div class="seg" role="group" aria-label="Efekt nadpłaty scenariusza B">
-                    <button class="seg-btn" type="button" id="cmp-btn-okres" aria-pressed="true" onclick="setCmpStrat('okres')">Okres</button>
-                    <button class="seg-btn" type="button" id="cmp-btn-rata" aria-pressed="false" onclick="setCmpStrat('rata')">Ratę</button>
-                </div>
-            </div>
-            <div></div>
-        </div>
-
-        <div class="table-scroll" style="margin-top:20px">
-            <table class="tbl stackable">
-                <thead>
-                    <tr>
-                        <th scope="col">Metryka</th>
-                        <th scope="col">Scenariusz A</th>
-                        <th scope="col">Scenariusz B</th>
-                        <th scope="col">Różnica</th>
-                    </tr>
-                </thead>
-                <tbody id="cmp-body"></tbody>
-            </table>
-        </div>
-    </div>
-
     <!-- Scenariusze stopy -->
     <div class="tabpanel" role="tabpanel" id="p-scen" aria-labelledby="tab-scen" hidden>
-        <p class="t-hint" style="margin-bottom:16px">Twój scenariusz przesunięty o podaną liczbę punktów procentowych, przy zachowanej nadpłacie.</p>
+        <p class="t-hint" style="margin-bottom:16px">Twój kredyt przy stopie przesuniętej o podaną liczbę punktów procentowych, przy zachowanej nadpłacie.</p>
         <div class="table-scroll">
             <table class="tbl stackable">
                 <thead>
@@ -1115,7 +1171,8 @@ select.mini-inp{
 <script>
 // ═══ Stan ════════════════════════════════════════════════════════════════
 const LS_STATE='inp-state-v1', LS_THEME='inp-theme';
-const TABS=['charts','sched','analysis','cmp','scen'];
+const TABS=['charts','saved','sched','analysis','scen'];
+const MAX_SAVED=6;
 
 function defaults(){
     const now=new Date();
@@ -1129,7 +1186,7 @@ function defaults(){
         kar:{on:false, mo:12, transze:[]},
         inv:{rate:6.0, belka:true},
         tab:'charts',
-        b:{type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0},
+        saved:[],   // zapisane scenariusze: {id, name, s:snapshot parametrów}
         goalYrs:20
     };
 }
@@ -1154,9 +1211,11 @@ function loadState(){
     m.fee={...d.fee,...(o.fee||{})};
     m.kar={...d.kar,...(o.kar||{})};
     m.inv={...d.inv,...(o.inv||{})};
-    m.b={...d.b,...(o.b||{})};
+    delete m.b; delete m.cmpOn;
+    m.saved=(Array.isArray(o.saved)?o.saved:[]).filter(x=>x&&x.s&&typeof x.name==='string').slice(0,MAX_SAVED);
     m.ot=(o.ot&&typeof o.ot==='object')?o.ot:{};
     m.ratePath=Array.isArray(o.ratePath)?o.ratePath:[];
+    if(m.tab==='cmp') m.tab='saved';
     if(!TABS.includes(m.tab)) m.tab='charts';
     // Stary format transz trzymał kwotę i datę kalendarzową — przeliczamy na
     // procent kredytu i miesiąc karencji.
@@ -1166,12 +1225,13 @@ function loadState(){
         const mo=(t.year-m.start.year)*12+(t.month-m.start.month)+1;
         return {id:t.id, mo:Math.max(1,Math.min(m.kar.mo,mo||1)), pct:Math.round((t.amt||0)/k*1000)/10};
     });
-    idCnt=Math.max(0,...m.ratePath.map(s=>s.id||0),...m.kar.transze.map(t=>t.id||0));
+    idCnt=Math.max(0,...m.ratePath.map(s=>s.id||0),...m.kar.transze.map(t=>t.id||0),...m.saved.map(x=>x.id||0));
     return m;
 }
 function resetAll(){
     try{ localStorage.removeItem(LS_STATE); }catch(e){}
-    st=defaults(); idCnt=0; prevHasEx=false;
+    const keep=st.saved;
+    st=defaults(); st.saved=keep; prevHasEx=false;
     syncInputs(); renderRatePath(); renderTransze(); selectTab(st.tab,false); upd(); updHeavy();
 }
 
@@ -1452,13 +1512,6 @@ function upd(){
     updBal(base.by,ext?ext.by:null);
     updBreakdown(cur.rows);
 
-    set('cmp-a-type',st.type==='malejace'?'Raty malejące':'Raty równe');
-    set('cmp-a-rate',st.rateMode==='path'?ratePc(st.rate)+' (zmienna)':ratePc(st.rate));
-    set('cmp-a-okres',st.okres+' '+yrWord(st.okres));
-    set('cmp-a-nadp',num(st.nadplata)+' PLN');
-    set('cmp-a-strat',st.strat==='okres'?'Okres kredytu':'Ratę');
-    updCmp(k,cur);
-
     scheduleRender();
     scheduleHeavy();
     saveState();
@@ -1478,38 +1531,7 @@ function scheduleHeavy(){ clearTimeout(heavyT); heavyT=setTimeout(updHeavy,130);
 
 function updHeavy(){
     const k=kredyt(), n=st.okres*12;
-    updSens(k,n); updGoal(k,n); updInvest(k,n); updScen(k,n);
-}
-
-// ═══ Porównanie ══════════════════════════════════════════════════════════
-function updCmp(k,A){
-    const bn=st.b.okres*12;
-    const B=run({p:k,rm:rateArray(bn,[{m:1,r:st.b.rate}],0),yrs:st.b.okres,
-        ex:st.b.nadplata,ot:{},type:st.b.type,strat:st.b.strat});
-
-    const money=(a,b)=>{
-        const d=b-a;
-        if(Math.abs(d)<1) return '<span class="ink-3">—</span>';
-        return `<span class="${d<0?'diff-good':'diff-bad'}">${d>0?'+':'−'}${num(Math.abs(d))} PLN</span>`;
-    };
-    const months=(a,b)=>{
-        const d=b-a;
-        if(d===0) return '<span class="ink-3">—</span>';
-        return `<span class="${d<0?'diff-good':'diff-bad'}">${d>0?'+':'−'}${fmtMo(Math.abs(d))}</span>`;
-    };
-    const rataTxt=res=>{
-        const f=firstPmt(res), l=lastPmt(res);
-        return Math.abs(f-l)>1?`${dec(f)} → ${dec(l)} PLN`:`${dec(f)} PLN`;
-    };
-
-    const rows=[
-        ['Rata',rataTxt(A),rataTxt(B),''],
-        ['Odsetki łącznie',pln(A.int),pln(B.int),money(A.int,B.int)],
-        ['Całkowity koszt',pln(A.total),pln(B.total),money(A.total,B.total)],
-        ['Czas spłaty',fmtMo(A.mo),fmtMo(B.mo),months(A.mo,B.mo)]
-    ];
-    html('cmp-body',rows.map(([lab,a,b,d])=>
-        `<tr><td>${lab}</td><td class="cmp-a" data-l="Scenariusz A">${a}</td><td class="cmp-b" data-l="Scenariusz B">${b}</td><td data-l="Różnica">${d}</td></tr>`).join(''));
+    updSens(k,n); updGoal(k,n); updInvest(k,n); updScen(k,n); renderSaved();
 }
 
 // ═══ Analiza: czułość, cel, inwestycja ═══════════════════════════════════
@@ -1642,6 +1664,157 @@ function updScen(k,n){
     }).join(''));
 }
 
+// ═══ Moje scenariusze ════════════════════════════════════════════════════
+const SNAP_KEYS=['cena','wklad','okres','rate','nadplata','ot','type','strat','start','rateMode','ratePath','fee','kar'];
+const clone=o=>JSON.parse(JSON.stringify(o));
+const snapshot=()=>clone(Object.fromEntries(SNAP_KEYS.map(k=>[k,st[k]])));
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Liczy scenariusz z dowolnego zestawu parametrów. Silnik (stopy, daty,
+   transze) czyta parametry z `st`, więc na czas obliczeń podmieniamy stan. */
+function evalSnap(snap){
+    const prev=st;
+    st={...prev,...clone(snap)};
+    try{
+        const k=kredyt(), n=st.okres*12, opts=baseOpts(k,rateArray(n,rateSteps(),0));
+        const cur=run({...opts,collect:true}), base=run({...opts,ex:0,ot:{},collect:false});
+        const hasEx=st.nadplata>0||Object.keys(st.ot).length>0;
+        return {k,cur,s:st,f:firstPmt(cur),l:lastPmt(cur),end:monthDate(cur.mo),
+            save:hasEx?Math.max(0,base.total-cur.total):0};
+    } finally { st=prev; }
+}
+
+function defaultName(){
+    const n=st.nadplata>0?`nadpłata ${num(st.nadplata)}`:'bez nadpłat';
+    return `${ratePc(st.rate)}, ${st.okres} ${yrWord(st.okres)}, ${n}`;
+}
+function scnMsg(h){ const el=$('scn-msg'); el.hidden=!h; if(h) el.innerHTML=h; }
+
+function openSave(){
+    if(st.saved.length>=MAX_SAVED){
+        scnMsg(`Masz już ${MAX_SAVED} scenariuszy — usuń któryś w zakładce <strong>Moje scenariusze</strong>.`);
+        return;
+    }
+    scnMsg('');
+    $('scn-open').hidden=true; $('scn-form').hidden=false;
+    const inp=$('scn-name'); inp.value=defaultName(); inp.focus(); inp.select();
+}
+function closeSave(){ $('scn-form').hidden=true; $('scn-open').hidden=false; }
+
+function saveScenario(name){
+    name=(name||'').trim()||defaultName();
+    st.saved.push({id:++idCnt,name:name.slice(0,40),s:snapshot()});
+    saveState(); renderSaved();
+    return name;
+}
+function loadScenario(id){
+    const sc=st.saved.find(x=>x.id===id); if(!sc) return;
+    Object.assign(st,clone(sc.s));
+    syncInputs(); renderRatePath(); renderTransze(); upd(); updHeavy();
+    document.querySelector('.calc').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function deleteScenario(id){
+    st.saved=st.saved.filter(x=>x.id!==id);
+    saveState(); renderSaved();
+}
+
+function renderSaved(){
+    const n=st.saved.length;
+    $('scn-count').hidden=!n; $('scn-count').textContent=n;
+    if(!n){
+        html('scn-out',`<div class="scn-empty">
+            <span class="ico ico-mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg></span>
+            <div>
+                <p class="t-section" style="margin-bottom:4px">Porównaj swoje warianty</p>
+                <p class="t-hint" style="margin-bottom:12px">Zapisz obecne wyliczenie, zmień parametry (np. inną nadpłatę, ofertę innego banku albo refinansowanie) i zapisz kolejne. Tu zobaczysz je obok siebie i od razu wiesz, który wariant jest najtańszy.</p>
+                <button class="btn btn-primary" type="button" onclick="quickSave()">Zapisz obecne wyliczenie</button>
+            </div>
+        </div>`);
+        return;
+    }
+
+    const nowSnap=JSON.stringify(snapshot());
+    const same=st.saved.find(x=>JSON.stringify(x.s)===nowSnap);
+    const cols=[{now:true,name:'Teraz',r:evalSnap(snapshot())},
+        ...st.saved.map(x=>({id:x.id,name:x.name,r:evalSnap(x.s)}))];
+    const best=cols.reduce((a,c)=>c.r.cur.total<a.r.cur.total?c:a,cols[0]);
+    const now=cols[0].r;
+
+    const money=(d)=>Math.abs(d)<1?'':`<small class="${d<0?'diff-good':'diff-bad'}">${d<0?'−':'+'}${num(Math.abs(d))} PLN vs teraz</small>`;
+    const months=(d)=>d===0?'':`<small class="${d<0?'diff-good':'diff-bad'}">${d<0?'o ':'+'}${fmtMo(Math.abs(d))}${d<0?' wcześniej':' później'}</small>`;
+    const extras=s=>[s.kar.on?'karencja':'',s.fee.on?'prowizja':'',Object.keys(s.ot).length?'wpłaty jednorazowe':'',s.rateMode==='path'&&s.ratePath.length?'zmiana stopy':'']
+        .filter(Boolean).join(', ')||'—';
+    const ROWS=[
+        ['Kwota kredytu',c=>pln(c.r.k)],
+        ['Okres',c=>`${c.r.s.okres} ${yrWord(c.r.s.okres)}`],
+        ['Oprocentowanie',c=>ratePc(c.r.s.rate)],
+        ['Raty',c=>c.r.s.type==='malejace'?'malejące':'równe'],
+        ['Nadpłata',c=>c.r.s.nadplata>0?`${num(c.r.s.nadplata)} PLN/mies.<small class="ink-3">skraca ${c.r.s.strat==='okres'?'okres':'ratę'}</small>`:'brak'],
+        ['Dodatki',c=>extras(c.r.s)],
+        ['Rata',c=>Math.abs(c.r.f-c.r.l)>1?`${num(c.r.f)} → ${num(c.r.l)} PLN`:`${num(c.r.f)} PLN`,true],
+        ['Odsetki',c=>pln(c.r.cur.int)],
+        ['Zapłacisz łącznie',c=>pln(c.r.cur.total)+(c.now?'':money(c.r.cur.total-now.cur.total)),true],
+        ['Koniec spłaty',c=>`${MIES_S[c.r.end.mo]} ${c.r.end.y}`+(c.now?'':months(c.r.cur.mo-now.cur.mo)),true],
+        ['Oszczędność z nadpłat',c=>c.r.save?`<span class="c-accent">${pln(c.r.save)}</span>`:'—']
+    ];
+    const cls=c=>c===best&&cols.length>1?'is-best':c.now?'is-now':'';
+    const head=cols.map(c=>`<th scope="col" class="${cls(c)}">
+        <div class="scn-name" title="${esc(c.name)}">${esc(c.name)}</div>
+        ${c===best&&cols.length>1?'<span class="scn-tag best">najtańszy</span>':''}
+        ${c.now?`<span class="scn-tag">${same?'= '+esc(same.name):'bieżące ustawienia'}</span>`
+            :`<div class="scn-actions">
+                <button class="btn btn-sm" type="button" onclick="loadScenario(${c.id})">Wczytaj</button>
+                <button class="del-btn" type="button" aria-label="Usuń scenariusz ${esc(c.name)}" onclick="deleteScenario(${c.id})">×</button>
+            </div>`}
+    </th>`).join('');
+    const body=ROWS.map(([lab,fn,key])=>`<tr class="${key?'is-key':''}"><td>${lab}</td>${cols.map(c=>`<td class="${cls(c)}">${fn(c)}</td>`).join('')}</tr>`).join('');
+
+    const params=s=>[ratePc(s.rate),`${s.okres} ${yrWord(s.okres)}`,s.type==='malejace'?'raty malejące':'raty równe',
+        s.nadplata>0?`nadpłata ${num(s.nadplata)} (skraca ${s.strat==='okres'?'okres':'ratę'})`:'bez nadpłaty'].join(' · ');
+    const kv=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
+    const cards=cols.map(c=>`<div class="scn-card ${cls(c)}">
+        <div class="scn-card-head">
+            <div><div class="scn-name">${esc(c.name)}</div>
+                ${c===best&&cols.length>1?'<span class="scn-tag best">najtańszy</span>':''}
+                ${c.now?`<span class="scn-tag">${same?'= '+esc(same.name):'bieżące ustawienia'}</span>`:''}</div>
+            ${c.now?'':`<div class="scn-actions">
+                <button class="btn btn-sm" type="button" onclick="loadScenario(${c.id})">Wczytaj</button>
+                <button class="del-btn" type="button" aria-label="Usuń scenariusz ${esc(c.name)}" onclick="deleteScenario(${c.id})">×</button></div>`}
+        </div>
+        <p class="t-hint">${params(c.r.s)}${extras(c.r.s)!=='—'?' · '+extras(c.r.s):''}</p>
+        <dl class="scn-kv">
+            ${kv('Rata',ROWS[6][1](c))}
+            ${kv('Oszczędność z nadpłat',ROWS[10][1](c))}
+            ${kv('Zapłacisz łącznie',ROWS[8][1](c))}
+            ${kv('Koniec spłaty',ROWS[9][1](c))}
+        </dl>
+    </div>`).join('');
+
+    const canAdd=n<MAX_SAVED&&!same;
+    html('scn-out',`<div class="head-row">
+            <p class="t-hint">Kolumna „Teraz” to bieżące ustawienia kalkulatora. „Wczytaj” przywraca zapisany wariant do kalkulatora.</p>
+            ${canAdd?'<button class="btn btn-primary" type="button" onclick="quickSave()">+ Zapisz obecne</button>':''}
+        </div>
+        <div class="scn-wrap"><table class="scn"><thead><tr><th scope="col"></th>${head}</tr></thead><tbody>${body}</tbody></table></div>
+        <div class="scn-cards">${cards}</div>`);
+}
+function quickSave(){
+    if(st.saved.length>=MAX_SAVED) return;
+    saveScenario(defaultName());
+}
+
+function initSaved(){
+    $('scn-open').addEventListener('click',openSave);
+    $('scn-cancel').addEventListener('click',closeSave);
+    $('scn-form').addEventListener('submit',e=>{
+        e.preventDefault();
+        const name=saveScenario($('scn-name').value);
+        closeSave();
+        scnMsg(`Zapisano „${esc(name)}”. <button class="btn btn-sm btn-ghost" type="button" onclick="selectTab('saved',true);$('szczegoly').scrollIntoView({behavior:'smooth'})">Zobacz porównanie →</button>`);
+    });
+    $('scn-name').addEventListener('keydown',e=>{ if(e.key==='Escape') closeSave(); });
+}
+
 // ═══ Harmonogram ═════════════════════════════════════════════════════════
 let schedT=null;
 function scheduleRender(){ clearTimeout(schedT); schedT=setTimeout(()=>renderSched(lastRows),90); }
@@ -1722,9 +1895,6 @@ function exportCsv(){
 // ═══ Przełączniki ════════════════════════════════════════════════════════
 function setType(t){ st.type=t; press('btn-rowne',t==='rowne'); press('btn-malejace',t==='malejace'); upd(); updHeavy(); }
 function setStrat(t){ st.strat=t; press('btn-okres',t==='okres'); press('btn-rata',t==='rata'); upd(); updHeavy(); }
-function setCmpType(t){ st.b.type=t; press('cmp-btn-rowne',t==='rowne'); press('cmp-btn-malejace',t==='malejace'); upd(); }
-function setCmpStrat(t){ st.b.strat=t; press('cmp-btn-okres',t==='okres'); press('cmp-btn-rata',t==='rata'); upd(); }
-
 function toggleBelka(){ st.inv.belka=!st.inv.belka; press('belka-btn',st.inv.belka); updHeavy(); saveState(); }
 function syncOpt(name,on){ $(name+'-panel').classList.toggle('is-open',on); check(name+'-toggle',on); }
 function toggleFee(){ st.fee.on=!st.fee.on; syncOpt('fee',st.fee.on); upd(); updHeavy(); }
@@ -2071,15 +2241,6 @@ function bind(slId,valId,key,float,after){
     fillTrack(sl);
 }
 
-function bindB(valId,key,float,lo,hi){
-    const inp=$(valId); if(!inp) return;
-    inp.addEventListener('change',()=>{
-        const n=float?parseNum(inp.value):Math.round(parseNum(inp.value));
-        if(!isNaN(n)){ st.b[key]=Math.max(lo,Math.min(hi,n)); upd(); }
-    });
-    inp.addEventListener('blur',()=>{ inp.value=float?dec(st.b[key]):num(st.b[key]); });
-}
-
 /* Przepisuje stan do kontrolek — po wczytaniu z localStorage i po resecie. */
 function syncInputs(){
     [['sl-cena','val-cena','cena',false],['sl-wklad','val-wklad','wklad',false],
@@ -2095,12 +2256,6 @@ function syncInputs(){
     syncOpt('fee',st.fee.on);
     buildKarSelect();
     syncOpt('kar',st.kar.on);
-
-    press('cmp-btn-rowne',st.b.type==='rowne'); press('cmp-btn-malejace',st.b.type==='malejace');
-    press('cmp-btn-okres',st.b.strat==='okres'); press('cmp-btn-rata',st.b.strat==='rata');
-    $('cmp-val-rate').value=dec(st.b.rate);
-    $('cmp-val-okres').value=num(st.b.okres);
-    $('cmp-val-nadp').value=num(st.b.nadplata);
 
     $('sl-inv').value=st.inv.rate; $('val-inv').value=dec(st.inv.rate);
     press('belka-btn',st.inv.belka);
@@ -2141,9 +2296,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     bind('sl-okres','val-okres','okres',false,()=>{ renderRatePath(); renderTransze(); });
     bind('sl-rate','val-rate','rate',true);
     bind('sl-nadplata','val-nadplata','nadplata');
-    bindB('cmp-val-rate','rate',true,0,30);
-    bindB('cmp-val-okres','okres',false,1,35);
-    bindB('cmp-val-nadp','nadplata',false,0,1000000);
 
     const onStart=()=>{ renderTransze(); renderRatePath(); upd(); };
     $('start-m').addEventListener('change',e=>{ st.start.month=parseInt(e.target.value,10); onStart(); });
@@ -2176,6 +2328,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
 
     initTabs();
+    initSaved();
     initSchedEvents();
     renderRatePath();
     renderTransze();
