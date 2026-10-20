@@ -194,15 +194,12 @@ svg{display:block;}
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */
 .hero{border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--accent-soft) 0%,transparent 70%);}
-.hero-in{max-width:1120px;margin:0 auto;padding:56px 28px 44px;}
+.hero-in{max-width:1120px;margin:0 auto;padding:40px 28px 32px;}
 .hero h1{
-    font-family:var(--display);font-size:clamp(28px,4.6vw,50px);font-weight:700;
-    line-height:1.12;letter-spacing:-.025em;margin:14px 0 16px;max-width:16ch;
+    font-family:var(--display);font-size:clamp(26px,4vw,42px);font-weight:700;
+    line-height:1.12;letter-spacing:-.025em;margin:12px 0 12px;max-width:20ch;
 }
-.hero-lead{font-size:16px;color:var(--ink-2);font-weight:300;line-height:1.7;max-width:56ch;margin-bottom:26px;}
-.hero-feats{display:flex;flex-wrap:wrap;gap:10px 22px;}
-.hero-feat{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);}
-.hero-feat svg{width:13px;height:13px;color:var(--accent);flex-shrink:0;}
+.hero-lead{font-size:16px;color:var(--ink-2);font-weight:300;line-height:1.7;max-width:60ch;}
 
 /* ── Panele ──────────────────────────────────────────────────────────────── */
 .grid-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;}
@@ -210,13 +207,15 @@ svg{display:block;}
 .panel{padding:28px 0;}
 .panel-l{padding-right:32px;}
 .panel-r{padding-left:32px;}
+.results{position:sticky;top:72px;}
+.save{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;padding:14px 16px;border-radius:var(--r);background:var(--accent-soft);}
+.ribbon .t-hint{margin-top:10px;}
 
 /* ── Kontrolki: suwak + wartość ──────────────────────────────────────────── */
 .field{margin-bottom:20px;}
 .field:last-child{margin-bottom:0;}
 .field-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:9px;}
 .field-val{display:flex;align-items:baseline;gap:5px;flex-shrink:0;}
-.field-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3);margin-top:6px;}
 
 .inp{
     background:transparent;border:none;border-bottom:1.5px solid var(--border-strong);
@@ -297,27 +296,10 @@ input[type="range"]:focus-visible{outline:2px solid var(--accent);outline-offset
 .ribbon-fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.4,0,.2,1);}
 .ribbon-fill.is-base{background:var(--cost);}
 .ribbon-fill.is-ext{background:var(--accent);}
-.ribbon-delta{
-    display:inline-flex;align-items:baseline;gap:6px;margin-top:10px;
-    padding:5px 11px;border-radius:999px;
-    background:var(--accent-soft);color:var(--accent-ink);
-    font-size:12px;font-weight:600;
-}
-.ribbon-delta .num{font-size:14px;font-variant-numeric:tabular-nums;}
-
-/* ── Pasek metryk ────────────────────────────────────────────────────────── */
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);}
-.metric{padding:20px 22px;border-right:1px solid var(--border);}
-.metric:last-child{border-right:none;}
-.metric:first-child{padding-left:0;}
-.metric-k{font-size:12px;color:var(--ink-3);margin-bottom:6px;}
-.metric-v{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
 
 /* ── Wykresy ─────────────────────────────────────────────────────────────── */
 .chart-box{position:relative;}
 .h-160{height:160px;} .h-200{height:200px;} .h-220{height:220px;} .h-240{height:240px;}
-.donut-wrap{position:relative;width:172px;height:172px;margin:0 auto 22px;}
-.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;}
 .legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);}
 .swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
@@ -393,9 +375,37 @@ input[type="range"]:focus-visible{outline:2px solid var(--accent);outline-offset
 .disclose > div{overflow:hidden;}
 .disclose-pad{padding:18px 0 4px;}
 
-/* ── Karencja / transze / ścieżka stopy ──────────────────────────────────── */
-.opt-block{border-top:1px solid var(--border);padding-top:18px;margin-top:18px;}
-.opt-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+/* ── Opcje dodatkowe ─────────────────────────────────────────────────────── */
+.field-accent{border-top:1px solid var(--border);padding-top:20px;margin-top:4px;}
+.opts-title{margin:30px 0 4px;color:var(--ink-3);}
+.opt{border-bottom:1px solid var(--border);padding:14px 0;}
+.opt:last-child{border-bottom:none;}
+.opt-head{display:flex;justify-content:space-between;align-items:center;gap:12px;}
+
+/* Przełącznik wł./wył. */
+.switch{
+    position:relative;flex-shrink:0;width:38px;height:22px;border-radius:999px;cursor:pointer;
+    background:var(--border-strong);border:none;padding:0;transition:background var(--step);
+}
+.switch::after{
+    content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform var(--step);
+}
+.switch[aria-checked="true"]{background:var(--accent);}
+.switch[aria-checked="true"]::after{transform:translateX(16px);}
+.switch:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+/* Transze */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px;}
+.chip{
+    border:1px solid var(--border-strong);background:var(--surface);color:var(--ink-2);
+    border-radius:999px;padding:4px 11px;font:inherit;font-size:12px;font-weight:500;cursor:pointer;
+    font-variant-numeric:tabular-nums;transition:border-color var(--step),color var(--step),background var(--step);
+}
+.chip:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft);}
+.tr-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.tr-row .grow{min-width:0;}
+.tr-n{font-size:12px;color:var(--ink-3);width:16px;flex-shrink:0;}
 .mini-inp{
     background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--r-sm);
     color:var(--ink);font-size:13px;font-family:inherit;padding:5px 8px;outline:none;
@@ -416,12 +426,10 @@ select.mini-inp{
     cursor:pointer;padding:0;flex-shrink:0;transition:border-color var(--step),color var(--step);
 }
 .del-btn:hover{border-color:var(--neg);color:var(--neg);}
-.badge{font-size:11px;color:var(--ink-3);white-space:nowrap;}
-.badge-bad{color:var(--neg);}
 
 /* ── Cel spłaty ──────────────────────────────────────────────────────────── */
 .goal{
-    display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:24px;
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px;
     padding:14px 16px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);
 }
 .goal .btn{margin-left:auto;}
@@ -438,8 +446,23 @@ select.mini-inp{
 .diff-bad{color:var(--neg);font-variant-numeric:tabular-nums;font-size:12px;}
 .cmp-label{grid-column:1;}
 
+/* ── Zakładki ────────────────────────────────────────────────────────────── */
+.tabs{
+    display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px;
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+    flex-shrink:0;background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;
+    padding:10px 12px;font:inherit;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;
+    white-space:nowrap;transition:color var(--step),border-color var(--step);
+}
+.tab:hover{color:var(--ink);}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--accent);}
+.tabpanel{min-height:260px;}
+
 /* ── Poradnik ────────────────────────────────────────────────────────────── */
-.guide{max-width:68ch;border-top:1px solid var(--border);margin-top:44px;padding-top:8px;}
+.guide{max-width:68ch;border-top:1px solid var(--border);margin-top:20px;padding-top:8px;}
 .guide h2{font-family:var(--display);font-size:23px;font-weight:700;letter-spacing:-.02em;color:var(--ink);margin:42px 0 14px;line-height:1.25;}
 .guide h3{font-size:16px;font-weight:600;color:var(--ink);margin:26px 0 8px;}
 .guide p{font-size:14.5px;color:var(--ink-2);font-weight:300;line-height:1.78;margin-bottom:13px;}
@@ -458,21 +481,15 @@ select.mini-inp{
 .flash{animation:flash .8s ease;}
 
 /* ── Responsywność ───────────────────────────────────────────────────────── */
-@media (max-width:900px){
-    .metrics{grid-template-columns:1fr 1fr;}
-    .metric{border-bottom:1px solid var(--border);}
-    .metric:nth-child(2n){border-right:none;}
-    .metric:nth-child(2n+1){padding-left:0;}
-    .metric:nth-last-child(-n+2){border-bottom:none;}
-}
 @media (max-width:820px){
     .grid-2{grid-template-columns:1fr;}
     .grid-2 > * + *{border-left:none;border-top:1px solid var(--border);}
     .panel-l{padding-right:0;}
     .panel-r{padding-left:0;}
+    .results{position:static;}
     .page{padding:0 18px 72px;}
     .topbar{padding:10px 18px;}
-    .hero-in{padding:40px 18px 34px;}
+    .hero-in{padding:28px 18px 24px;}
 }
 /* Poniżej 720px tabela porównania przestaje być tabelą — składa się w karty,
    bo kolumna „Różnica” inaczej wychodzi poza ekran. */
@@ -517,9 +534,6 @@ select.mini-inp{
     .goal .btn{margin-left:0;width:100%;}
 }
 @media (max-width:480px){
-    .metrics{grid-template-columns:1fr;}
-    .metric{border-right:none;padding-left:0;padding-right:0;}
-    .hero-feats{gap:8px 16px;}
 }
 </style>
 </head>
@@ -554,13 +568,7 @@ select.mini-inp{
     <div class="hero-in">
         <p class="t-eyebrow">Kalkulator nadpłaty kredytu hipotecznego</p>
         <h1>Ile naprawdę zaoszczędzisz nadpłacając kredyt?</h1>
-        <p class="hero-lead">Wpisz parametry kredytu, ustaw nadpłatę i sprawdź dokładnie ile mniej oddasz bankowi — miesiąc po miesiącu. Bezpłatnie, bez rejestracji.</p>
-        <div class="hero-feats">
-            <span class="hero-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Raty równe i malejące</span>
-            <span class="hero-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Zmienna stopa w czasie</span>
-            <span class="hero-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Rekompensata za wcześniejszą spłatę</span>
-            <span class="hero-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Harmonogram i eksport CSV</span>
-        </div>
+        <p class="hero-lead">Wpisz parametry kredytu i kwotę nadpłaty — od razu zobaczysz, ile mniej oddasz bankowi i o ile szybciej spłacisz kredyt. Bezpłatnie, bez rejestracji.</p>
     </div>
 </div>
 
@@ -587,8 +595,7 @@ select.mini-inp{
                     <span class="t-unit">PLN</span>
                 </span>
             </div>
-            <input type="range" id="sl-cena" min="100000" max="3000000" step="10000" value="600000" aria-label="Cena mieszkania w złotych">
-            <div class="field-scale"><span>100 tys.</span><span>3 mln</span></div>
+            <input type="range" id="sl-cena" min="100000" max="3000000" step="10000" value="600000" data-hard-max="20000000" aria-label="Cena mieszkania w złotych">
         </div>
 
         <div class="field">
@@ -599,8 +606,7 @@ select.mini-inp{
                     <span class="t-unit">%</span>
                 </span>
             </div>
-            <input type="range" id="sl-wklad" min="10" max="80" step="1" value="20" aria-label="Wkład własny w procentach">
-            <div class="field-scale"><span>10%</span><span>80%</span></div>
+            <input type="range" id="sl-wklad" min="0" max="80" step="1" value="20" aria-label="Wkład własny w procentach">
         </div>
 
         <div class="field">
@@ -611,8 +617,7 @@ select.mini-inp{
                     <span class="t-unit">lat</span>
                 </span>
             </div>
-            <input type="range" id="sl-okres" min="5" max="35" step="1" value="30" aria-label="Okres kredytowania w latach">
-            <div class="field-scale"><span>5 lat</span><span>35 lat</span></div>
+            <input type="range" id="sl-okres" min="5" max="35" step="1" value="30" data-hard-min="1" aria-label="Okres kredytowania w latach">
         </div>
 
         <div class="field">
@@ -623,104 +628,114 @@ select.mini-inp{
                     <span class="t-unit">%</span>
                 </span>
             </div>
-            <input type="range" id="sl-rate" min="1" max="15" step="0.01" value="7.5" aria-label="Oprocentowanie roczne w procentach">
-            <div class="field-scale"><span>1%</span><span>15%</span></div>
+            <input type="range" id="sl-rate" min="1" max="15" step="0.05" value="7.5" data-hard-min="0" data-hard-max="30" aria-label="Oprocentowanie roczne w procentach">
+        </div>
 
-            <div class="row-inline" style="margin-top:13px">
-                <span class="t-hint">Stopa w czasie</span>
-                <div class="seg" role="group" aria-label="Tryb oprocentowania">
-                    <button class="seg-btn" type="button" id="btn-rate-const" aria-pressed="true" onclick="setRateMode('const')">Stała</button>
-                    <button class="seg-btn" type="button" id="btn-rate-path" aria-pressed="false" onclick="setRateMode('path')">Zmienna</button>
+        <!-- Nadpłata -->
+        <div class="field field-accent">
+            <div class="field-top">
+                <label class="t-label c-accent" for="val-nadplata">Nadpłata co miesiąc</label>
+                <span class="field-val">
+                    <input class="inp" id="val-nadplata" type="text" inputmode="numeric" value="500">
+                    <span class="t-unit">PLN</span>
+                </span>
+            </div>
+            <input type="range" id="sl-nadplata" min="0" max="10000" step="50" value="500" data-hard-max="1000000" aria-label="Nadpłata miesięczna w złotych">
+            <div class="row-inline" style="margin-top:14px">
+                <span class="t-hint">Nadpłata skraca</span>
+                <div class="seg grow" role="group" aria-label="Efekt nadpłaty">
+                    <button class="seg-btn" type="button" id="btn-okres" aria-pressed="true" onclick="setStrat('okres')">Okres kredytu</button>
+                    <button class="seg-btn" type="button" id="btn-rata" aria-pressed="false" onclick="setStrat('rata')">Ratę</button>
                 </div>
             </div>
+        </div>
 
+        <!-- Opcje dodatkowe -->
+        <p class="t-eyebrow opts-title">Opcje dodatkowe</p>
+
+        <div class="opt">
+            <div class="opt-head">
+                <label class="t-label grow" for="start-m">Kredyt uruchomiony</label>
+                <select class="mini-inp" id="start-m" aria-label="Miesiąc uruchomienia kredytu"></select>
+                <select class="mini-inp" id="start-y" aria-label="Rok uruchomienia kredytu"></select>
+            </div>
+        </div>
+
+        <div class="opt">
+            <div class="opt-head">
+                <div class="grow">
+                    <p class="t-label">Zmienna stopa w czasie</p>
+                    <p class="t-hint">Np. stała przez 5 lat, potem inna.</p>
+                </div>
+                <button class="switch" type="button" role="switch" id="rate-toggle" aria-checked="false" aria-controls="rate-panel" aria-label="Zmienna stopa w czasie" onclick="toggleRate()"></button>
+            </div>
             <div class="disclose" id="rate-panel">
                 <div><div class="disclose-pad">
-                    <p class="t-hint" style="margin-bottom:10px">Typowy scenariusz: okresowo stała stopa przez 5 lat, potem powrót do zmiennej. Wartość powyżej obowiązuje od pierwszego miesiąca.</p>
+                    <p class="t-hint" style="margin-bottom:10px">Oprocentowanie z suwaka obowiązuje od pierwszego miesiąca. Dodaj, od którego roku stopa się zmienia.</p>
                     <div id="rate-path-list"></div>
                     <button class="btn" type="button" onclick="addRateStep()" style="margin-top:4px">+ Dodaj zmianę stopy</button>
                 </div></div>
             </div>
         </div>
 
-        <!-- Data uruchomienia -->
-        <div class="opt-block">
-            <div class="row-inline">
-                <label class="t-label grow" for="start-m">Kredyt uruchomiony</label>
-                <select class="mini-inp" id="start-m" aria-label="Miesiąc uruchomienia kredytu"></select>
-                <select class="mini-inp" id="start-y" aria-label="Rok uruchomienia kredytu"></select>
-            </div>
-            <p class="t-hint">Ustala daty w harmonogramie i moment wygaśnięcia rekompensaty.</p>
-        </div>
-
-        <!-- Nadpłata -->
-        <div class="opt-block">
-            <div class="field-top">
-                <label class="t-label c-accent" for="val-nadplata">Nadpłata miesięczna</label>
-                <span class="field-val">
-                    <input class="inp" id="val-nadplata" type="text" inputmode="numeric" value="500">
-                    <span class="t-unit">PLN</span>
-                </span>
-            </div>
-            <input type="range" id="sl-nadplata" min="0" max="10000" step="50" value="500" aria-label="Nadpłata miesięczna w złotych">
-            <div class="field-scale"><span>0 PLN</span><span>10 000 PLN</span></div>
-            <div class="row-inline" style="margin-top:14px">
-                <span class="t-hint">Nadpłata skraca</span>
-                <div class="seg grow" role="group" aria-label="Efekt nadpłaty">
-                    <button class="seg-btn" type="button" id="btn-okres" aria-pressed="true" onclick="setStrat('okres')">Okres kredytu</button>
-                    <button class="seg-btn" type="button" id="btn-rata" aria-pressed="false" onclick="setStrat('rata')">Ratę miesięczną</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rekompensata -->
-        <div class="opt-block">
+        <div class="opt">
             <div class="opt-head">
-                <div>
-                    <p class="t-label">Rekompensata za wcześniejszą spłatę</p>
-                    <p class="t-hint" style="margin-top:3px">Prowizja, jaką bank pobiera od nadpłaty w pierwszych latach.</p>
+                <div class="grow">
+                    <p class="t-label">Prowizja za nadpłatę</p>
+                    <p class="t-hint">Rekompensata dla banku w pierwszych latach.</p>
                 </div>
-                <button class="btn" type="button" id="fee-toggle" aria-pressed="false" aria-controls="fee-panel" onclick="toggleFee()">Włącz</button>
+                <button class="switch" type="button" role="switch" id="fee-toggle" aria-checked="false" aria-controls="fee-panel" aria-label="Prowizja za nadpłatę" onclick="toggleFee()"></button>
             </div>
             <div class="disclose" id="fee-panel">
                 <div><div class="disclose-pad">
                     <div class="row-inline">
                         <label class="t-hint grow" for="fee-pct">Prowizja od nadpłacanej kwoty</label>
-                        <input class="mini-inp" id="fee-pct" type="number" min="0" max="3" step="0.1" value="2" style="width:64px;text-align:right">
-                        <span class="t-unit">%</span>
+                        <select class="mini-inp" id="fee-pct">
+                            <option value="0.5">0,5%</option><option value="1">1%</option><option value="1.5">1,5%</option>
+                            <option value="2">2%</option><option value="2.5">2,5%</option><option value="3">3%</option>
+                        </select>
                     </div>
                     <div class="row-inline">
                         <label class="t-hint grow" for="fee-mo">Obowiązuje przez pierwsze</label>
-                        <input class="mini-inp" id="fee-mo" type="number" min="0" max="360" step="1" value="36" style="width:64px;text-align:right">
-                        <span class="t-unit">mies.</span>
+                        <select class="mini-inp" id="fee-mo">
+                            <option value="12">12 mies.</option><option value="24">24 mies.</option><option value="36">36 mies.</option>
+                            <option value="60">5 lat</option><option value="84">7 lat</option><option value="120">10 lat</option>
+                        </select>
                     </div>
-                    <p class="t-hint" style="margin-top:8px">Ustawa o kredycie hipotecznym ogranicza rekompensatę przy zmiennej stopie do <strong>36 miesięcy</strong>, maksymalnie <strong>3%</strong> nadpłacanej kwoty i nie więcej niż roczne odsetki od tej kwoty. Kalkulator stosuje oba limity.</p>
+                    <p class="t-hint" style="margin-top:8px">Przy zmiennej stopie ustawa pozwala bankowi na rekompensatę tylko przez <strong>36 miesięcy</strong>, maks. <strong>3%</strong> kwoty i nie więcej niż roczne odsetki od niej. Dłuższe okresy dotyczą stopy okresowo stałej.</p>
                 </div></div>
             </div>
         </div>
 
-        <!-- Karencja -->
-        <div class="opt-block">
+        <div class="opt">
             <div class="opt-head">
-                <div>
-                    <p class="t-label">Karencja</p>
-                    <p class="t-hint" style="margin-top:3px">Płacisz tylko odsetki od wypłaconych transz. Typowe przy kredycie na budowę domu.</p>
+                <div class="grow">
+                    <p class="t-label">Karencja i transze</p>
+                    <p class="t-hint">Budowa domu: płacisz tylko odsetki od wypłaconej części.</p>
                 </div>
-                <button class="btn" type="button" id="kar-toggle" aria-pressed="false" aria-controls="kar-panel" onclick="toggleKar()">Włącz</button>
+                <button class="switch" type="button" role="switch" id="kar-toggle" aria-checked="false" aria-controls="kar-panel" aria-label="Karencja i transze" onclick="toggleKar()"></button>
             </div>
             <div class="disclose" id="kar-panel">
                 <div><div class="disclose-pad">
                     <div class="row-inline">
                         <label class="t-hint grow" for="kar-mo-inp">Czas karencji</label>
-                        <input class="mini-inp" id="kar-mo-inp" type="number" min="1" max="60" value="12" style="width:64px;text-align:right">
-                        <span class="t-unit">mies.</span>
+                        <select class="mini-inp" id="kar-mo-inp"></select>
                     </div>
-                    <div class="row-inline" style="justify-content:space-between;margin-top:12px">
-                        <span class="t-label">Transze wypłat</span>
-                        <button class="btn" type="button" onclick="addTranche()">+ Dodaj transzę</button>
+                    <div class="row-inline" style="margin-top:14px">
+                        <span class="t-label grow">Transze</span>
+                    </div>
+                    <div class="chips" role="group" aria-label="Szybki podział na transze">
+                        <button class="chip" type="button" onclick="presetTranches(1)">1 × 100%</button>
+                        <button class="chip" type="button" onclick="presetTranches(2)">2 × 50%</button>
+                        <button class="chip" type="button" onclick="presetTranches(3)">30 · 30 · 40%</button>
+                        <button class="chip" type="button" onclick="presetTranches(4)">4 × 25%</button>
+                        <button class="chip" type="button" onclick="presetTranches(5)">5 × 20%</button>
                     </div>
                     <div id="transze-list"></div>
-                    <p class="t-hint" id="tranche-sum-info" style="margin-top:8px;min-height:18px"></p>
+                    <div class="row-inline" style="margin-top:6px">
+                        <button class="btn" type="button" onclick="addTranche()">+ Dodaj transzę</button>
+                        <span class="t-hint grow" id="tranche-sum-info"></span>
+                    </div>
                 </div></div>
             </div>
         </div>
@@ -728,12 +743,13 @@ select.mini-inp{
 
     <!-- Wyniki -->
     <div class="panel panel-r">
-        <h2 class="t-section" style="margin-bottom:22px">Wyniki</h2>
+      <div class="results">
+        <h2 class="t-section" style="margin-bottom:18px">Wyniki</h2>
 
         <div id="rata-display">
             <p class="t-label result-head">Rata miesięczna</p>
             <p class="t-num-xl" id="big-rata">3 356,23</p>
-            <p class="result-sub" id="big-sub">PLN / miesiąc · przez 360 miesięcy</p>
+            <p class="result-sub" id="big-sub">PLN / miesiąc</p>
         </div>
 
         <div id="rata-range-display" hidden>
@@ -748,7 +764,7 @@ select.mini-inp{
                     <p class="t-num-lg ink-2" id="big-rata-last">—</p>
                 </div>
             </div>
-            <p class="result-sub" id="big-sub-range">PLN · przez 360 miesięcy</p>
+            <p class="result-sub" id="big-sub-range">PLN</p>
         </div>
 
         <div class="stat-grid">
@@ -757,20 +773,18 @@ select.mini-inp{
                 <p class="t-num-md" id="r-kredyt">480 000 PLN</p>
             </div>
             <div class="stat">
-                <p class="stat-k">Odsetki banku</p>
-                <p class="t-num-md c-cost" id="r-odsetki">728 243 PLN</p>
+                <p class="stat-k">Odsetki</p>
+                <p class="t-num-md c-cost" id="r-odsetki">—</p>
             </div>
             <div class="stat">
                 <p class="stat-k">Zapłacisz łącznie</p>
-                <p class="t-num-md" id="r-total">1 208 243 PLN</p>
+                <p class="t-num-md" id="r-total">—</p>
             </div>
-            <div class="stat" id="stat-4">
-                <p class="stat-k" id="r-mult-k">Płacisz ekstra</p>
-                <p class="t-num-md" id="r-mult">201% ceny</p>
+            <div class="stat">
+                <p class="stat-k">Koniec spłaty</p>
+                <p class="t-num-md" id="r-end">—</p>
             </div>
         </div>
-
-        <div class="callout" id="r-summary"></div>
 
         <!-- Wstęga oszczędności -->
         <div class="ribbon" id="ribbon" hidden>
@@ -782,255 +796,208 @@ select.mini-inp{
                 <div class="ribbon-top"><span class="ink-2" id="ribbon-ext-title">Z nadpłatą</span><span class="ink-2 num" id="ribbon-ext-lbl">—</span></div>
                 <div class="ribbon-track"><div class="ribbon-fill is-ext" id="ribbon-ext"></div></div>
             </div>
-            <p class="ribbon-delta">W kieszeni zostaje <span class="num" id="ribbon-delta">—</span></p>
+            <div class="save">
+                <div>
+                    <p class="stat-k">Oszczędzasz</p>
+                    <p class="t-num-lg c-accent" id="s-interest">—</p>
+                </div>
+                <div>
+                    <p class="stat-k">Spłacisz szybciej o</p>
+                    <p class="t-num-lg c-accent" id="s-time">—</p>
+                </div>
+            </div>
             <p class="t-hint" id="ribbon-fee" hidden></p>
+            <p class="t-hint" id="ribbon-ot" hidden></p>
         </div>
+        <p class="callout" id="no-ex" hidden>Ustaw nadpłatę, a zobaczysz tu, ile zaoszczędzisz.</p>
+      </div>
     </div>
 </section>
 
-<!-- ── Wykresy ──────────────────────────────────────────────────────────── -->
-<section class="grid-2 band">
-    <div class="panel panel-l">
-        <h2 class="t-section" style="margin-bottom:18px">Podział płatności</h2>
-        <div class="donut-wrap">
-            <canvas id="chart-donut" aria-label="Wykres pierścieniowy: udział kapitału i odsetek w całkowitym koszcie" role="img"></canvas>
-            <div class="donut-center">
-                <span class="t-hint">razem</span>
-                <span class="t-num-lg" id="donut-center">1,21 mln</span>
-                <span class="t-hint">PLN</span>
-            </div>
-        </div>
-        <div class="legend-rows">
-            <div class="legend-row">
-                <span class="legend-item"><span class="swatch sw-capital"></span>Kapitał</span>
-                <span class="num" id="donut-k">480 000 PLN</span>
-            </div>
-            <div class="legend-row">
-                <span class="legend-item"><span class="swatch sw-cost"></span>Odsetki</span>
-                <span class="num c-cost" id="donut-o">728 243 PLN</span>
-            </div>
-        </div>
+<!-- ── Szczegóły (zakładki) ─────────────────────────────────────────────── -->
+<section class="stack" id="szczegoly">
+    <div class="tabs" role="tablist" aria-label="Szczegóły kredytu">
+        <button class="tab" type="button" role="tab" id="tab-charts" aria-controls="p-charts" aria-selected="true">Wykresy</button>
+        <button class="tab" type="button" role="tab" id="tab-sched" aria-controls="p-sched" aria-selected="false" tabindex="-1">Harmonogram</button>
+        <button class="tab" type="button" role="tab" id="tab-analysis" aria-controls="p-analysis" aria-selected="false" tabindex="-1">Ile nadpłacać?</button>
+        <button class="tab" type="button" role="tab" id="tab-cmp" aria-controls="p-cmp" aria-selected="false" tabindex="-1">Porównanie</button>
+        <button class="tab" type="button" role="tab" id="tab-scen" aria-controls="p-scen" aria-selected="false" tabindex="-1">Gdy stopa się zmieni</button>
     </div>
-    <div class="panel panel-r">
+
+    <!-- Wykresy -->
+    <div class="tabpanel" role="tabpanel" id="p-charts" aria-labelledby="tab-charts">
         <div class="head-row">
             <h2 class="t-section">Saldo zadłużenia w czasie</h2>
             <div class="legend">
                 <span class="legend-item"><span class="swatch-line" style="background:var(--capital)"></span>Bez nadpłat</span>
-                <span class="legend-item" id="leg-b-wrap"><span class="swatch-dash" style="color:var(--accent)"></span><span id="chart-leg-b">z nadpłatami</span></span>
+                <span class="legend-item" id="leg-b-wrap"><span class="swatch-dash" style="color:var(--accent)"></span>Z nadpłatami</span>
             </div>
         </div>
         <div class="chart-box h-240"><canvas id="chart-balance" aria-label="Wykres liniowy salda zadłużenia w kolejnych latach" role="img"></canvas></div>
-    </div>
-</section>
 
-<!-- ── Rozkład roczny ───────────────────────────────────────────────────── -->
-<section class="band stack">
-    <div class="head-row">
-        <h2 class="t-section">Rozkład roczny spłat</h2>
-        <div class="legend">
-            <span class="legend-item"><span class="swatch sw-capital"></span>Kapitał</span>
-            <span class="legend-item"><span class="swatch sw-cost"></span>Odsetki</span>
-            <span class="legend-item" id="bkd-nadp-leg" hidden><span class="swatch sw-accent"></span>Nadpłaty</span>
-        </div>
-    </div>
-    <div class="chart-box h-220"><canvas id="chart-breakdown" aria-label="Wykres słupkowy: kapitał, odsetki i nadpłaty w kolejnych latach" role="img"></canvas></div>
-</section>
-
-<!-- ── Pasek metryk ─────────────────────────────────────────────────────── -->
-<section class="band">
-    <div class="metrics">
-        <div class="metric">
-            <p class="metric-k">Oszczędzasz łącznie</p>
-            <p class="metric-v c-accent" id="s-interest">—</p>
-        </div>
-        <div class="metric">
-            <p class="metric-k">Skrócenie okresu</p>
-            <p class="metric-v c-accent" id="s-time">—</p>
-        </div>
-        <div class="metric">
-            <p class="metric-k">Nowy czas kredytu</p>
-            <p class="metric-v" id="s-new">30 lat</p>
-        </div>
-        <div class="metric">
-            <p class="metric-k" id="s-ot-k">Nadpłaty jednorazowe</p>
-            <p class="metric-v" id="s-ot">0 PLN</p>
-        </div>
-    </div>
-</section>
-
-<!-- ── Porównanie scenariuszy ───────────────────────────────────────────── -->
-<section class="band stack">
-    <div class="head-row">
-        <div>
-            <h2 class="t-section">Porównanie scenariuszy</h2>
-            <p class="t-hint">Zestaw dwa kredyty obok siebie — typ rat, oprocentowanie, okres, nadpłata.</p>
-        </div>
-        <button class="btn" type="button" id="cmp-toggle-btn" aria-pressed="false" aria-controls="cmp-panel" onclick="toggleCmp()">Otwórz porównanie</button>
-    </div>
-
-    <div class="disclose" id="cmp-panel">
-        <div><div class="disclose-pad">
-            <div class="cmp-grid cmp-head">
-                <div></div>
-                <div><span class="t-label">Scenariusz A</span><span class="t-hint">aktualne parametry</span></div>
-                <div><span class="t-label c-accent">Scenariusz B</span><span class="t-hint">edytuj poniżej</span></div>
-                <div><span class="t-label">Różnica</span></div>
+        <div class="head-row" style="margin-top:36px">
+            <h2 class="t-section">Co roku płacisz</h2>
+            <div class="legend">
+                <span class="legend-item"><span class="swatch sw-capital"></span>Kapitał</span>
+                <span class="legend-item"><span class="swatch sw-cost"></span>Odsetki</span>
+                <span class="legend-item" id="bkd-nadp-leg" hidden><span class="swatch sw-accent"></span>Nadpłaty</span>
             </div>
-
-            <div class="cmp-grid">
-                <div class="t-label">Typ rat</div>
-                <div class="cmp-a" id="cmp-a-type">Raty równe</div>
-                <div>
-                    <div class="seg" role="group" aria-label="Typ rat scenariusza B">
-                        <button class="seg-btn" type="button" id="cmp-btn-rowne" aria-pressed="true" onclick="setCmpType('rowne')">Równe</button>
-                        <button class="seg-btn" type="button" id="cmp-btn-malejace" aria-pressed="false" onclick="setCmpType('malejace')">Malejące</button>
-                    </div>
-                </div>
-                <div></div>
-
-                <div class="t-label">Oprocentowanie</div>
-                <div class="cmp-a" id="cmp-a-rate">7,5%</div>
-                <div><input class="inp inp-sm" id="cmp-val-rate" type="text" inputmode="decimal" value="6,5" aria-label="Oprocentowanie scenariusza B"><span class="t-unit">&nbsp;%</span></div>
-                <div></div>
-
-                <div class="t-label">Okres</div>
-                <div class="cmp-a" id="cmp-a-okres">30 lat</div>
-                <div><input class="inp inp-sm" id="cmp-val-okres" type="text" inputmode="numeric" value="25" aria-label="Okres scenariusza B"><span class="t-unit">&nbsp;lat</span></div>
-                <div></div>
-
-                <div class="t-label">Nadpłata / mies.</div>
-                <div class="cmp-a" id="cmp-a-nadp">500 PLN</div>
-                <div><input class="inp inp-sm" id="cmp-val-nadp" type="text" inputmode="numeric" value="0" aria-label="Nadpłata miesięczna scenariusza B"><span class="t-unit">&nbsp;PLN</span></div>
-                <div></div>
-
-                <div class="t-label">Nadpłata skraca</div>
-                <div class="cmp-a" id="cmp-a-strat">Okres kredytu</div>
-                <div>
-                    <div class="seg" role="group" aria-label="Efekt nadpłaty scenariusza B">
-                        <button class="seg-btn" type="button" id="cmp-btn-okres" aria-pressed="true" onclick="setCmpStrat('okres')">Okres</button>
-                        <button class="seg-btn" type="button" id="cmp-btn-rata" aria-pressed="false" onclick="setCmpStrat('rata')">Ratę</button>
-                    </div>
-                </div>
-                <div></div>
-            </div>
-
-            <div class="table-scroll" style="margin-top:20px">
-                <table class="tbl stackable">
-                    <thead>
-                        <tr>
-                            <th scope="col">Metryka</th>
-                            <th scope="col">Scenariusz A</th>
-                            <th scope="col">Scenariusz B</th>
-                            <th scope="col">Różnica</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cmp-body"></tbody>
-                </table>
-            </div>
-            <p class="t-hint" id="cmp-chart-note" style="margin-top:12px"></p>
-        </div></div>
-    </div>
-</section>
-
-<!-- ── Analiza nadpłaty ─────────────────────────────────────────────────── -->
-<section class="band stack">
-    <h2 class="t-section" style="margin-bottom:18px">Analiza nadpłaty</h2>
-
-    <div class="head-row">
-        <p class="t-label">Ile oszczędzasz przy różnych kwotach nadpłaty <span class="t-hint" id="sens-strat"></span></p>
-        <span class="legend-item"><span class="swatch sw-accent" style="border-radius:50%"></span>Twoja nadpłata</span>
-    </div>
-    <div class="chart-box h-200"><canvas id="chart-sens" aria-label="Wykres: oszczędność na odsetkach w zależności od kwoty nadpłaty miesięcznej" role="img"></canvas></div>
-
-    <div class="goal">
-        <label class="t-label" for="goal-yrs">Chcę spłacić kredyt w</label>
-        <input class="inp inp-xs" id="goal-yrs" type="text" inputmode="numeric" value="20">
-        <span class="t-label">lat</span>
-        <span class="t-label" id="goal-result">—</span>
-        <button class="btn" type="button" id="goal-apply" onclick="applyGoal()">Ustaw tę nadpłatę</button>
+        </div>
+        <div class="chart-box h-220"><canvas id="chart-breakdown" aria-label="Wykres słupkowy: kapitał, odsetki i nadpłaty w kolejnych latach" role="img"></canvas></div>
     </div>
 
-    <div style="margin-top:34px">
+    <!-- Harmonogram -->
+    <div class="tabpanel" role="tabpanel" id="p-sched" aria-labelledby="tab-sched" hidden>
         <div class="head-row">
-            <div>
-                <h3 class="t-section">Nadpłata czy inwestycja?</h3>
-                <p class="t-hint">Ten sam budżet miesięczny w obu wariantach.</p>
-            </div>
-            <div class="row-inline">
-                <label class="t-hint" for="val-inv">Oczekiwany zwrot rocznie</label>
-                <input type="range" id="sl-inv" min="0" max="15" step="0.1" value="6" style="width:120px" aria-label="Oczekiwany roczny zwrot z inwestycji">
-                <input class="inp inp-xs" id="val-inv" type="text" inputmode="decimal" value="6,0">
-                <span class="t-unit">%</span>
-                <button class="btn" type="button" id="belka-btn" aria-pressed="true" onclick="toggleBelka()">podatek Belki 19%</button>
-            </div>
+            <p class="t-hint">Kliknij komórkę w kolumnie <span class="c-accent">Nadpłata</span>, aby dodać wpłatę jednorazową w danym miesiącu.</p>
+            <button class="icon-btn" type="button" id="csv-btn" onclick="exportCsv()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                <span>Pobierz CSV</span>
+            </button>
         </div>
-        <div class="callout" id="inv-verdict">Ustaw nadpłatę miesięczną, aby porównać ją z inwestowaniem tej samej kwoty.</div>
-        <div id="inv-wrap" hidden>
-            <div class="head-row" style="margin-top:16px;margin-bottom:8px">
-                <p class="t-hint">Wartość majątku w czasie, po podatku</p>
-                <div class="legend">
-                    <span class="legend-item"><span class="swatch-line" style="background:var(--accent)"></span>Nadpłacasz kredyt</span>
-                    <span class="legend-item"><span class="swatch-dash" style="color:var(--capital)"></span>Inwestujesz</span>
+        <div id="sched-wrap">
+            <table class="sched">
+                <thead>
+                    <tr>
+                        <th scope="col">Miesiąc</th>
+                        <th scope="col">Saldo</th>
+                        <th scope="col">Rata</th>
+                        <th scope="col">Odsetki</th>
+                        <th scope="col">Kapitał</th>
+                        <th scope="col">Nadpłata</th>
+                        <th scope="col" id="th-fee" hidden>Prowizja</th>
+                        <th scope="col">Saldo po</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Ile nadpłacać -->
+    <div class="tabpanel" role="tabpanel" id="p-analysis" aria-labelledby="tab-analysis" hidden>
+        <div class="goal">
+            <label class="t-label" for="goal-yrs">Chcę spłacić kredyt w</label>
+            <input class="inp inp-xs" id="goal-yrs" type="text" inputmode="numeric" value="20">
+            <span class="t-label">lat</span>
+            <span class="t-label" id="goal-result">—</span>
+            <button class="btn btn-accent" type="button" id="goal-apply" onclick="applyGoal()">Ustaw tę nadpłatę</button>
+        </div>
+
+        <div class="head-row" style="margin-top:32px">
+            <h2 class="t-section">Oszczędność przy różnych nadpłatach <span class="t-hint" id="sens-strat"></span></h2>
+            <span class="legend-item"><span class="swatch sw-accent" style="border-radius:50%"></span>Twoja nadpłata</span>
+        </div>
+        <div class="chart-box h-200"><canvas id="chart-sens" aria-label="Wykres: oszczędność w zależności od kwoty nadpłaty miesięcznej" role="img"></canvas></div>
+
+        <div style="margin-top:36px">
+            <div class="head-row">
+                <div>
+                    <h2 class="t-section">Nadpłata czy inwestycja?</h2>
+                    <p class="t-hint">Ten sam budżet miesięczny w obu wariantach.</p>
+                </div>
+                <div class="row-inline">
+                    <label class="t-hint" for="val-inv">Zwrot rocznie</label>
+                    <input type="range" id="sl-inv" min="0" max="15" step="0.1" value="6" style="width:120px" aria-label="Oczekiwany roczny zwrot z inwestycji">
+                    <input class="inp inp-xs" id="val-inv" type="text" inputmode="decimal" value="6,0">
+                    <span class="t-unit">%</span>
+                    <button class="btn" type="button" id="belka-btn" aria-pressed="true" onclick="toggleBelka()">podatek Belki 19%</button>
                 </div>
             </div>
-            <div class="chart-box h-200"><canvas id="chart-invest" aria-label="Wykres: wartość majątku przy nadpłacaniu kredytu kontra inwestowaniu" role="img"></canvas></div>
-            <p class="t-hint" style="margin-top:10px">W obu wariantach wydajesz co miesiąc tyle samo. „Nadpłacasz”: nadpłata idzie w kredyt, a po jego spłacie cała rata wraz z nadpłatą jest inwestowana. „Inwestujesz”: płacisz zwykłą ratę, a nadpłatę inwestujesz. Zwrot składany miesięcznie, podatek naliczany od zysku przy sprzedaży.</p>
+            <div class="callout" id="inv-verdict">Ustaw nadpłatę miesięczną, aby porównać ją z inwestowaniem tej samej kwoty.</div>
+            <div id="inv-wrap" hidden>
+                <div class="head-row" style="margin-top:16px;margin-bottom:8px">
+                    <p class="t-hint">Wartość majątku w czasie, po podatku</p>
+                    <div class="legend">
+                        <span class="legend-item"><span class="swatch-line" style="background:var(--accent)"></span>Nadpłacasz kredyt</span>
+                        <span class="legend-item"><span class="swatch-dash" style="color:var(--capital)"></span>Inwestujesz</span>
+                    </div>
+                </div>
+                <div class="chart-box h-200"><canvas id="chart-invest" aria-label="Wykres: wartość majątku przy nadpłacaniu kredytu kontra inwestowaniu" role="img"></canvas></div>
+                <p class="t-hint" style="margin-top:10px">W obu wariantach wydajesz co miesiąc tyle samo. „Nadpłacasz”: nadpłata idzie w kredyt, a po jego spłacie cała rata wraz z nadpłatą jest inwestowana. „Inwestujesz”: płacisz zwykłą ratę, a nadpłatę inwestujesz. Zwrot składany miesięcznie, podatek naliczany od zysku przy sprzedaży.</p>
+            </div>
         </div>
     </div>
-</section>
 
-<!-- ── Harmonogram ──────────────────────────────────────────────────────── -->
-<section class="band stack">
-    <div class="head-row">
-        <div>
-            <h2 class="t-section">Harmonogram spłat</h2>
-            <p class="t-hint">Kliknij komórkę w kolumnie <span class="c-accent">Nadpłata</span>, aby dodać wpłatę jednorazową w danym miesiącu.</p>
+    <!-- Porównanie -->
+    <div class="tabpanel" role="tabpanel" id="p-cmp" aria-labelledby="tab-cmp" hidden>
+        <p class="t-hint" style="margin-bottom:16px">Scenariusz A to Twoje obecne parametry. Zmień scenariusz B i porównaj — ta sama kwota kredytu, stała stopa.</p>
+        <div class="cmp-grid cmp-head">
+            <div></div>
+            <div><span class="t-label">Scenariusz A</span><span class="t-hint">obecne parametry</span></div>
+            <div><span class="t-label c-accent">Scenariusz B</span><span class="t-hint">edytuj</span></div>
+            <div><span class="t-label">Różnica</span></div>
         </div>
-        <button class="icon-btn" type="button" id="csv-btn" onclick="exportCsv()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-            <span>Pobierz CSV</span>
-        </button>
-    </div>
-    <div id="sched-wrap">
-        <table class="sched">
-            <thead>
-                <tr>
-                    <th scope="col">Miesiąc</th>
-                    <th scope="col">Saldo</th>
-                    <th scope="col">Rata</th>
-                    <th scope="col">Odsetki</th>
-                    <th scope="col">Kapitał</th>
-                    <th scope="col">Nadpłata</th>
-                    <th scope="col" id="th-fee" hidden>Prowizja</th>
-                    <th scope="col">Saldo po</th>
-                </tr>
-            </thead>
-            <tbody id="schedule-body"></tbody>
-        </table>
-    </div>
-</section>
 
-<!-- ── Scenariusze stopy ────────────────────────────────────────────────── -->
-<section class="stack">
-    <div class="head-row">
-        <div>
-            <h2 class="t-section">Co jeśli stopa się zmieni?</h2>
-            <p class="t-hint">Cały Twój scenariusz przesunięty o podaną liczbę punktów procentowych, przy zachowanej nadpłacie.</p>
+        <div class="cmp-grid">
+            <div class="t-label">Typ rat</div>
+            <div class="cmp-a" id="cmp-a-type">Raty równe</div>
+            <div>
+                <div class="seg" role="group" aria-label="Typ rat scenariusza B">
+                    <button class="seg-btn" type="button" id="cmp-btn-rowne" aria-pressed="true" onclick="setCmpType('rowne')">Równe</button>
+                    <button class="seg-btn" type="button" id="cmp-btn-malejace" aria-pressed="false" onclick="setCmpType('malejace')">Malejące</button>
+                </div>
+            </div>
+            <div></div>
+
+            <div class="t-label">Oprocentowanie</div>
+            <div class="cmp-a" id="cmp-a-rate">7,5%</div>
+            <div><input class="inp inp-sm" id="cmp-val-rate" type="text" inputmode="decimal" value="6,5" aria-label="Oprocentowanie scenariusza B"><span class="t-unit">&nbsp;%</span></div>
+            <div></div>
+
+            <div class="t-label">Okres</div>
+            <div class="cmp-a" id="cmp-a-okres">30 lat</div>
+            <div><input class="inp inp-sm" id="cmp-val-okres" type="text" inputmode="numeric" value="25" aria-label="Okres scenariusza B"><span class="t-unit">&nbsp;lat</span></div>
+            <div></div>
+
+            <div class="t-label">Nadpłata / mies.</div>
+            <div class="cmp-a" id="cmp-a-nadp">500 PLN</div>
+            <div><input class="inp inp-sm" id="cmp-val-nadp" type="text" inputmode="numeric" value="0" aria-label="Nadpłata miesięczna scenariusza B"><span class="t-unit">&nbsp;PLN</span></div>
+            <div></div>
+
+            <div class="t-label">Nadpłata skraca</div>
+            <div class="cmp-a" id="cmp-a-strat">Okres kredytu</div>
+            <div>
+                <div class="seg" role="group" aria-label="Efekt nadpłaty scenariusza B">
+                    <button class="seg-btn" type="button" id="cmp-btn-okres" aria-pressed="true" onclick="setCmpStrat('okres')">Okres</button>
+                    <button class="seg-btn" type="button" id="cmp-btn-rata" aria-pressed="false" onclick="setCmpStrat('rata')">Ratę</button>
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="table-scroll" style="margin-top:20px">
+            <table class="tbl stackable">
+                <thead>
+                    <tr>
+                        <th scope="col">Metryka</th>
+                        <th scope="col">Scenariusz A</th>
+                        <th scope="col">Scenariusz B</th>
+                        <th scope="col">Różnica</th>
+                    </tr>
+                </thead>
+                <tbody id="cmp-body"></tbody>
+            </table>
         </div>
     </div>
-    <div class="table-scroll">
-        <table class="tbl stackable">
-            <thead>
-                <tr>
-                    <th scope="col">Zmiana stopy</th>
-                    <th scope="col">Oprocentowanie</th>
-                    <th scope="col">Rata</th>
-                    <th scope="col">Odsetki łącznie</th>
-                    <th scope="col">Całkowity koszt</th>
-                </tr>
-            </thead>
-            <tbody id="scenarios-body"></tbody>
-        </table>
+
+    <!-- Scenariusze stopy -->
+    <div class="tabpanel" role="tabpanel" id="p-scen" aria-labelledby="tab-scen" hidden>
+        <p class="t-hint" style="margin-bottom:16px">Twój scenariusz przesunięty o podaną liczbę punktów procentowych, przy zachowanej nadpłacie.</p>
+        <div class="table-scroll">
+            <table class="tbl stackable">
+                <thead>
+                    <tr>
+                        <th scope="col">Zmiana stopy</th>
+                        <th scope="col">Oprocentowanie</th>
+                        <th scope="col">Rata</th>
+                        <th scope="col">Odsetki łącznie</th>
+                        <th scope="col">Całkowity koszt</th>
+                    </tr>
+                </thead>
+                <tbody id="scenarios-body"></tbody>
+            </table>
+        </div>
     </div>
 </section>
 
@@ -1046,12 +1013,12 @@ select.mini-inp{
         <li><strong>Skrócenie okresu</strong> — rata zostaje bez zmian, ale spłacasz kredyt szybciej. To wariant z <strong>większą oszczędnością na odsetkach</strong>, bo wysoka rata nadal intensywnie spłaca kapitał.</li>
         <li><strong>Zmniejszenie raty</strong> — okres zostaje, ale miesięczne obciążenie spada. Oszczędność odsetkowa jest mniejsza, za to zyskujesz <strong>luz w budżecie</strong> i bezpieczeństwo na wypadek gorszych miesięcy.</li>
     </ul>
-    <p>Obie strategie porównasz w kalkulatorze jednym kliknięciem — przełącznik „Okres kredytu / Ratę miesięczną” pokaże różnicę w złotówkach.</p>
+    <p>Obie strategie porównasz w kalkulatorze jednym kliknięciem — przełącznik „Nadpłata skraca: okres kredytu / ratę” pokaże różnicę w złotówkach.</p>
 
     <h2>Najczęstsze pytania o nadpłatę kredytu</h2>
 
     <h3>Czy bank może pobrać prowizję za nadpłatę kredytu hipotecznego?</h3>
-    <p>Dla umów zawartych od 22 lipca 2017 r. (ustawa o kredycie hipotecznym) bank może pobierać rekompensatę za nadpłatę kredytu ze zmiennym oprocentowaniem tylko przez <strong>pierwsze 36 miesięcy</strong> — maksymalnie 3% nadpłacanej kwoty i nie więcej niż roczne odsetki od tej kwoty. <strong>Po 3 latach nadpłata jest bezpłatna.</strong> Przy okresowo stałej stopie rekompensata może obowiązywać przez cały okres stałego oprocentowania — sprawdź swoją umowę. W kalkulatorze włączysz ją w sekcji „Rekompensata za wcześniejszą spłatę”.</p>
+    <p>Dla umów zawartych od 22 lipca 2017 r. (ustawa o kredycie hipotecznym) bank może pobierać rekompensatę za nadpłatę kredytu ze zmiennym oprocentowaniem tylko przez <strong>pierwsze 36 miesięcy</strong> — maksymalnie 3% nadpłacanej kwoty i nie więcej niż roczne odsetki od tej kwoty. <strong>Po 3 latach nadpłata jest bezpłatna.</strong> Przy okresowo stałej stopie rekompensata może obowiązywać przez cały okres stałego oprocentowania — sprawdź swoją umowę. W kalkulatorze włączysz ją w opcji „Prowizja za nadpłatę”.</p>
 
     <h3>Czy warto nadpłacać kredyt hipoteczny?</h3>
     <p>Nadpłata daje gwarantowany zysk równy oprocentowaniu kredytu — jeśli kredyt kosztuje 7,5% rocznie, każda nadpłacona złotówka „zarabia” 7,5% bez ryzyka i bez podatku Belki. Warto nadpłacać, gdy oprocentowanie kredytu jest wyższe niż to, co bezpiecznie zarobisz na lokacie lub obligacjach skarbowych. Najpierw jednak zbuduj poduszkę finansową na 3–6 miesięcy wydatków — nadpłaconych pieniędzy nie da się łatwo „wyjąć” z kredytu.</p>
@@ -1063,7 +1030,7 @@ select.mini-inp{
     <p>Nie — większość banków domyślnie zmniejsza ratę, zachowując dotychczasowy okres. Jeśli chcesz skrócić okres kredytowania, zwykle musisz to wskazać w dyspozycji nadpłaty; w części banków wymaga to aneksu do umowy. Sprawdź zasady w swojej bankowości elektronicznej.</p>
 
     <h3>Co się dzieje z ratą, gdy zmienia się stopa procentowa?</h3>
-    <p>Przy racie równej bank przelicza ją na nowo od momentu zmiany stopy — bierze aktualne saldo i liczbę rat, które zostały do końca okresu. Przy racie malejącej część kapitałowa jest stała, więc zmiana stopy przekłada się wyłącznie na część odsetkową. Kalkulator odwzorowuje oba zachowania; ścieżkę stopy ustawisz przełącznikiem „Stopa w czasie → Zmienna”.</p>
+    <p>Przy racie równej bank przelicza ją na nowo od momentu zmiany stopy — bierze aktualne saldo i liczbę rat, które zostały do końca okresu. Przy racie malejącej część kapitałowa jest stała, więc zmiana stopy przekłada się wyłącznie na część odsetkową. Kalkulator odwzorowuje oba zachowania; ścieżkę stopy ustawisz w opcji „Zmienna stopa w czasie”.</p>
 </section>
 
 </main>
@@ -1148,6 +1115,7 @@ select.mini-inp{
 <script>
 // ═══ Stan ════════════════════════════════════════════════════════════════
 const LS_STATE='inp-state-v1', LS_THEME='inp-theme';
+const TABS=['charts','sched','analysis','cmp','scen'];
 
 function defaults(){
     const now=new Date();
@@ -1157,9 +1125,10 @@ function defaults(){
         start:{year:now.getFullYear(), month:now.getMonth()+1},
         rateMode:'const', ratePath:[],
         fee:{on:false, pct:2, mo:36},
+        // Transze jako procent kwoty kredytu i numer miesiąca karencji: {id, mo, pct}
         kar:{on:false, mo:12, transze:[]},
         inv:{rate:6.0, belka:true},
-        cmpOn:false,
+        tab:'charts',
         b:{type:'rowne', strat:'okres', rate:6.5, okres:25, nadplata:0},
         goalYrs:20
     };
@@ -1188,14 +1157,22 @@ function loadState(){
     m.b={...d.b,...(o.b||{})};
     m.ot=(o.ot&&typeof o.ot==='object')?o.ot:{};
     m.ratePath=Array.isArray(o.ratePath)?o.ratePath:[];
-    m.kar.transze=Array.isArray(m.kar.transze)?m.kar.transze:[];
+    if(!TABS.includes(m.tab)) m.tab='charts';
+    // Stary format transz trzymał kwotę i datę kalendarzową — przeliczamy na
+    // procent kredytu i miesiąc karencji.
+    const k=Math.round(m.cena*(1-m.wklad/100))||1;
+    m.kar.transze=(Array.isArray(m.kar.transze)?m.kar.transze:[]).map(t=>{
+        if(t.pct!==undefined) return t;
+        const mo=(t.year-m.start.year)*12+(t.month-m.start.month)+1;
+        return {id:t.id, mo:Math.max(1,Math.min(m.kar.mo,mo||1)), pct:Math.round((t.amt||0)/k*1000)/10};
+    });
     idCnt=Math.max(0,...m.ratePath.map(s=>s.id||0),...m.kar.transze.map(t=>t.id||0));
     return m;
 }
 function resetAll(){
     try{ localStorage.removeItem(LS_STATE); }catch(e){}
     st=defaults(); idCnt=0; prevHasEx=false;
-    syncInputs(); renderRatePath(); renderTransze(); upd(); updHeavy();
+    syncInputs(); renderRatePath(); renderTransze(); selectTab(st.tab,false); upd(); updHeavy();
 }
 
 // ═══ Formatowanie ════════════════════════════════════════════════════════
@@ -1204,7 +1181,7 @@ const nf2=new Intl.NumberFormat('pl-PL',{minimumFractionDigits:2,maximumFraction
 const num=n=>nf0.format(Math.round(n));
 const pln=n=>num(n)+' PLN';
 const dec=n=>nf2.format(n);
-const parseNum=v=>parseFloat(String(v).replace(/[\s ]/g,'').replace(',','.'));
+const parseNum=v=>parseFloat(String(v).replace(/\s/g,'').replace(',','.'));
 const compact=n=>n>=1e6?(n/1e6).toFixed(2).replace('.',',')+' mln':n>=1e4?Math.round(n/1e3)+' tys.':num(n);
 /* Stopy bez zbędnych zer: 7% / 7,5% / 7,25% — nigdy „7%” obok „5,50%”. */
 const ratePc=r=>(Math.round(r*100)/100).toFixed(2).replace(/0+$/,'').replace(/\.$/,'').replace('.',',')+'%';
@@ -1228,12 +1205,18 @@ function monthDate(m){
     return {y:st.start.year+Math.floor(idx/12), mo:((idx%12)+12)%12};
 }
 const dateLabel=m=>{const d=monthDate(m);return MIES_S[d.mo]+' '+d.y;};
-const trancheMo=t=>(t.year-st.start.year)*12+(t.month-st.start.month)+1;
 
 // ═══ Silnik ══════════════════════════════════════════════════════════════
 const kredyt=()=>Math.round(st.cena*(1-st.wklad/100));
 
 function annuity(p,r,n){ return r===0?p/n:p*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1); }
+/* Liczba rat, w których stała rata pmt spłaci saldo b przy stopie r. */
+function nper(b,r,pmt){
+    if(pmt<=0) return Infinity;
+    if(r===0) return b/pmt;
+    const x=1-b*r/pmt;
+    return x<=0?Infinity:-Math.log(x)/Math.log(1+r);
+}
 
 /* Punkty zmiany stopy: zawsze zaczyna się od miesiąca 1. */
 function rateSteps(){
@@ -1262,6 +1245,24 @@ function feeFor(fee,m,amount,rMonthly){
     return Math.min(amount*fee.pct/100, amount*rMonthly*12);
 }
 
+/* Wypłaty transz w kolejnych miesiącach karencji. Narastająco nie więcej niż
+   100% kredytu; brakująca część trafia do ostatniego miesiąca karencji, więc
+   kapitał do spłaty to zawsze pełna kwota kredytu. */
+function disbursements(p,transze,karMo){
+    const disb={};
+    if(!transze||!transze.length){ disb[1]=p; return disb; }
+    let left=100;
+    [...transze].sort((a,b)=>a.mo-b.mo).forEach(t=>{
+        const pc=Math.max(0,Math.min(left,t.pct||0));
+        if(pc<=0) return;
+        left-=pc;
+        const m=Math.max(1,Math.min(karMo,t.mo));
+        disb[m]=(disb[m]||0)+p*pc/100;
+    });
+    if(left>1e-9) disb[karMo]=(disb[karMo]||0)+p*left/100;
+    return disb;
+}
+
 /* Jedyna implementacja harmonogramu — wszystkie widoki czytają z niej,
    dzięki czemu rata w każdym panelu jest z definicji ta sama liczba.
    collect=false pomija budowanie wierszy (dla przemiatania scenariuszy). */
@@ -1271,17 +1272,13 @@ function run(o){
     const kar=o.kar, fee=o.fee, collect=o.collect!==false;
     const rows=collect?[]:null;
 
-    let b=0, interest=0, feeTotal=0, mo=0, karMo=0, refBase=p;
+    let b=0, interest=0, feeTotal=0, mo=0, karMo=0;
     const karOn=!!(kar&&kar.on&&kar.mo>0);
     const by=[karOn?0:p];
 
     if(karOn){
-        karMo=Math.min(kar.mo,n);
-        const disb={};
-        if(kar.transze&&kar.transze.length)
-            kar.transze.forEach(t=>{const tm=trancheMo(t); if(tm>=1&&tm<=karMo) disb[tm]=(disb[tm]||0)+t.amt;});
-        else disb[1]=p;
-        refBase=Object.values(disb).reduce((a,v)=>a+v,0)||p;
+        karMo=Math.min(kar.mo,n-1);
+        const disb=disbursements(p,kar.transze,karMo);
         for(let m=1;m<=karMo;m++){
             const tr=disb[m]||0; b+=tr;
             const ob=b, i=b*rm[m];
@@ -1295,22 +1292,29 @@ function run(o){
         }
     } else b=p;
 
-    const repN=karOn?Math.max(1,n-karMo):n;
-    const startM=karOn?karMo+1:1;
-    // Rata liczona tak, jakby nadpłat w karencji nie było — inaczej nadpłata
-    // obniżyłaby ratę zamiast skrócić okres.
-    const basis=karOn?refBase:p;
-    let fixed=(type==='rowne'&&strat==='okres')?annuity(basis,rm[startM],repN):0;
-    const cPrin=type==='malejace'?b/repN:0;
+    const repN=n-karMo;
+    const startM=karMo+1;
+    // Rata liczona od pełnej kwoty kredytu, tak jakby nadpłat w karencji nie
+    // było — inaczej nadpłata obniżyłaby ratę zamiast skrócić okres.
+    let fixed=(type==='rowne'&&strat==='okres')?annuity(p,rm[startM],repN):0;
+    const cPrin=p/repN;
 
     for(let m=startM;m<=n;m++){
         if(b<0.01) break;
         const ob=b, i=b*rm[m], remMo=n-m+1;
-        // Bank przelicza ratę równą od miesiąca, w którym zmienia się stopa.
-        if(type==='rowne'&&strat==='okres'&&m>startM&&rm[m]!==rm[m-1])
-            fixed=annuity(b,rm[m],remMo);
+        // Przy zmianie stopy bank przelicza ratę równą. Przy skracaniu okresu
+        // zachowuje dotychczasowy (już skrócony) termin, a nie wraca do
+        // pierwotnego — inaczej nadpłaty po zmianie stopy obniżałyby ratę.
+        if(type==='rowne'&&strat==='okres'&&m>startM&&rm[m]!==rm[m-1]){
+            const left=Math.max(1,Math.min(remMo,Math.round(nper(b,rm[m-1],fixed))));
+            fixed=annuity(b,rm[m],left);
+        }
         let pmt, prin;
-        if(type==='malejace'){ prin=Math.min(b,cPrin); pmt=i+prin; }
+        if(type==='malejace'){
+            // Skracanie okresu: stała część kapitałowa. Obniżanie raty: saldo
+            // rozkładane na nowo na pozostałe miesiące.
+            prin=Math.min(b,strat==='okres'?cPrin:b/remMo); pmt=i+prin;
+        }
         else if(strat==='okres'){ prin=Math.min(b,Math.max(0,fixed-i)); pmt=prin+i; }
         else { const dp=annuity(b,rm[m],remMo); prin=Math.min(b,Math.max(0,dp-i)); pmt=prin+i; }
 
@@ -1334,20 +1338,9 @@ function run(o){
     };
 }
 
-/* Skrót: uruchomienie z bieżącego stanu. */
-function runA(opts){
-    opts=opts||{};
-    const yrs=opts.yrs||st.okres, n=yrs*12;
-    return run({
-        p:opts.p!==undefined?opts.p:kredyt(),
-        rm:opts.rm||rateArray(n,rateSteps(),opts.shift||0),
-        yrs, ex:opts.ex!==undefined?opts.ex:st.nadplata,
-        ot:opts.ot!==undefined?opts.ot:st.ot,
-        type:st.type, strat:st.strat,
-        kar:opts.kar!==undefined?opts.kar:st.kar,
-        fee:opts.fee!==undefined?opts.fee:st.fee,
-        collect:opts.collect
-    });
+/* Wspólne parametry bieżącego scenariusza — nadpisywane tam, gdzie trzeba. */
+function baseOpts(k,rm){
+    return {p:k,rm,yrs:st.okres,ex:st.nadplata,ot:st.ot,type:st.type,strat:st.strat,kar:st.kar,fee:st.fee};
 }
 
 const firstPmt=res=>{const r=(res.rows||[]).find(x=>!x.kar); return r?r.pmt:0;};
@@ -1368,6 +1361,7 @@ function set(id,t){const el=$(id); if(!el||el.textContent===t) return; el.textCo
 function html(id,h){const el=$(id); if(el&&el.innerHTML!==h) el.innerHTML=h;}
 function show(id,on){const el=$(id); if(el) el.hidden=!on;}
 function press(id,on){const el=$(id); if(el) el.setAttribute('aria-pressed',on?'true':'false');}
+function check(id,on){const el=$(id); if(el) el.setAttribute('aria-checked',on?'true':'false');}
 function flash(id){const el=$(id); if(!el) return; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');}
 
 const _cur={}, _raf={};
@@ -1392,98 +1386,78 @@ function countUp(id,to,fmt,dur){
 // ═══ Aktualizacja — ścieżka szybka ═══════════════════════════════════════
 function upd(){
     const k=kredyt(), n=st.okres*12;
-    const steps=rateSteps(), rm=rateArray(n,steps,0);
+    const rm=rateArray(n,rateSteps(),0);
+    const opts=baseOpts(k,rm);
 
-    const base=run({p:k,rm,yrs:st.okres,ex:0,ot:{},type:st.type,strat:st.strat,kar:st.kar,fee:st.fee});
+    const base=run({...opts,ex:0,ot:{}});
     const hasEx=st.nadplata>0||Object.keys(st.ot).length>0;
-    const ext=hasEx?run({p:k,rm,yrs:st.okres,ex:st.nadplata,ot:st.ot,type:st.type,strat:st.strat,kar:st.kar,fee:st.fee}):null;
+    const ext=hasEx?run(opts):null;
     const cur=ext||base;
     lastRows=cur.rows;
 
     const karOn=st.kar.on&&st.kar.mo>0;
-    const karMo=karOn?Math.min(st.kar.mo,n):0;
-    const isMal=st.type==='malejace';
+    const karMo=karOn?Math.min(st.kar.mo,n-1):0;
 
     const f=firstPmt(cur), l=lastPmt(cur);
-    // Zakres „od → do” tylko wtedy, gdy rata naprawdę się zmienia z założenia.
-    const varying=isMal||(st.strat==='rata'&&hasEx&&Math.abs(f-l)>1);
+    // Zakres „od → do” tylko wtedy, gdy rata naprawdę się zmienia.
+    const varying=Math.abs(f-l)>1;
     show('rata-display',!varying); show('rata-range-display',varying);
 
-    const karTxt=karOn?`pierwsze ${karMo} mies. to karencja · `:'';
+    const karTxt=karOn?`najpierw ${karMo} mies. karencji (same odsetki)`:'';
     if(varying){
         countUp('big-rata-first',f,dec);
         countUp('big-rata-last',l,dec);
-        set('big-sub-range',`PLN · ${karTxt}spłata przez ${cur.mo} ${moWord(cur.mo)}`);
+        set('big-sub-range','PLN'+(karTxt?' · '+karTxt:''));
     } else {
         countUp('big-rata',f,dec);
-        set('big-sub',`PLN / miesiąc · ${karTxt}przez ${cur.mo} ${moWord(cur.mo)}`);
+        set('big-sub','PLN / miesiąc'+(karTxt?' · '+karTxt:''));
     }
 
     countUp('r-kredyt',k,pln);
-    countUp('r-odsetki',base.int,pln);
-    countUp('r-total',base.total,pln);
-    set('r-mult-k','Koszt vs cena mieszkania');
-    set('r-mult',((base.total/st.cena)*100).toFixed(0)+'% ceny');
-    html('r-summary',`Za mieszkanie warte <strong>${pln(st.cena)}</strong> oddasz bankowi <strong class="c-cost">${pln(base.total)}</strong> — o <strong>${pln(base.total-k)}</strong> więcej niż pożyczasz.`);
+    countUp('r-odsetki',cur.int,pln);
+    countUp('r-total',cur.total,pln);
+    const end=monthDate(cur.mo);
+    set('r-end',`${MIES[end.mo]} ${end.y}`);
     $('wklad-kwota').textContent='('+pln(Math.round(st.cena*st.wklad/100))+')';
-
-    countUp('donut-k',k,pln);
-    countUp('donut-o',base.int,pln);
-    set('donut-center',compact(base.total));
-
-    // Faktycznie zastosowane nadpłaty jednorazowe — te poza okresem nie liczą się.
-    const otApplied=cur.rows.reduce((a,r)=>a+r.ot,0);
-    const otRaw=Object.values(st.ot).reduce((a,v)=>a+v,0);
-    const stranded=otRaw-otApplied>1;
-    set('s-ot',otApplied>0?pln(otApplied):'0 PLN');
-    set('s-ot-k',stranded?'Nadpłaty jednorazowe (część poza okresem)':'Nadpłaty jednorazowe');
 
     if(ext){
         const sv=base.total-ext.total, svM=base.mo-ext.mo;
-        countUp('s-interest',sv>0?sv:0,pln);
+        countUp('s-interest',Math.max(0,sv),pln);
         set('s-time',svM>0?fmtMo(svM):'—');
-        set('s-new',fmtMo(ext.mo));
-        show('ribbon',true);
+        show('ribbon',true); show('no-ex',false);
         set('ribbon-base-lbl',pln(base.total));
         set('ribbon-ext-lbl',pln(ext.total));
         set('ribbon-ext-title',st.nadplata>0?`Z nadpłatą ${num(st.nadplata)} PLN/mies.`:'Z nadpłatami jednorazowymi');
         $('ribbon-base').style.width='100%';
         $('ribbon-ext').style.width=Math.max(2,(ext.total/base.total*100)).toFixed(1)+'%';
-        set('ribbon-delta',pln(Math.max(0,sv)));
         if(hasEx&&!prevHasEx) setTimeout(()=>flash('s-interest'),120);
     } else {
-        set('s-interest','—'); set('s-time','—'); set('s-new',fmtMo(base.mo));
-        show('ribbon',false);
+        show('ribbon',false); show('no-ex',true);
     }
     prevHasEx=hasEx;
 
-    // Rekompensata dotyczy scenariusza z nadpłatą, więc mieszka przy wstędze,
-    // a nie w siatce statystyk, która opisuje kredyt bez nadpłat.
     const feePaid=cur.fee;
     show('ribbon-fee',feePaid>0&&!!ext);
-    if(feePaid>0) html('ribbon-fee',`Oszczędność jest już pomniejszona o <strong>${pln(feePaid)}</strong> rekompensaty dla banku.`);
+    if(feePaid>0) html('ribbon-fee',`Wliczona prowizja dla banku: <strong>${pln(feePaid)}</strong>.`);
     show('th-fee',feePaid>0);
 
-    // Wykres salda
-    let second=null, legB='z nadpłatami';
-    if(st.cmpOn){
-        const bn=st.b.okres*12;
-        second=run({p:k,rm:rateArray(bn,[{m:1,r:st.b.rate}],0),yrs:st.b.okres,ex:st.b.nadplata,ot:{},type:st.b.type,strat:st.b.strat,collect:false}).by;
-        legB='Scenariusz B';
-    } else if(ext) second=ext.by;
-    set('chart-leg-b',legB);
-    show('leg-b-wrap',!!second);
+    // Faktycznie zastosowane nadpłaty jednorazowe — te poza okresem nie liczą się.
+    const otApplied=cur.rows.reduce((a,r)=>a+r.ot,0);
+    const otRaw=Object.values(st.ot).reduce((a,v)=>a+v,0);
+    show('ribbon-ot',otRaw>0&&!!ext);
+    if(otRaw>0) html('ribbon-ot',`Nadpłaty jednorazowe z harmonogramu: <strong>${pln(otApplied)}</strong>`
+        +(otRaw-otApplied>1?' (część wypada po spłacie kredytu)':'')+'.');
 
-    updDonut(k,base.int);
-    updBal(base.by,second);
+    show('leg-b-wrap',!!ext);
+    updBal(base.by,ext?ext.by:null);
     updBreakdown(cur.rows);
 
-    set('cmp-a-type',isMal?'Raty malejące':'Raty równe');
+    set('cmp-a-type',st.type==='malejace'?'Raty malejące':'Raty równe');
     set('cmp-a-rate',st.rateMode==='path'?ratePc(st.rate)+' (zmienna)':ratePc(st.rate));
-    set('cmp-a-okres',st.okres+' lat');
+    set('cmp-a-okres',st.okres+' '+yrWord(st.okres));
     set('cmp-a-nadp',num(st.nadplata)+' PLN');
-    set('cmp-a-strat',st.strat==='okres'?'Okres kredytu':'Ratę miesięczną');
-    if(st.cmpOn) updCmp(k,cur);
+    set('cmp-a-strat',st.strat==='okres'?'Okres kredytu':'Ratę');
+    updCmp(k,cur);
 
     scheduleRender();
     scheduleHeavy();
@@ -1536,16 +1510,14 @@ function updCmp(k,A){
     ];
     html('cmp-body',rows.map(([lab,a,b,d])=>
         `<tr><td>${lab}</td><td class="cmp-a" data-l="Scenariusz A">${a}</td><td class="cmp-b" data-l="Scenariusz B">${b}</td><td data-l="Różnica">${d}</td></tr>`).join(''));
-    set('cmp-chart-note','Saldo Scenariusza B rysuje przerywana linia na wykresie „Saldo zadłużenia w czasie”.');
 }
 
 // ═══ Analiza: czułość, cel, inwestycja ═══════════════════════════════════
 let goalNeeded=null, sensMo=[];
 
 function updSens(k,n){
-    const rm=rateArray(n,rateSteps(),0);
+    const opts={...baseOpts(k,rateArray(n,rateSteps(),0)),collect:false};
     const maxE=Math.max(2000,Math.ceil(st.nadplata/1000)*1000+2000), steps=32, stp=maxE/steps;
-    const opts={p:k,rm,yrs:st.okres,ot:st.ot,type:st.type,strat:st.strat,kar:st.kar,fee:st.fee,collect:false};
     const base=run({...opts,ex:0});
     const pts=[]; sensMo=[];
     for(let i=0;i<=steps;i++){
@@ -1555,7 +1527,7 @@ function updSens(k,n){
         sensMo.push(base.mo-s.mo);
     }
     set('sens-strat',st.strat==='okres'?'(przy skracaniu okresu)':'(przy obniżaniu raty)');
-    const cur=st.nadplata>0?run({...opts,ex:st.nadplata}):base;
+    const cur=st.nadplata>0?run(opts):base;
     ch.sens.data.datasets[0].data=pts;
     ch.sens.data.datasets[1].data=st.nadplata>0?[{x:st.nadplata,y:Math.max(0,base.total-cur.total)}]:[];
     ch.sens.options.scales.x.max=maxE;
@@ -1564,9 +1536,9 @@ function updSens(k,n){
 
 function updGoal(k,n){
     const gy=Math.max(1,Math.min(st.okres,st.goalYrs||st.okres));
+    if(document.activeElement!==$('goal-yrs')) $('goal-yrs').value=gy;
     const T=gy*12;
-    const rm=rateArray(n,rateSteps(),0);
-    const opts={p:k,rm,yrs:st.okres,ot:st.ot,type:st.type,strat:'okres',kar:st.kar,fee:st.fee,collect:false};
+    const opts={...baseOpts(k,rateArray(n,rateSteps(),0)),strat:'okres',collect:false};
     const solve=e=>run({...opts,ex:e}).mo;
     if(solve(0)<=T){
         goalNeeded=0;
@@ -1588,11 +1560,9 @@ function updGoal(k,n){
 
 function applyGoal(){
     if(goalNeeded===null||goalNeeded===0) return;
-    if(st.strat!=='okres') setStrat('okres');
+    if(st.strat!=='okres'){ st.strat='okres'; press('btn-okres',true); press('btn-rata',false); }
     st.nadplata=goalNeeded;
-    $('sl-nadplata').value=Math.min(goalNeeded,10000);
-    $('val-nadplata').value=num(goalNeeded);
-    fillTrack($('sl-nadplata'));
+    syncSlider('sl-nadplata','val-nadplata','nadplata',false);
     upd(); updHeavy();
     setTimeout(()=>flash('s-interest'),150);
 }
@@ -1626,19 +1596,18 @@ function updInvest(k,n){
     const hasEx=st.nadplata>0||Object.keys(st.ot).length>0;
     show('inv-wrap',hasEx);
     if(!hasEx){
-        html('inv-verdict','Ustaw nadpłatę miesięczną powyżej, aby porównać ją z inwestowaniem tej samej kwoty.');
+        html('inv-verdict','Ustaw nadpłatę miesięczną, aby porównać ją z inwestowaniem tej samej kwoty.');
         return;
     }
-    const rm=rateArray(n,rateSteps(),0);
-    const shared={p:k,rm,yrs:st.okres,type:st.type,strat:st.strat,kar:st.kar,fee:st.fee};
-    const cA=cashFlow(run({...shared,ex:st.nadplata,ot:st.ot}),n);
-    const cB=cashFlow(run({...shared,ex:0,ot:{}}),n);
+    const opts=baseOpts(k,rateArray(n,rateSteps(),0));
+    const cA=cashFlow(run(opts),n);
+    const cB=cashFlow(run({...opts,ex:0,ot:{}}),n);
     const s=simInvest(cA,cB,n,st.inv.rate,st.inv.belka,st.nadplata,st.ot);
     const be=breakEven(cA,cB,n,st.nadplata,st.ot);
     const dif=Math.abs(Math.round(s.netA-s.netB));
     const beTxt=be===null?'':be<=0.05
         ?' Przy tych parametrach inwestowanie wygrywa nawet przy zerowym zwrocie.'
-        :` Próg opłacalności: inwestycja wygrywa dopiero powyżej <strong>${dec(be).replace(/,\d$/,m=>m)}%</strong> rocznie${st.inv.belka?' (brutto, przed podatkiem)':''}.`;
+        :` Próg opłacalności: inwestycja wygrywa dopiero powyżej <strong>${dec(be)}%</strong> rocznie${st.inv.belka?' (brutto, przed podatkiem)':''}.`;
     const winner=s.netA>=s.netB
         ?`<strong class="c-accent">nadpłata wygrywa</strong> z inwestowaniem o <strong class="c-accent">${pln(dif)}</strong>`
         :`<strong class="c-cost">inwestowanie wygrywa</strong> z nadpłatą o <strong class="c-cost">${pln(dif)}</strong>`;
@@ -1654,10 +1623,9 @@ function updInvest(k,n){
 const SHIFTS=[-2,-1,-0.5,0,0.5,1,2,3];
 
 function updScen(k,n){
-    const steps=rateSteps();
+    const steps=rateSteps(), opts=baseOpts(k,null);
     html('scenarios-body',SHIFTS.map(sh=>{
-        const res=run({p:k,rm:rateArray(n,steps,sh),yrs:st.okres,ex:st.nadplata,ot:st.ot,
-            type:st.type,strat:st.strat,kar:st.kar,fee:st.fee});
+        const res=run({...opts,rm:rateArray(n,steps,sh)});
         const f=firstPmt(res), l=lastPmt(res);
         const rata=Math.abs(f-l)>1?`${num(f)} → ${num(l)} PLN`:`${num(f)} PLN`;
         const eff=Math.max(0,st.rate+sh);
@@ -1731,7 +1699,7 @@ function initSchedEvents(){
 function exportCsv(){
     if(!lastRows.length) return;
     const showFee=lastRows.some(r=>r.fee>0);
-    const money=v=>dec(v).replace(/ /g,'');   // przecinek dziesiętny, bez separatora tysięcy
+    const money=v=>dec(v).replace(/\s/g,'');   // przecinek dziesiętny, bez separatora tysięcy
     const head=['Miesiac','Data','Saldo poczatkowe','Rata','Odsetki','Kapital','Nadplata miesieczna','Nadplata jednorazowa'];
     if(showFee) head.push('Rekompensata');
     head.push('Saldo koncowe');
@@ -1743,7 +1711,7 @@ function exportCsv(){
         cells.push(money(r.cb));
         lines.push(cells.join(';'));
     });
-    const blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'});
+    const blob=new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'});
     const url=URL.createObjectURL(blob), a=document.createElement('a');
     a.href=url;
     a.download=`harmonogram-${kredyt()}pln-${st.okres}lat.csv`;
@@ -1757,46 +1725,65 @@ function setStrat(t){ st.strat=t; press('btn-okres',t==='okres'); press('btn-rat
 function setCmpType(t){ st.b.type=t; press('cmp-btn-rowne',t==='rowne'); press('cmp-btn-malejace',t==='malejace'); upd(); }
 function setCmpStrat(t){ st.b.strat=t; press('cmp-btn-okres',t==='okres'); press('cmp-btn-rata',t==='rata'); upd(); }
 
-function toggleCmp(){
-    st.cmpOn=!st.cmpOn;
-    $('cmp-panel').classList.toggle('is-open',st.cmpOn);
-    press('cmp-toggle-btn',st.cmpOn);
-    $('cmp-toggle-btn').textContent=st.cmpOn?'Zamknij porównanie':'Otwórz porównanie';
-    upd();
-}
 function toggleBelka(){ st.inv.belka=!st.inv.belka; press('belka-btn',st.inv.belka); updHeavy(); saveState(); }
-function toggleFee(){
-    st.fee.on=!st.fee.on;
-    $('fee-panel').classList.toggle('is-open',st.fee.on);
-    press('fee-toggle',st.fee.on);
-    $('fee-toggle').textContent=st.fee.on?'Wyłącz':'Włącz';
-    upd(); updHeavy();
-}
+function syncOpt(name,on){ $(name+'-panel').classList.toggle('is-open',on); check(name+'-toggle',on); }
+function toggleFee(){ st.fee.on=!st.fee.on; syncOpt('fee',st.fee.on); upd(); updHeavy(); }
 function toggleKar(){
-    st.kar.on=!st.kar.on;
-    $('kar-panel').classList.toggle('is-open',st.kar.on);
-    press('kar-toggle',st.kar.on);
-    $('kar-toggle').textContent=st.kar.on?'Wyłącz':'Włącz';
+    st.kar.on=!st.kar.on; syncOpt('kar',st.kar.on);
     if(st.kar.on) renderTransze();
     upd(); updHeavy();
 }
-function setRateMode(m){
-    st.rateMode=m;
-    press('btn-rate-const',m==='const'); press('btn-rate-path',m==='path');
-    $('rate-panel').classList.toggle('is-open',m==='path');
-    $('rate-label').textContent=m==='path'?'Oprocentowanie na start':'Oprocentowanie';
-    if(m==='path') renderRatePath();
+function toggleRate(){
+    st.rateMode=st.rateMode==='path'?'const':'path';
+    syncRateMode();
+    if(st.rateMode==='path'){
+        if(!st.ratePath.length) addRateStep(); else renderRatePath();
+    }
     upd(); updHeavy();
+}
+function syncRateMode(){
+    const on=st.rateMode==='path';
+    syncOpt('rate',on);
+    $('rate-label').textContent=on?'Oprocentowanie na start':'Oprocentowanie';
+}
+
+// ═══ Zakładki ════════════════════════════════════════════════════════════
+function selectTab(name,focus){
+    if(!TABS.includes(name)) name='charts';
+    st.tab=name;
+    TABS.forEach(t=>{
+        const on=t===name, tab=$('tab-'+t);
+        tab.setAttribute('aria-selected',on?'true':'false');
+        tab.tabIndex=on?0:-1;
+        $('p-'+t).hidden=!on;
+    });
+    if(focus) $('tab-'+name).focus();
+    saveState();
+}
+function initTabs(){
+    const list=document.querySelector('.tabs');
+    list.addEventListener('click',e=>{
+        const t=e.target.closest('.tab'); if(t) selectTab(t.id.slice(4));
+    });
+    // Strzałki przełączają zakładki (wzorzec ARIA tabs).
+    list.addEventListener('keydown',e=>{
+        const i=TABS.indexOf(st.tab);
+        let j=null;
+        if(e.key==='ArrowRight') j=(i+1)%TABS.length;
+        if(e.key==='ArrowLeft') j=(i-1+TABS.length)%TABS.length;
+        if(e.key==='Home') j=0;
+        if(e.key==='End') j=TABS.length-1;
+        if(j!==null){ e.preventDefault(); selectTab(TABS[j],true); }
+    });
 }
 
 // ═══ Ścieżka stopy ═══════════════════════════════════════════════════════
 function addRateStep(){
     const used=st.ratePath.map(s=>s.yr);
-    let yr=6;
-    while(used.includes(yr)&&yr<st.okres) yr++;
-    if(yr>st.okres) yr=Math.min(st.okres,Math.max(2,used.length+2));
+    const lastYr=used.length?Math.max(...used):1;
+    const yr=Math.max(2,Math.min(st.okres,used.length?lastYr+5:6));
     const last=st.ratePath.length?st.ratePath[st.ratePath.length-1].r:st.rate;
-    st.ratePath.push({id:++idCnt,yr:Math.max(2,Math.min(st.okres,yr)),r:Math.round((last-1)*10)/10});
+    st.ratePath.push({id:++idCnt,yr,r:Math.max(0,Math.round((last-1)*10)/10)});
     st.ratePath.sort((a,b)=>a.yr-b.yr);
     renderRatePath(); upd(); updHeavy();
 }
@@ -1809,21 +1796,22 @@ function updateRateStep(id,field,val){
     if(field==='yr') s.yr=Math.max(2,Math.min(st.okres,parseInt(val,10)||2));
     if(field==='r'){ const v=parseNum(val); if(!isNaN(v)) s.r=Math.max(0,Math.min(30,v)); }
     st.ratePath.sort((a,b)=>a.yr-b.yr);
-    upd(); updHeavy();
+    renderRatePath(); upd(); updHeavy();
 }
 function renderRatePath(){
     const el=$('rate-path-list'); if(!el) return;
+    // Po skróceniu okresu zmiana stopy nie może wypaść poza kredyt.
+    st.ratePath.forEach(s=>{ s.yr=Math.max(2,Math.min(st.okres,s.yr)); });
     if(!st.ratePath.length){
         el.innerHTML='<p class="t-hint" style="margin-bottom:9px">Brak zmian — stopa stała przez cały okres.</p>';
         return;
     }
     el.innerHTML=st.ratePath.map(s=>{
         const yrOpts=Array.from({length:Math.max(0,st.okres-1)},(_,i)=>i+2)
-            .map(y=>`<option value="${y}"${y===s.yr?' selected':''}>roku ${y}</option>`).join('');
+            .map(y=>`<option value="${y}"${y===s.yr?' selected':''}>od roku ${y}</option>`).join('');
         return`<div class="row-inline">
-            <span class="t-hint">od</span>
             <select class="mini-inp" aria-label="Rok zmiany stopy" onchange="updateRateStep(${s.id},'yr',this.value)">${yrOpts}</select>
-            <span class="t-hint grow">(${dateLabel((s.yr-1)*12+1)})</span>
+            <span class="t-hint grow">${dateLabel((s.yr-1)*12+1)}</span>
             <input class="mini-inp" type="text" inputmode="decimal" value="${dec(s.r)}" style="width:66px;text-align:right"
                 aria-label="Stopa od roku ${s.yr}" onchange="updateRateStep(${s.id},'r',this.value)">
             <span class="t-unit">%</span>
@@ -1832,16 +1820,23 @@ function renderRatePath(){
     }).join('');
 }
 
-// ═══ Transze karencji ════════════════════════════════════════════════════
+// ═══ Transze karencji (procent kwoty kredytu) ════════════════════════════
+const PCT_OPTS=[5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100];
+const karLen=()=>Math.max(1,Math.min(st.kar.mo,st.okres*12-1));
+const pctSum=()=>st.kar.transze.reduce((a,t)=>a+(t.pct||0),0);
+
+function presetTranches(count){
+    const splits={1:[100],2:[50,50],3:[30,30,40],4:[25,25,25,25],5:[20,20,20,20,20]}[count];
+    const L=karLen();
+    st.kar.transze=splits.map((pct,i)=>({id:++idCnt, mo:Math.floor(i*L/count)+1, pct}));
+    renderTransze(); upd(); updHeavy();
+}
 function addTranche(){
-    const k=kredyt();
-    const used=st.kar.transze.reduce((a,t)=>a+t.amt,0);
+    const L=karLen();
     const last=st.kar.transze[st.kar.transze.length-1];
-    let y=st.start.year, m=st.start.month;
-    if(last){ y=last.year; m=last.month+3; if(m>12){ y+=Math.floor((m-1)/12); m=((m-1)%12)+1; } }
-    const endAbs=st.start.year*12+st.start.month+st.kar.mo-1;
-    if(y*12+m>endAbs){ y=Math.floor((endAbs-1)/12); m=((endAbs-1)%12)+1; }
-    st.kar.transze.push({id:++idCnt,year:y,month:m,amt:Math.max(0,k-used)});
+    const left=Math.max(0,100-pctSum());
+    const pct=left>0?Math.max(5,Math.floor(left/5)*5||left):10;
+    st.kar.transze.push({id:++idCnt, mo:last?Math.min(L,last.mo+3):1, pct});
     renderTransze(); upd(); updHeavy();
 }
 function removeTranche(id){
@@ -1850,42 +1845,49 @@ function removeTranche(id){
 }
 function updateTranche(id,field,val){
     const t=st.kar.transze.find(x=>x.id===id); if(!t) return;
-    if(field==='year') t.year=parseInt(val,10)||st.start.year;
-    if(field==='month') t.month=parseInt(val,10)||1;
-    if(field==='amt') t.amt=Math.max(0,Math.round(parseNum(val)||0));
-    renderTrancheSum();
-    clearTimeout(schedT); schedT=setTimeout(()=>{upd();updHeavy();},80);
+    if(field==='mo') t.mo=Math.max(1,Math.min(karLen(),parseInt(val,10)||1));
+    if(field==='pct') t.pct=Math.max(0,Math.min(100,parseNum(val)||0));
+    renderTransze(); upd(); updHeavy();
 }
 function renderTrancheSum(){
     const el=$('tranche-sum-info'); if(!el) return;
-    const k=kredyt(), sum=st.kar.transze.reduce((a,t)=>a+t.amt,0), d=sum-k;
     if(!st.kar.transze.length){ el.textContent=''; return; }
-    const cls=Math.abs(d)<1?'c-accent':d>0?'c-neg':'ink-2';
-    el.innerHTML=`Suma transz: <strong class="${cls}">${num(sum)}</strong> / ${pln(k)}`
-        +(Math.abs(d)>=1?` <span class="${cls}">(${d>0?'+':'−'}${num(Math.abs(d))})</span>`:' ✓');
+    const k=kredyt(), sum=Math.round(pctSum()*10)/10;
+    if(Math.abs(sum-100)<0.05){ html('tranche-sum-info','Razem <strong class="c-accent">100%</strong> ✓'); return; }
+    if(sum>100){
+        html('tranche-sum-info',`Razem <strong class="c-neg">${trim0(sum)}%</strong> — liczę tylko pierwsze 100%`);
+        return;
+    }
+    const left=100-sum;
+    html('tranche-sum-info',`Razem ${trim0(sum)}% — pozostałe ${trim0(left)}% (${pln(k*left/100)}) przyjmuję w ostatnim miesiącu karencji`);
 }
 function renderTransze(){
     const el=$('transze-list'); if(!el) return;
+    const L=karLen(), k=kredyt();
+    st.kar.transze.forEach(t=>{ t.mo=Math.max(1,Math.min(L,t.mo)); });
     if(!st.kar.transze.length){
-        el.innerHTML='<p class="t-hint">Brak transz — cała kwota kredytu wypłacana w pierwszym miesiącu.</p>';
+        el.innerHTML='<p class="t-hint" style="margin:10px 0">Brak transz — cały kredyt wypłacony w pierwszym miesiącu. Wybierz podział powyżej.</p>';
         renderTrancheSum(); return;
     }
-    const yrs=Array.from({length:Math.ceil(st.kar.mo/12)+2},(_,i)=>st.start.year+i);
-    el.innerHTML=st.kar.transze.map(t=>{
-        const mOpts=MIES.map((nm,i)=>`<option value="${i+1}"${i+1===t.month?' selected':''}>${nm}</option>`).join('');
-        const yOpts=yrs.map(y=>`<option value="${y}"${y===t.year?' selected':''}>${y}</option>`).join('');
-        const mo=trancheMo(t), ok=mo>=1&&mo<=st.kar.mo;
-        return`<div class="row-inline">
-            <select class="mini-inp grow" aria-label="Miesiąc transzy" onchange="updateTranche(${t.id},'month',this.value)">${mOpts}</select>
-            <select class="mini-inp" aria-label="Rok transzy" onchange="updateTranche(${t.id},'year',this.value)">${yOpts}</select>
-            <span class="badge${ok?'':' badge-bad'}">${ok?'mies. '+mo:'poza karencją'}</span>
-            <input class="mini-inp" type="text" inputmode="numeric" value="${t.amt}" style="width:92px;text-align:right"
-                aria-label="Kwota transzy" onchange="updateTranche(${t.id},'amt',this.value)">
-            <span class="t-unit">PLN</span>
-            <button class="del-btn" type="button" aria-label="Usuń transzę" onclick="removeTranche(${t.id})">×</button>
+    el.innerHTML=st.kar.transze.map((t,i)=>{
+        const moOpts=Array.from({length:L},(_,j)=>j+1)
+            .map(m=>`<option value="${m}"${m===t.mo?' selected':''}>${dateLabel(m)}</option>`).join('');
+        const opts=PCT_OPTS.includes(t.pct)?PCT_OPTS:[...PCT_OPTS,t.pct].sort((a,b)=>a-b);
+        const pctOpts=opts.map(p=>`<option value="${p}"${p===t.pct?' selected':''}>${trim0(p)}% · ${compact(k*p/100)}</option>`).join('');
+        return`<div class="tr-row">
+            <span class="tr-n">${i+1}.</span>
+            <select class="mini-inp grow" aria-label="Miesiąc wypłaty transzy ${i+1}" onchange="updateTranche(${t.id},'mo',this.value)">${moOpts}</select>
+            <select class="mini-inp" aria-label="Procent kredytu w transzy ${i+1}" onchange="updateTranche(${t.id},'pct',this.value)">${pctOpts}</select>
+            <button class="del-btn" type="button" aria-label="Usuń transzę ${i+1}" onclick="removeTranche(${t.id})">×</button>
         </div>`;
     }).join('');
     renderTrancheSum();
+}
+
+function buildKarSelect(){
+    const opts=[3,6,9,12,15,18,24,30,36,48,60];
+    if(!opts.includes(st.kar.mo)) opts.push(st.kar.mo), opts.sort((a,b)=>a-b);
+    $('kar-mo-inp').innerHTML=opts.map(m=>`<option value="${m}"${m===st.kar.mo?' selected':''}>${m} mies.</option>`).join('');
 }
 
 // ═══ Wykresy ═════════════════════════════════════════════════════════════
@@ -1917,17 +1919,6 @@ function initCharts(){
     const p=pal();
     Chart.defaults.font.family="'Inter',system-ui,sans-serif";
     Chart.defaults.animation.duration=220;
-
-    ch.donut=new Chart($('chart-donut'),{
-        type:'doughnut',
-        data:{labels:['Kapitał','Odsetki'],datasets:[{
-            data:[480000,728243],
-            backgroundColor:[p.capital,p.cost],
-            borderColor:p.surface, borderWidth:2, hoverOffset:6
-        }]},
-        options:{responsive:true,maintainAspectRatio:false,cutout:'72%',
-            plugins:{legend:{display:false},tooltip:{...tipCfg(p),callbacks:{label:c=>' '+c.label+': '+pln(c.raw)}}}}
-    });
 
     ch.bal=new Chart($('chart-balance'),{
         type:'line',
@@ -1969,7 +1960,7 @@ function initCharts(){
                     const mo=sensMo[c.dataIndex]||0;
                     return[' oszczędzasz '+pln(c.parsed.y),' spłata krótsza o '+fmtMo(mo)];
                 }}}},
-            scales:{...axes(p,{callback:v=>num(v)}),x:{type:'linear',min:0,max:10000,grid:{color:p.grid,drawTicks:false},border:{display:false},ticks:{color:p.tick,font:{size:11},maxTicksLimit:8,callback:v=>num(v)}}},
+            scales:{...axes(p),x:{type:'linear',min:0,max:10000,grid:{color:p.grid,drawTicks:false},border:{display:false},ticks:{color:p.tick,font:{size:11},maxTicksLimit:8,callback:v=>num(v)}}},
             interaction:{mode:'index',axis:'x',intersect:false}}
     });
 
@@ -1988,8 +1979,6 @@ function initCharts(){
 /* Po zmianie motywu wykresy dostają nowe kolory z tokenów. */
 function rethemeCharts(){
     const p=pal();
-    ch.donut.data.datasets[0].backgroundColor=[p.capital,p.cost];
-    ch.donut.data.datasets[0].borderColor=p.surface;
     const lineMap=[[ch.bal,[p.capital,p.accent]],[ch.sens,[p.accent,p.accent]],[ch.inv,[p.accent,p.capital]]];
     lineMap.forEach(([c,cols])=>{
         c.data.datasets.forEach((ds,i)=>{
@@ -2013,31 +2002,21 @@ function rethemeCharts(){
     });
 }
 
-function updDonut(k,i){ ch.donut.data.datasets[0].data=[k,i]; ch.donut.update('none'); }
-
 function updBal(base,second){
-    const maxY=Math.max(st.okres,st.cmpOn?st.b.okres:0);
-    ch.bal.data.labels=Array.from({length:maxY+1},(_,i)=>i);
-    const pad=a=>{const x=[...a]; while(x.length<maxY+1)x.push(0); return x.slice(0,maxY+1);};
-    ch.bal.data.datasets[0].data=pad(base);
-    if(second){ ch.bal.data.datasets[1].data=pad(second); ch.bal.data.datasets[1].hidden=false; }
+    ch.bal.data.labels=Array.from({length:st.okres+1},(_,i)=>i);
+    ch.bal.data.datasets[0].data=base;
+    if(second){ ch.bal.data.datasets[1].data=second; ch.bal.data.datasets[1].hidden=false; }
     else ch.bal.data.datasets[1].hidden=true;
-    ch.bal.data.datasets[1].label=st.cmpOn?'Scenariusz B':'Z nadpłatami';
     ch.bal.update('none');
 }
 
 function updBreakdown(rows){
     const out=[];
-    for(let yr=1;;yr++){
-        const yrRows=rows.filter(r=>Math.ceil(r.m/12)===yr);
-        if(!yrRows.length) break;
-        out.push({
-            yr,
-            int:yrRows.reduce((a,r)=>a+r.i,0),
-            prin:yrRows.reduce((a,r)=>a+r.prin,0),
-            nadp:yrRows.reduce((a,r)=>a+r.ex+r.ot,0)
-        });
-    }
+    rows.forEach(r=>{
+        const y=Math.ceil(r.m/12)-1;
+        if(!out[y]) out[y]={yr:y+1,int:0,prin:0,nadp:0};
+        out[y].int+=r.i; out[y].prin+=r.prin; out[y].nadp+=r.ex+r.ot;
+    });
     const hasNadp=out.some(y=>y.nadp>0);
     show('bkd-nadp-leg',hasNadp);
     ch.bkd.data.labels=out.map(y=>y.yr);
@@ -2062,19 +2041,29 @@ function toggleTheme(){
 
 // ═══ Wiązanie kontrolek ══════════════════════════════════════════════════
 function fillTrack(sl){
-    const p=((sl.value-sl.min)/(sl.max-sl.min))*100;
+    const p=Math.max(0,Math.min(100,((sl.value-sl.min)/(sl.max-sl.min))*100));
     sl.style.background=`linear-gradient(to right,var(--accent) ${p}%,var(--border-strong) ${p}%)`;
 }
+/* Suwak ma wygodny zakres, ale wpisać można więcej (data-hard-min/max) —
+   wtedy suwak stoi na krawędzi, a liczy się wpisana wartość. */
+const limits=sl=>[+(sl.dataset.hardMin??sl.min), +(sl.dataset.hardMax??sl.max)];
+function syncSlider(slId,valId,key,float){
+    const sl=$(slId), inp=$(valId);
+    sl.value=Math.max(+sl.min,Math.min(+sl.max,st[key]));
+    if(document.activeElement!==inp) inp.value=float?dec(st[key]):num(st[key]);
+    fillTrack(sl);
+}
 
-function bind(slId,valId,key,float){
+function bind(slId,valId,key,float,after){
     const sl=$(slId), inp=$(valId);
     const apply=v=>{
         const n=float?parseNum(v):Math.round(parseNum(v));
         if(isNaN(n)) return;
-        const clamped=Math.max(+sl.min,Math.min(+sl.max,n));
-        st[key]=clamped; sl.value=clamped;
-        if(document.activeElement!==inp) inp.value=float?dec(clamped):num(clamped);
-        fillTrack(sl); upd(); updHeavy();
+        const [lo,hi]=limits(sl);
+        st[key]=Math.max(lo,Math.min(hi,n));
+        syncSlider(slId,valId,key,float);
+        if(after) after();
+        upd(); updHeavy();
     };
     sl.addEventListener('input',()=>apply(sl.value));
     inp.addEventListener('change',()=>apply(inp.value));
@@ -2082,43 +2071,31 @@ function bind(slId,valId,key,float){
     fillTrack(sl);
 }
 
-function bindB(valId,key,float){
+function bindB(valId,key,float,lo,hi){
     const inp=$(valId); if(!inp) return;
     inp.addEventListener('change',()=>{
         const n=float?parseNum(inp.value):Math.round(parseNum(inp.value));
-        if(!isNaN(n)&&n>=0){ st.b[key]=n; upd(); }
+        if(!isNaN(n)){ st.b[key]=Math.max(lo,Math.min(hi,n)); upd(); }
     });
     inp.addEventListener('blur',()=>{ inp.value=float?dec(st.b[key]):num(st.b[key]); });
 }
 
 /* Przepisuje stan do kontrolek — po wczytaniu z localStorage i po resecie. */
 function syncInputs(){
-    const pairs=[['sl-cena','val-cena','cena',false],['sl-wklad','val-wklad','wklad',false],
-        ['sl-okres','val-okres','okres',false],['sl-rate','val-rate','rate',true],
-        ['sl-nadplata','val-nadplata','nadplata',false]];
-    pairs.forEach(([slId,valId,key,float])=>{
-        const sl=$(slId), inp=$(valId);
-        sl.value=Math.max(+sl.min,Math.min(+sl.max,st[key]));
-        inp.value=float?dec(st[key]):num(st[key]);
-        fillTrack(sl);
-    });
+    [['sl-cena','val-cena','cena',false],['sl-wklad','val-wklad','wklad',false],
+     ['sl-okres','val-okres','okres',false],['sl-rate','val-rate','rate',true],
+     ['sl-nadplata','val-nadplata','nadplata',false]]
+        .forEach(a=>syncSlider(...a));
     press('btn-rowne',st.type==='rowne'); press('btn-malejace',st.type==='malejace');
     press('btn-okres',st.strat==='okres'); press('btn-rata',st.strat==='rata');
-    press('btn-rate-const',st.rateMode==='const'); press('btn-rate-path',st.rateMode==='path');
-    $('rate-panel').classList.toggle('is-open',st.rateMode==='path');
-    $('rate-label').textContent=st.rateMode==='path'?'Oprocentowanie na start':'Oprocentowanie';
+    syncRateMode();
 
-    $('fee-pct').value=st.fee.pct; $('fee-mo').value=st.fee.mo;
-    $('fee-panel').classList.toggle('is-open',st.fee.on);
-    press('fee-toggle',st.fee.on); $('fee-toggle').textContent=st.fee.on?'Wyłącz':'Włącz';
+    selectValue('fee-pct',st.fee.pct,trim0(st.fee.pct)+'%');
+    selectValue('fee-mo',st.fee.mo,st.fee.mo+' mies.');
+    syncOpt('fee',st.fee.on);
+    buildKarSelect();
+    syncOpt('kar',st.kar.on);
 
-    $('kar-mo-inp').value=st.kar.mo;
-    $('kar-panel').classList.toggle('is-open',st.kar.on);
-    press('kar-toggle',st.kar.on); $('kar-toggle').textContent=st.kar.on?'Wyłącz':'Włącz';
-
-    $('cmp-panel').classList.toggle('is-open',st.cmpOn);
-    press('cmp-toggle-btn',st.cmpOn);
-    $('cmp-toggle-btn').textContent=st.cmpOn?'Zamknij porównanie':'Otwórz porównanie';
     press('cmp-btn-rowne',st.b.type==='rowne'); press('cmp-btn-malejace',st.b.type==='malejace');
     press('cmp-btn-okres',st.b.strat==='okres'); press('cmp-btn-rata',st.b.strat==='rata');
     $('cmp-val-rate').value=dec(st.b.rate);
@@ -2131,11 +2108,22 @@ function syncInputs(){
     buildStartSelects();
 }
 
+/* Ustawia wartość selecta; wartość spoza listy (np. ze starego zapisu) dokłada jako opcję. */
+function selectValue(id,v,label){
+    const sel=$(id), val=String(v);
+    if(![...sel.options].some(o=>o.value===val)){
+        const o=new Option(label,val);
+        const after=[...sel.options].find(x=>parseFloat(x.value)>v);
+        sel.add(o,after||null);
+    }
+    sel.value=val;
+}
+
 function buildStartSelects(){
     const sm=$('start-m'), sy=$('start-y');
     sm.innerHTML=MIES.map((n,i)=>`<option value="${i+1}"${i+1===st.start.month?' selected':''}>${n}</option>`).join('');
-    const cy=new Date().getFullYear();
-    sy.innerHTML=Array.from({length:12},(_,i)=>cy-6+i)
+    const cy=new Date().getFullYear(), from=Math.min(cy-35,st.start.year), to=Math.max(cy+5,st.start.year);
+    sy.innerHTML=Array.from({length:to-from+1},(_,i)=>to-i)
         .map(y=>`<option value="${y}"${y===st.start.year?' selected':''}>${y}</option>`).join('');
 }
 
@@ -2147,17 +2135,19 @@ document.addEventListener('DOMContentLoaded',()=>{
     initCharts();
     syncInputs();
 
-    bind('sl-cena','val-cena','cena');
-    bind('sl-wklad','val-wklad','wklad');
-    bind('sl-okres','val-okres','okres');
+    const afterPrice=()=>renderTransze();
+    bind('sl-cena','val-cena','cena',false,afterPrice);
+    bind('sl-wklad','val-wklad','wklad',false,afterPrice);
+    bind('sl-okres','val-okres','okres',false,()=>{ renderRatePath(); renderTransze(); });
     bind('sl-rate','val-rate','rate',true);
     bind('sl-nadplata','val-nadplata','nadplata');
-    bindB('cmp-val-rate','rate',true);
-    bindB('cmp-val-okres','okres');
-    bindB('cmp-val-nadp','nadplata');
+    bindB('cmp-val-rate','rate',true,0,30);
+    bindB('cmp-val-okres','okres',false,1,35);
+    bindB('cmp-val-nadp','nadplata',false,0,1000000);
 
-    $('start-m').addEventListener('change',e=>{ st.start.month=parseInt(e.target.value,10); renderTransze(); renderRatePath(); upd(); });
-    $('start-y').addEventListener('change',e=>{ st.start.year=parseInt(e.target.value,10); renderTransze(); renderRatePath(); upd(); });
+    const onStart=()=>{ renderTransze(); renderRatePath(); upd(); };
+    $('start-m').addEventListener('change',e=>{ st.start.month=parseInt(e.target.value,10); onStart(); });
+    $('start-y').addEventListener('change',e=>{ st.start.year=parseInt(e.target.value,10); onStart(); });
 
     const slInv=$('sl-inv'), valInv=$('val-inv');
     slInv.addEventListener('input',()=>{ st.inv.rate=parseFloat(slInv.value); valInv.value=dec(st.inv.rate); updHeavy(); saveState(); });
@@ -2171,17 +2161,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         st.goalYrs=v; e.target.value=v; updHeavy(); saveState();
     });
 
-    $('fee-pct').addEventListener('input',e=>{
-        const v=Math.max(0,Math.min(3,parseNum(e.target.value)||0));
-        st.fee.pct=v; upd(); updHeavy();
-    });
-    $('fee-mo').addEventListener('input',e=>{
-        const v=Math.max(0,Math.min(360,parseInt(e.target.value,10)||0));
-        st.fee.mo=v; upd(); updHeavy();
-    });
+    $('fee-pct').addEventListener('change',e=>{ st.fee.pct=parseFloat(e.target.value); upd(); updHeavy(); });
+    $('fee-mo').addEventListener('change',e=>{ st.fee.mo=parseInt(e.target.value,10); upd(); updHeavy(); });
     $('kar-mo-inp').addEventListener('change',e=>{
-        const v=Math.max(1,Math.min(60,parseInt(e.target.value,10)||12));
-        st.kar.mo=v; e.target.value=v; renderTransze(); upd(); updHeavy();
+        st.kar.mo=parseInt(e.target.value,10); renderTransze(); upd(); updHeavy();
     });
 
     $('theme-btn').addEventListener('click',toggleTheme);
@@ -2192,9 +2175,11 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(!document.documentElement.getAttribute('data-theme')) rethemeCharts();
     });
 
+    initTabs();
     initSchedEvents();
     renderRatePath();
     renderTransze();
+    selectTab(st.tab,false);
     upd();
     updHeavy();
 });
